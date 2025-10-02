@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Akses Dokumen</title>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        color: #333;
+      }
+
+      .container {
+        padding: 20px;
+        width: 100%;
+        max-width: 600px;
+        box-sizing: border-box;
+        display: none; /* Sembunyikan secara default */
+      }
+
+      .card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+      }
+
+      h2 {
+        color: #4a4a4a;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
+
+      #fileList {
+        list-style-type: none;
+        padding: 0;
+        text-align: left;
+      }
+
+      #fileList li {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s ease;
+      }
+
+      #fileList li:hover {
+        background-color: #e2e6ea;
+      }
+
+      #fileList li .file-name-text {
+        color: #007bff;
+        font-weight: 500;
+        word-break: break-word;
+        flex-grow: 1;
+      }
+
+      .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .download-btn,
+      .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .download-btn img,
+      .delete-btn img {
+        width: 24px;
+        height: 24px;
+      }
+
+      .status-message {
+        margin-top: 20px;
+        color: #555;
+      }
+
+      .empty-message {
+        color: #888;
+        font-style: italic;
+      }
+
+      /* --- Dialog PIN --- */
+      .pin-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .pin-dialog-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .pin-dialog-card h3 {
+        color: #4a4a4a;
+        margin-bottom: 20px;
+      }
+
+      .pin-dialog-card input {
+        width: 80%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        text-align: center;
+      }
+
+      .pin-dialog-card button {
+        width: 80%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .pin-dialog-card button:hover {
+        background-color: #0056b3;
+      }
+
+      .error-message {
+        color: #dc3545;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        min-height: 20px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  </head>
+  <body>
+    <div id="pinDialogOverlay" class="pin-dialog-overlay">
+      <div class="pin-dialog-card">
+        <h3>Masukkan PIN Akses</h3>
+        <p>Untuk melihat daftar file, Anda harus memasukkan PIN.</p>
+        <form id="pinForm">
+          <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
+          <button type="submit">Akses</button>
+          <p id="pinErrorMessage" class="error-message"></p>
+        </form>
+      </div>
+    </div>
+
+    <div id="mainContent" class="container">
+      <div class="card">
+        <h2>Daftar Dokumen Tugas</h2>
+        <ul id="fileList">
+          <p class="status-message">Memuat daftar file...</p>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      // Ganti dengan konfigurasi Firebase Anda sendiri
+      // JANGAN BAGIKAN kredensial ini ke publik!
+      const firebaseConfig = {
+        apiKey: "AIzaSyCZAfnelUdrwUz856j2hC3yJWqUm-JJmiI",
+        authDomain: "ruangbelajar-52a67.firebaseapp.com",
+        databaseURL: "https://ruangbelajar-52a67-default-rtdb.firebaseio.com",
+        projectId: "ruangbelajar-52a67",
+        storageBucket: "ruangbelajar-52a67.appspot.com",
+        messagingSenderId: "545318863560",
+        appId: "1:545318863560:web:df392c010ff914aad49bfd",
+        measurementId: "G-9M8CKR66BW",
+      };
+
+      // Inisialisasi Firebase
+      firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+      const database = firebase.database();
+
+      const pinDialogOverlay = document.getElementById("pinDialogOverlay");
+      const pinForm = document.getElementById("pinForm");
+      const pinInput = document.getElementById("pinInput");
+      const pinErrorMessage = document.getElementById("pinErrorMessage");
+      const mainContent = document.getElementById("mainContent");
+      const fileListContainer = document.getElementById("fileList");
+
+      // Event listener untuk form PIN
+      pinForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        validatePin();
+      });
+
+      async function validatePin() {
+        const enteredPin = pinInput.value.trim();
+        if (!enteredPin) {
+          pinErrorMessage.textContent = "PIN tidak boleh kosong.";
+          return;
+        }
+
+        try {
+          // Ambil PIN dari Firebase Realtime Database
+          const snapshot = await database.ref("infopin/").once("value");
+          const correctPin = snapshot.val(); // Asumsi struktur data: { "infopin": "12345" }
+
+          if (enteredPin === correctPin) {
+            pinErrorMessage.textContent = "";
+            pinDialogOverlay.style.display = "none";
+            mainContent.style.display = "block";
+            fetchFiles();
+          } else {
+            pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
+          }
+        } catch (error) {
+          console.error("Gagal mendapatkan PIN dari database:", error);
+          pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
+        }
+      }
+
+      async function fetchFiles() {
+        const storageRef = storage.ref("dokumen/");
+
+        try {
+          const listResult = await storageRef.listAll();
+          fileListContainer.innerHTML = "";
+
+          if (listResult.items.length === 0) {
+            fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
+            return;
+          }
+
+          listResult.items.forEach(async (itemRef) => {
+            const downloadURL = await itemRef.getDownloadURL();
+            const fileName = itemRef.name;
+
+            const li = document.createElement("li");
+
+            const fileNameSpan = document.createElement("span");
+            fileNameSpan.classList.add("file-name-text");
+            fileNameSpan.textContent = fileName;
+
+            const actionButtonsDiv = document.createElement("div");
+            actionButtonsDiv.classList.add("action-buttons");
+
+            // Tombol Unduh
+            const downloadBtn = document.createElement("a");
+            downloadBtn.href = downloadURL;
+            downloadBtn.classList.add("download-btn");
+            downloadBtn.target = "_blank";
+            downloadBtn.download = fileName;
+            const downloadIcon = document.createElement("img");
+            downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
+            downloadIcon.alt = "Unduh";
+            downloadBtn.appendChild(downloadIcon);
+
+            // Tombol Hapus
+            const deleteBtn = document.createElement("button");
+            deleteBtn.classList.add("delete-btn");
+            const deleteIcon = document.createElement("img");
+            deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
+            deleteIcon.alt = "Hapus";
+            deleteBtn.appendChild(deleteIcon);
+
+            deleteBtn.addEventListener("click", () => {
+              if (confirm(`Apakah Anda yakin ingin menghapus file "${fileName}"?`)) {
+                deleteFile(fileName);
+              }
+            });
+
+            actionButtonsDiv.appendChild(downloadBtn);
+            actionButtonsDiv.appendChild(deleteBtn);
+
+            li.appendChild(fileNameSpan);
+            li.appendChild(actionButtonsDiv);
+            fileListContainer.appendChild(li);
+          });
+        } catch (error) {
+          console.error("Gagal mengambil data file:", error);
+          fileListContainer.innerHTML = `<p class="status-message" style="color:#dc3545;">Gagal memuat file: ${error.message}</p>`;
+        }
+      }
+
+      async function deleteFile(fileName) {
+        const fileRef = storage.ref(`dokumen/${fileName}`);
+
+        try {
+          await fileRef.delete();
+          alert(`File "${fileName}" berhasil dihapus.`);
+          fetchFiles(); // Muat ulang daftar file
+        } catch (error) {
+          console.error("Gagal menghapus file:", error);
+          alert(`Gagal menghapus file: ${error.message}`);
+        }
+      }
+    </script>
+  </body>
+</html>
