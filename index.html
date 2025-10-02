@@ -41,6 +41,27 @@
         margin-bottom: 20px;
       }
 
+      .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+      }
+
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+      }
+
       #fileList {
         list-style-type: none;
         padding: 0;
@@ -195,6 +216,16 @@
     <div id="mainContent" class="container">
       <div class="card">
         <h2>Daftar Dokumen Tugas</h2>
+
+        <div class="form-group">
+          <label for="courseFilter">Filter Berdasarkan Mata Kuliah:</label>
+          <select id="courseFilter">
+            <option value="dokumen/">Semua Dokumen</option>
+            <option value="dokumen/perancangandanppl/">Praktikum Perancangan & Pengujian Perangkat Lunak</option>
+            <option value="dokumen/pemrogramanweb/">Praktikum Pemrograman Web</option>
+          </select>
+        </div>
+
         <ul id="fileList">
           <p class="status-message">Memuat daftar file...</p>
         </ul>
@@ -203,7 +234,6 @@
 
     <script>
       // Ganti dengan konfigurasi Firebase Anda sendiri
-      // JANGAN BAGIKAN kredensial ini ke publik!
       const firebaseConfig = {
         apiKey: "AIzaSyCZAfnelUdrwUz856j2hC3yJWqUm-JJmiI",
         authDomain: "ruangbelajar-52a67.firebaseapp.com",
@@ -226,11 +256,18 @@
       const pinErrorMessage = document.getElementById("pinErrorMessage");
       const mainContent = document.getElementById("mainContent");
       const fileListContainer = document.getElementById("fileList");
+      const courseFilter = document.getElementById("courseFilter");
 
       // Event listener untuk form PIN
       pinForm.addEventListener("submit", (e) => {
         e.preventDefault();
         validatePin();
+      });
+
+      // Event listener untuk filter mata kuliah
+      courseFilter.addEventListener("change", () => {
+        const selectedPath = courseFilter.value;
+        fetchFiles(selectedPath);
       });
 
       async function validatePin() {
@@ -242,14 +279,15 @@
 
         try {
           // Ambil PIN dari Firebase Realtime Database
-          const snapshot = await database.ref("infopin/").once("value");
-          const correctPin = snapshot.val(); // Asumsi struktur data: { "infopin": "12345" }
+          const snapshot = await database.ref("infopin").once("value");
+          const correctPin = snapshot.val();
 
           if (enteredPin === correctPin) {
             pinErrorMessage.textContent = "";
             pinDialogOverlay.style.display = "none";
             mainContent.style.display = "block";
-            fetchFiles();
+            // Muat file berdasarkan filter awal (Semua Dokumen)
+            fetchFiles(courseFilter.value);
           } else {
             pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
           }
@@ -259,8 +297,8 @@
         }
       }
 
-      async function fetchFiles() {
-        const storageRef = storage.ref("dokumen/");
+      async function fetchFiles(path) {
+        const storageRef = storage.ref(path);
 
         try {
           const listResult = await storageRef.listAll();
@@ -274,6 +312,7 @@
           listResult.items.forEach(async (itemRef) => {
             const downloadURL = await itemRef.getDownloadURL();
             const fileName = itemRef.name;
+            const filePath = itemRef.fullPath; // Dapatkan path lengkap untuk hapus
 
             const li = document.createElement("li");
 
@@ -305,7 +344,7 @@
 
             deleteBtn.addEventListener("click", () => {
               if (confirm(`Apakah Anda yakin ingin menghapus file "${fileName}"?`)) {
-                deleteFile(fileName);
+                deleteFile(filePath); // Kirim path lengkap ke fungsi hapus
               }
             });
 
@@ -322,13 +361,14 @@
         }
       }
 
-      async function deleteFile(fileName) {
-        const fileRef = storage.ref(`dokumen/${fileName}`);
+      async function deleteFile(filePath) {
+        const fileRef = storage.ref(filePath); // Gunakan path lengkap
 
         try {
           await fileRef.delete();
-          alert(`File "${fileName}" berhasil dihapus.`);
-          fetchFiles(); // Muat ulang daftar file
+          alert(`File berhasil dihapus.`);
+          const currentPath = courseFilter.value; // Dapatkan path filter saat ini
+          fetchFiles(currentPath); // Muat ulang daftar file berdasarkan filter
         } catch (error) {
           console.error("Gagal menghapus file:", error);
           alert(`Gagal menghapus file: ${error.message}`);
