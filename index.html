@@ -24,7 +24,6 @@
         width: 100%;
         max-width: 600px;
         box-sizing: border-box;
-        display: none; /* Sembunyikan secara default */
       }
 
       .card {
@@ -131,7 +130,7 @@
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.7);
-        display: flex;
+        display: none; /* Sembunyikan secara default */
         justify-content: center;
         align-items: center;
         z-index: 1000;
@@ -226,8 +225,8 @@
   <body>
     <div id="pinDialogOverlay" class="pin-dialog-overlay">
       <div class="pin-dialog-card">
-        <h3>Masukkan PIN Akses</h3>
-        <p>Untuk melihat daftar file, Anda harus memasukkan PIN.</p>
+        <h3 id="pinDialogTitle">Masukkan PIN</h3>
+        <p>Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.</p>
         <form id="pinForm">
           <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
           <button type="submit">Akses</button>
@@ -236,7 +235,7 @@
       </div>
     </div>
 
-    <div id="mainContent" class="container" style="display: none">
+    <div id="mainContent" class="container">
       <div class="card">
         <h2>Daftar Dokumen Tugas</h2>
 
@@ -252,7 +251,7 @@
         </div>
 
         <ul id="fileList">
-          <p class="status-message">Memuat daftar file...</p>
+          <p class="status-message">Silakan pilih mata kuliah untuk melihat file.</p>
         </ul>
       </div>
     </div>
@@ -278,40 +277,64 @@
       const pinForm = document.getElementById("pinForm");
       const pinInput = document.getElementById("pinInput");
       const pinErrorMessage = document.getElementById("pinErrorMessage");
-      const mainContent = document.getElementById("mainContent");
+      const pinDialogTitle = document.getElementById("pinDialogTitle");
       const fileListContainer = document.getElementById("fileList");
       const courseFilter = document.getElementById("courseFilter");
       const toggleAccessBtn = document.getElementById("toggleAccessBtn");
 
-      pinForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        validatePin();
-      });
+      // Objek untuk menyimpan status autentikasi per-mata pelajaran
+      const courseAuthStatus = {};
+
+      // Inisialisasi awal saat halaman dimuat
+      updateAccessButtonStatus();
 
       courseFilter.addEventListener("change", () => {
         const selectedPath = courseFilter.value;
-        fetchFiles(selectedPath);
-      });
+        const courseKey = selectedPath.split("/")[1]; // Dapatkan kunci seperti 'perancangandanppl'
 
-      toggleAccessBtn.addEventListener("click", toggleAccessStatus);
-
-      async function validatePin() {
-        const enteredPin = pinInput.value.trim();
-        if (!enteredPin) {
-          pinErrorMessage.textContent = "PIN tidak boleh kosong.";
+        if (selectedPath === "dokumen/") {
+          // Tampilkan semua dokumen tanpa PIN, atau hapus daftar file
+          fileListContainer.innerHTML = '<p class="status-message">Silakan pilih mata kuliah untuk melihat file.</p>';
           return;
         }
 
+        if (courseAuthStatus[courseKey]) {
+          // Jika sudah terautentikasi, langsung tampilkan file
+          fetchFiles(selectedPath);
+        } else {
+          // Jika belum, tampilkan dialog PIN
+          showPinDialog(courseKey, selectedPath);
+        }
+      });
+
+      pinForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const enteredPin = pinInput.value.trim();
+        const courseKey = pinDialogOverlay.dataset.courseKey; // Ambil kunci dari dataset
+        const selectedPath = pinDialogOverlay.dataset.selectedPath; // Ambil path dari dataset
+        validatePin(enteredPin, courseKey, selectedPath);
+      });
+
+      async function showPinDialog(courseKey, selectedPath) {
+        pinInput.value = "";
+        pinErrorMessage.textContent = "";
+        pinDialogTitle.textContent = `Masukkan PIN untuk ${courseFilter.options[courseFilter.selectedIndex].text}`;
+        pinDialogOverlay.style.display = "flex";
+        // Simpan data di elemen dialog untuk digunakan saat validasi
+        pinDialogOverlay.dataset.courseKey = courseKey;
+        pinDialogOverlay.dataset.selectedPath = selectedPath;
+      }
+
+      async function validatePin(enteredPin, courseKey, selectedPath) {
         try {
-          const snapshot = await database.ref("infopin").once("value");
+          const snapshot = await database.ref(`akses_pin/${courseKey}`).once("value");
           const correctPin = snapshot.val();
 
           if (enteredPin === correctPin) {
             pinErrorMessage.textContent = "";
             pinDialogOverlay.style.display = "none";
-            mainContent.style.display = "block";
-            fetchFiles(courseFilter.value);
-            updateAccessButtonStatus();
+            courseAuthStatus[courseKey] = true; // Tandai mata pelajaran ini sebagai terautentikasi
+            fetchFiles(selectedPath);
           } else {
             pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
           }
@@ -323,6 +346,7 @@
 
       async function fetchFiles(path) {
         const storageRef = storage.ref(path);
+        fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
 
         try {
           const listResult = await storageRef.listAll();
@@ -348,7 +372,6 @@
             const actionButtonsDiv = document.createElement("div");
             actionButtonsDiv.classList.add("action-buttons");
 
-            // Tombol Pratinjau (hanya untuk file yang didukung)
             const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
             if (supportedPreviewExtensions.includes(fileExtension)) {
               const previewBtn = document.createElement("a");
@@ -370,7 +393,6 @@
               actionButtonsDiv.appendChild(previewBtn);
             }
 
-            // Tombol Unduh
             const downloadBtn = document.createElement("a");
             downloadBtn.href = downloadURL;
             downloadBtn.classList.add("download-btn");
@@ -382,7 +404,6 @@
             downloadBtn.appendChild(downloadIcon);
             actionButtonsDiv.appendChild(downloadBtn);
 
-            // Tombol Hapus
             const deleteBtn = document.createElement("button");
             deleteBtn.classList.add("delete-btn");
             const deleteIcon = document.createElement("img");
