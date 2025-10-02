@@ -194,6 +194,27 @@
           transform: scale(1);
         }
       }
+
+      /* Tombol Akses */
+      .access-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      .access-open {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .access-closed {
+        background-color: #dc3545;
+        color: white;
+      }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -213,9 +234,11 @@
       </div>
     </div>
 
-    <div id="mainContent" class="container">
+    <div id="mainContent" class="container" style="display: none">
       <div class="card">
         <h2>Daftar Dokumen Tugas</h2>
+
+        <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
 
         <div class="form-group">
           <label for="courseFilter">Filter Berdasarkan Mata Kuliah:</label>
@@ -245,7 +268,6 @@
         measurementId: "G-9M8CKR66BW",
       };
 
-      // Inisialisasi Firebase
       firebase.initializeApp(firebaseConfig);
       const storage = firebase.storage();
       const database = firebase.database();
@@ -257,18 +279,20 @@
       const mainContent = document.getElementById("mainContent");
       const fileListContainer = document.getElementById("fileList");
       const courseFilter = document.getElementById("courseFilter");
+      const toggleAccessBtn = document.getElementById("toggleAccessBtn");
 
-      // Event listener untuk form PIN
       pinForm.addEventListener("submit", (e) => {
         e.preventDefault();
         validatePin();
       });
 
-      // Event listener untuk filter mata kuliah
       courseFilter.addEventListener("change", () => {
         const selectedPath = courseFilter.value;
         fetchFiles(selectedPath);
       });
+
+      // Event listener untuk tombol toggle
+      toggleAccessBtn.addEventListener("click", toggleAccessStatus);
 
       async function validatePin() {
         const enteredPin = pinInput.value.trim();
@@ -278,7 +302,6 @@
         }
 
         try {
-          // Ambil PIN dari Firebase Realtime Database
           const snapshot = await database.ref("infopin").once("value");
           const correctPin = snapshot.val();
 
@@ -286,8 +309,8 @@
             pinErrorMessage.textContent = "";
             pinDialogOverlay.style.display = "none";
             mainContent.style.display = "block";
-            // Muat file berdasarkan filter awal (Semua Dokumen)
             fetchFiles(courseFilter.value);
+            updateAccessButtonStatus(); // Perbarui status tombol setelah login
           } else {
             pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
           }
@@ -312,7 +335,7 @@
           listResult.items.forEach(async (itemRef) => {
             const downloadURL = await itemRef.getDownloadURL();
             const fileName = itemRef.name;
-            const filePath = itemRef.fullPath; // Dapatkan path lengkap untuk hapus
+            const filePath = itemRef.fullPath;
 
             const li = document.createElement("li");
 
@@ -323,7 +346,6 @@
             const actionButtonsDiv = document.createElement("div");
             actionButtonsDiv.classList.add("action-buttons");
 
-            // Tombol Unduh
             const downloadBtn = document.createElement("a");
             downloadBtn.href = downloadURL;
             downloadBtn.classList.add("download-btn");
@@ -334,7 +356,6 @@
             downloadIcon.alt = "Unduh";
             downloadBtn.appendChild(downloadIcon);
 
-            // Tombol Hapus
             const deleteBtn = document.createElement("button");
             deleteBtn.classList.add("delete-btn");
             const deleteIcon = document.createElement("img");
@@ -344,7 +365,7 @@
 
             deleteBtn.addEventListener("click", () => {
               if (confirm(`Apakah Anda yakin ingin menghapus file "${fileName}"?`)) {
-                deleteFile(filePath); // Kirim path lengkap ke fungsi hapus
+                deleteFile(filePath);
               }
             });
 
@@ -362,16 +383,56 @@
       }
 
       async function deleteFile(filePath) {
-        const fileRef = storage.ref(filePath); // Gunakan path lengkap
+        const fileRef = storage.ref(filePath);
 
         try {
           await fileRef.delete();
           alert(`File berhasil dihapus.`);
-          const currentPath = courseFilter.value; // Dapatkan path filter saat ini
-          fetchFiles(currentPath); // Muat ulang daftar file berdasarkan filter
+          const currentPath = courseFilter.value;
+          fetchFiles(currentPath);
         } catch (error) {
           console.error("Gagal menghapus file:", error);
           alert(`Gagal menghapus file: ${error.message}`);
+        }
+      }
+
+      async function updateAccessButtonStatus() {
+        try {
+          const snapshot = await database.ref("akses").once("value");
+          const isOpen = snapshot.val();
+
+          if (isOpen === true) {
+            toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: BUKA ✅";
+            toggleAccessBtn.classList.remove("access-closed");
+            toggleAccessBtn.classList.add("access-open");
+          } else {
+            toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: TUTUP 🔒";
+            toggleAccessBtn.classList.remove("access-open");
+            toggleAccessBtn.classList.add("access-closed");
+          }
+        } catch (error) {
+          console.error("Gagal memperbarui status tombol:", error);
+          toggleAccessBtn.textContent = "Status tidak dapat dimuat.";
+        }
+      }
+
+      async function toggleAccessStatus() {
+        try {
+          // Ambil status saat ini
+          const snapshot = await database.ref("akses").once("value");
+          const currentStatus = snapshot.val();
+          const newStatus = !currentStatus; // Balik statusnya
+
+          // Perbarui di database
+          await database.ref("akses").set(newStatus);
+
+          // Perbarui tampilan tombol
+          updateAccessButtonStatus();
+
+          alert(`Akses pengumpulan tugas berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
+        } catch (error) {
+          console.error("Gagal mengubah status akses:", error);
+          alert(`Gagal mengubah status akses: ${error.message}`);
         }
       }
     </script>
