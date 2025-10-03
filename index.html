@@ -317,6 +317,7 @@
         padding: 15px;
         border-radius: 10px;
         transition: background-color 0.2s ease, transform 0.2s ease;
+        position: relative;
       }
 
       .folder-item:hover {
@@ -324,7 +325,7 @@
         transform: translateY(-2px);
       }
 
-      .folder-item img {
+      .folder-item img.folder-icon {
         width: 40px;
         height: 40px;
         margin-bottom: 5px;
@@ -334,6 +335,26 @@
         font-size: 0.9em;
         text-align: center;
         word-break: break-all;
+      }
+
+      .folder-delete-btn {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: background-color 0.2s ease;
+      }
+      .folder-delete-btn:hover {
+        background-color: rgba(220, 53, 69, 0.1);
+      }
+      .folder-delete-btn img {
+        width: 18px;
+        height: 18px;
+        filter: invert(100%) sepia(50%) saturate(1500%) hue-rotate(330deg) brightness(95%) contrast(100%);
       }
 
       /* CSS for move-file feature */
@@ -460,6 +481,7 @@
       const courseAuthStatus = {};
       let cachedFiles = [];
       let currentFolderPath = null;
+      let pendingDelete = null;
 
       // Inisialisasi
       updateAccessButtonStatus();
@@ -506,6 +528,7 @@
         pinDialogOverlay.style.display = "none";
         pinInput.value = "";
         pinErrorMessage.textContent = "";
+        pendingDelete = null; // Reset pending state
       });
 
       createFolderBtn.addEventListener("click", () => {
@@ -603,21 +626,45 @@
 
         prefixes.forEach((prefix) => {
           const folderName = prefix.name;
+          const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
           const folderItem = document.createElement("li");
           folderItem.classList.add("folder-item");
           folderItem.innerHTML = `
-            <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon"/>
+            <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
             <span>${folderName}</span>
+            <button class="folder-delete-btn" data-folder-name="${folderName}">
+              <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
+            </button>
           `;
-          folderItem.addEventListener("click", () => {
+
+          // Event listener untuk melihat folder
+          folderItem.querySelector("img.folder-icon").addEventListener("click", () => {
             const path = `dokumen/${folderName}/`;
-            const courseKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-            if (courseAuthStatus[courseKey]) {
+            if (courseAuthStatus[folderKey]) {
               fetchFiles(path);
             } else {
-              showPinDialog("course", courseKey, `melihat folder ${folderName}`, path);
+              showPinDialog("course", folderKey, `melihat folder ${folderName}`, path);
             }
           });
+
+          folderItem.querySelector("span").addEventListener("click", () => {
+            const path = `dokumen/${folderName}/`;
+            if (courseAuthStatus[folderKey]) {
+              fetchFiles(path);
+            } else {
+              showPinDialog("course", folderKey, `melihat folder ${folderName}`, path);
+            }
+          });
+
+          // Event listener untuk menghapus folder
+          folderItem.querySelector(".folder-delete-btn").addEventListener("click", (e) => {
+            e.stopPropagation(); // Prevent folder view click
+            if (confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
+              pendingDelete = { folderName, folderKey };
+              showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null);
+            }
+          });
+
           folderListContainer.appendChild(folderItem);
         });
       }
@@ -628,7 +675,7 @@
         pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
         if (actionType === "course" || actionType === "upload") {
           pinDialogMessage.textContent = "Untuk melanjutkan, Anda harus memasukkan PIN mata pelajaran.";
-        } else if (actionType === "toggle_access" || actionType === "toggle_course_access") {
+        } else if (actionType === "toggle_access" || actionType === "toggle_course_access" || actionType === "delete_folder") {
           pinDialogMessage.textContent = "Masukkan PIN untuk mengonfirmasi perubahan status.";
         }
 
@@ -666,6 +713,9 @@
               _toggleAccessStatusLogic("akses");
             } else if (actionType === "toggle_course_access") {
               _toggleAccessStatusLogic(`akses_unggah/${actionKey}`);
+            } else if (actionType === "delete_folder") {
+              await deleteFolder(pendingDelete.folderName, pendingDelete.folderKey);
+              pendingDelete = null;
             }
           } else {
             pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
@@ -673,6 +723,28 @@
         } catch (error) {
           console.error("Gagal mendapatkan PIN dari database:", error);
           pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
+        }
+      }
+
+      async function deleteFolder(folderName, folderKey) {
+        const folderRef = storage.ref(`dokumen/${folderName}`);
+        try {
+          // 1. Hapus semua file di dalam folder
+          const listResult = await folderRef.listAll();
+          const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
+          await Promise.all(deletePromises);
+
+          // 2. Hapus entri dari database
+          const dbPromises = [database.ref(`akses_pin/${folderKey}`).remove(), database.ref(`akses_unggah/${folderKey}`).remove(), database.ref(`mata_kuliah/${folderKey}`).remove()];
+          await Promise.all(dbPromises);
+
+          alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
+          fetchFolders();
+          fetchCourseList();
+          fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+        } catch (error) {
+          console.error("Gagal menghapus folder:", error);
+          alert(`Gagal menghapus folder: ${error.message}`);
         }
       }
 
