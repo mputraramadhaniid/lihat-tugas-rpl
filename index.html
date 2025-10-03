@@ -338,24 +338,7 @@
 
       /* CSS for move-file feature */
       .move-file-section {
-        margin-top: 20px;
-        text-align: left;
-      }
-
-      .move-file-section .access-button {
-        background-color: #ffc107;
-        color: #333;
-        border: 1px solid #e0a800;
-      }
-
-      .move-file-section .access-button:hover {
-        background-color: #e0a800;
-      }
-
-      .move-file-section .access-button:disabled {
-        background-color: #f1f1f1;
-        color: #999;
-        cursor: not-allowed;
+        display: none;
       }
 
       .create-folder-section {
@@ -431,28 +414,6 @@
 
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
-        <div class="move-file-section">
-          <h4 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Pindahkan File</h4>
-          <p>Pindahkan file dari folder yang sedang aktif ke folder lain.</p>
-          <div class="form-group">
-            <label for="moveFileSelect">Pilih File yang Akan Dipindahkan:</label>
-            <select id="moveFileSelect" disabled>
-              <option value="" disabled selected>-- Pilih file --</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="destinationFolderSelect">Pilih Folder Tujuan:</label>
-            <select id="destinationFolderSelect" disabled>
-              <option value="" disabled selected>-- Pilih folder --</option>
-            </select>
-          </div>
-          <button id="moveFileBtn" class="access-button access-open" style="width: 100%" disabled>Pindahkan File</button>
-        </div>
-
-        <button id="moveAllFilesBtn" class="access-button access-open" disabled>Pindahkan Semua File</button>
-
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
-
         <div class="search-group">
           <input type="text" id="fileSearch" placeholder="Cari nama file..." />
         </div>
@@ -495,11 +456,6 @@
       const newFolderPinInput = document.getElementById("newFolderPin");
       const folderListContainer = document.getElementById("folderList");
       const createFolderBtn = document.getElementById("createFolderBtn");
-
-      const moveFileSelect = document.getElementById("moveFileSelect");
-      const destinationFolderSelect = document.getElementById("destinationFolderSelect");
-      const moveFileBtn = document.getElementById("moveFileBtn");
-      const moveAllFilesBtn = document.getElementById("moveAllFilesBtn");
 
       const courseAuthStatus = {};
       let cachedFiles = [];
@@ -562,48 +518,6 @@
         createFolder(folderName, folderPin);
       });
 
-      moveFileBtn.addEventListener("click", async () => {
-        const sourcePath = moveFileSelect.value;
-        const destinationPath = destinationFolderSelect.value;
-
-        if (!sourcePath || !destinationPath) {
-          alert("Mohon pilih file dan folder tujuan.");
-          return;
-        }
-
-        if (sourcePath.startsWith(destinationPath)) {
-          alert("Tidak bisa memindahkan file ke folder yang sama.");
-          return;
-        }
-
-        if (confirm("Apakah Anda yakin ingin memindahkan file ini?")) {
-          await moveFile(sourcePath, destinationPath);
-        }
-      });
-
-      // New event listener for "Move All Files" button
-      moveAllFilesBtn.addEventListener("click", async () => {
-        if (!currentFolderPath) {
-          alert("Mohon pilih folder sumber terlebih dahulu.");
-          return;
-        }
-
-        const destinationPath = destinationFolderSelect.value;
-        if (!destinationPath) {
-          alert("Mohon pilih folder tujuan.");
-          return;
-        }
-
-        if (currentFolderPath === destinationPath) {
-          alert("Tidak bisa memindahkan file ke folder yang sama.");
-          return;
-        }
-
-        if (confirm(`Apakah Anda yakin ingin memindahkan SEMUA file dari folder ini ke "${destinationPath.split("/").slice(-2)[0]}"?`)) {
-          await moveAllFiles(currentFolderPath, destinationPath);
-        }
-      });
-
       // ======================= FUNGSI BARU =======================
       async function fetchCourseList() {
         try {
@@ -629,42 +543,6 @@
           }
         } catch (error) {
           console.error("Gagal memuat daftar mata kuliah:", error);
-        }
-      }
-
-      // New function to move all files from a folder
-      async function moveAllFiles(sourceFolderPath, destinationFolderPath) {
-        try {
-          const sourceRef = storage.ref(sourceFolderPath);
-          const listResult = await sourceRef.listAll();
-
-          if (listResult.items.length === 0) {
-            alert("Tidak ada file di folder ini untuk dipindahkan.");
-            return;
-          }
-
-          const movePromises = listResult.items.map(async (itemRef) => {
-            const fileName = itemRef.name;
-            const newFileRef = storage.ref(`${destinationFolderPath}${fileName}`);
-
-            if (fileName === ".gitkeep") {
-              await itemRef.delete();
-              return;
-            }
-
-            const fileBlob = await itemRef.getDownloadURL().then((url) => fetch(url).then((r) => r.blob()));
-            await newFileRef.put(fileBlob);
-            await itemRef.delete();
-          });
-
-          await Promise.all(movePromises);
-
-          alert(`${listResult.items.length} file berhasil dipindahkan!`);
-          fetchFolders();
-          fetchFiles(sourceFolderPath); // Refresh the current folder view
-        } catch (error) {
-          console.error("Gagal memindahkan semua file:", error);
-          alert("Gagal memindahkan semua file: " + error.message);
         }
       }
 
@@ -717,12 +595,9 @@
 
       function displayFolders(prefixes) {
         folderListContainer.innerHTML = "";
-        destinationFolderSelect.innerHTML = '<option value="" disabled selected>-- Pilih folder --</option>';
-        destinationFolderSelect.disabled = false;
 
         if (prefixes.length === 0) {
           folderListContainer.innerHTML = '<p class="empty-message">Belum ada folder yang dibuat.</p>';
-          destinationFolderSelect.disabled = true;
           return;
         }
 
@@ -744,11 +619,6 @@
             }
           });
           folderListContainer.appendChild(folderItem);
-
-          const destOption = document.createElement("option");
-          destOption.value = `dokumen/${folderName}/`;
-          destOption.textContent = folderName;
-          destinationFolderSelect.appendChild(destOption);
         });
       }
 
@@ -830,9 +700,6 @@
         currentFolderPath = path;
         const storageRef = storage.ref(path);
         fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
-        moveFileSelect.disabled = true;
-        moveFileBtn.disabled = true;
-        moveAllFilesBtn.disabled = true; // Disable the new button initially
 
         try {
           const listResult = await storageRef.listAll();
@@ -863,25 +730,12 @@
 
       function displayFiles(files) {
         fileListContainer.innerHTML = "";
-        moveFileSelect.innerHTML = '<option value="" disabled selected>-- Pilih file --</option>';
 
         if (files.length === 0) {
           fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
-          moveFileSelect.disabled = true;
-          moveFileBtn.disabled = true;
-          moveAllFilesBtn.disabled = true; // Disable "Move All" if no files exist
           return;
         }
 
-        // Enable "Move All" button if there are files and a destination folder is selected
-        if (destinationFolderSelect.value) {
-          moveAllFilesBtn.disabled = false;
-        } else {
-          moveAllFilesBtn.disabled = true;
-        }
-
-        moveFileSelect.disabled = false;
-        moveFileBtn.disabled = false;
         let fileNumber = 1;
         files.forEach((file) => {
           const li = document.createElement("li");
@@ -941,11 +795,6 @@
           li.appendChild(actionButtonsDiv);
           fileListContainer.appendChild(li);
           fileNumber++;
-
-          const moveOption = document.createElement("option");
-          moveOption.value = file.filePath;
-          moveOption.textContent = file.fileName;
-          moveFileSelect.appendChild(moveOption);
         });
       }
 
@@ -958,26 +807,6 @@
         } catch (error) {
           console.error("Gagal menghapus file:", error);
           alert(`Gagal menghapus file: ${error.message}`);
-        }
-      }
-
-      async function moveFile(sourcePath, destinationPath) {
-        try {
-          const fileRef = storage.ref(sourcePath);
-          const fileName = fileRef.name;
-          const newFileRef = storage.ref(`${destinationPath}${fileName}`);
-
-          const fileBlob = await fileRef.getDownloadURL().then((url) => fetch(url).then((r) => r.blob()));
-          await newFileRef.put(fileBlob);
-          await fileRef.delete();
-
-          alert("File berhasil dipindahkan!");
-
-          fetchFolders();
-          fetchFiles(currentFolderPath);
-        } catch (error) {
-          console.error("Gagal memindahkan file:", error);
-          alert("Gagal memindahkan file: " + error.message);
         }
       }
 
