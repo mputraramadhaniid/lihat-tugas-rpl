@@ -1,563 +1,656 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Akses Dokumen</title>
 
     <style>
-        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
 
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            color: #333;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        color: #333;
+      }
 
-        .container {
-            padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
-        }
+      .container {
+        padding: 20px;
+        width: 100%;
+        max-width: 600px;
+        box-sizing: border-box;
+      }
 
-        .card {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            text-align: center;
-        }
+      .card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+      }
 
-        h2 {
-            color: #4a4a4a;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
+      h2 {
+        color: #4a4a4a;
+        font-weight: 600;
+        margin-bottom: 20px;
+      }
 
-        .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        
-        .search-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
+      .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #555;
-        }
+      .search-group {
+        margin-bottom: 20px;
+        text-align: left;
+      }
 
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 1rem;
-            background-color: #f9f9f9;
-        }
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #555;
+      }
 
-        .search-group input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 1rem;
-            background-color: #f9f9f9;
-        }
+      .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+      }
 
+      .search-group input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+      }
 
-        #fileList {
-            list-style-type: none;
-            padding: 0;
-            text-align: left;
-        }
+      #fileList {
+        list-style-type: none;
+        padding: 0;
+        text-align: left;
+      }
 
-        #fileList li {
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.2s ease;
-        }
+      #fileList li {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s ease;
+      }
 
-        #fileList li:hover {
-            background-color: #e2e6ea;
-        }
+      #fileList li:hover {
+        background-color: #e2e6ea;
+      }
 
-        #fileList li .file-name-text {
-            color: #007bff;
-            font-weight: 500;
-            word-break: break-word;
-            flex-grow: 1;
-        }
-        
-        #fileList li .file-number {
-            font-weight: 600;
-            color: #6c757d;
-            margin-right: 15px;
-        }
+      #fileList li .file-name-text {
+        color: #007bff;
+        font-weight: 500;
+        word-break: break-word;
+        flex-grow: 1;
+      }
 
+      #fileList li .file-number {
+        font-weight: 600;
+        color: #6c757d;
+        margin-right: 15px;
+      }
 
-        .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+      .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-        .preview-btn,
-        .download-btn,
-        .delete-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0;
-        }
+      .preview-btn,
+      .download-btn,
+      .delete-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+      }
 
-        .preview-btn img,
-        .download-btn img,
-        .delete-btn img {
-            width: 24px;
-            height: 24px;
-        }
+      .preview-btn img,
+      .download-btn img,
+      .delete-btn img {
+        width: 24px;
+        height: 24px;
+      }
 
-        .status-message {
-            margin-top: 20px;
-            color: #555;
-        }
+      .status-message {
+        margin-top: 20px;
+        color: #555;
+      }
 
-        .empty-message {
-            color: #888;
-            font-style: italic;
-        }
+      .empty-message {
+        color: #888;
+        font-style: italic;
+      }
 
-        /* --- Dialog PIN --- */
-        .pin-dialog-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+      /* --- Dialog PIN --- */
+      .pin-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
 
-        .pin-dialog-card {
-            background: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            animation: fadeIn 0.3s ease-in-out;
-        }
+      .pin-dialog-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        animation: fadeIn 0.3s ease-in-out;
+      }
 
-        .pin-dialog-card h3 {
-            color: #4a4a4a;
-            margin-bottom: 20px;
-        }
+      .pin-dialog-card h3 {
+        color: #4a4a4a;
+        margin-bottom: 20px;
+      }
 
-        .pin-dialog-card input {
-            width: 80%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            text-align: center;
-        }
+      .pin-dialog-card input {
+        width: 80%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        text-align: center;
+      }
 
-        .pin-dialog-card button {
-            width: 80%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background-color: #007bff;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
+      .pin-dialog-card .dialog-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
 
-        .pin-dialog-card button:hover {
-            background-color: #0056b3;
-        }
+      .pin-dialog-card .dialog-actions button {
+        width: 40%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
 
-        .error-message {
-            color: #dc3545;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            min-height: 20px;
-        }
+      .pin-dialog-card .dialog-actions #accessBtn {
+        background-color: #007bff;
+        color: #fff;
+      }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
+      .pin-dialog-card .dialog-actions #accessBtn:hover {
+        background-color: #0056b3;
+      }
 
-        /* Tombol Akses */
-        .access-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-bottom: 20px;
-        }
+      .pin-dialog-card .dialog-actions #cancelBtn {
+        background-color: #6c757d;
+        color: #fff;
+      }
 
-        .access-open {
-            background-color: #28a745;
-            color: white;
-        }
+      .pin-dialog-card .dialog-actions #cancelBtn:hover {
+        background-color: #5a6268;
+      }
 
-        .access-closed {
-            background-color: #dc3545;
-            color: white;
+      .error-message {
+        color: #dc3545;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        min-height: 20px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.95);
         }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Tombol Akses */
+      .access-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      .access-open {
+        background-color: #28a745;
+        color: white;
+      }
+
+      .access-closed {
+        background-color: #dc3545;
+        color: white;
+      }
+
+      .toggle-section {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+        text-align: left;
+      }
+
+      .toggle-section button {
+        width: 100%;
+      }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div id="pinDialogOverlay" class="pin-dialog-overlay">
-        <div class="pin-dialog-card">
-            <h3 id="pinDialogTitle">Masukkan PIN</h3>
-            <p id="pinDialogMessage">Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.</p>
-            <form id="pinForm">
-                <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
-                <button type="submit">Akses</button>
-                <p id="pinErrorMessage" class="error-message"></p>
-            </form>
-        </div>
+      <div class="pin-dialog-card">
+        <h3 id="pinDialogTitle">Masukkan PIN</h3>
+        <p id="pinDialogMessage">Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.</p>
+        <form id="pinForm">
+          <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
+          <p id="pinErrorMessage" class="error-message"></p>
+          <div class="dialog-actions">
+            <button type="button" id="cancelBtn">Batal</button>
+            <button type="submit" id="accessBtn">Akses</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div id="mainContent" class="container">
-        <div class="card">
-            <h2>Daftar Dokumen Tugas</h2>
+      <div class="card">
+        <h2>Daftar Dokumen Tugas</h2>
 
-            <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
+        <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
 
-            <div class="form-group">
-                <label for="courseFilter">Filter Berdasarkan Mata Kuliah:</label>
-                <select id="courseFilter">
-                    <option value="dokumen/">Semua Dokumen</option>
-                    <option value="dokumen/perancangandanppl/">Praktikum Perancangan & Pengujian Perangkat Lunak</option>
-                    <option value="dokumen/pemrogramanweb/">Praktikum Pemrograman Web</option>
-                </select>
-            </div>
-            
-            <div class="search-group">
-                <input type="text" id="fileSearch" placeholder="Cari nama file..." />
-            </div>
-
-            <ul id="fileList">
-                <p class="status-message">Silakan pilih mata kuliah untuk melihat file.</p>
-            </ul>
+        <div class="form-group">
+          <label for="courseFilter">Filter Berdasarkan Mata Kuliah:</label>
+          <select id="courseFilter">
+            <option value="dokumen/">Semua Dokumen</option>
+            <option value="dokumen/perancangandanppl/">Praktikum Perancangan & Pengujian Perangkat Lunak</option>
+            <option value="dokumen/pemrogramanweb/">Praktikum Pemrograman Web</option>
+          </select>
         </div>
+
+        <div class="search-group">
+          <input type="text" id="fileSearch" placeholder="Cari nama file..." />
+        </div>
+
+        <ul id="fileList">
+          <p class="status-message">Silakan pilih mata kuliah untuk melihat file.</p>
+        </ul>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
+        <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses Per Mata Kuliah</h3>
+        <div class="toggle-section">
+          <button id="toggleCourseAccessBtn" class="access-button access-closed">Status: Memuat...</button>
+          <div class="form-group">
+            <label for="toggleCourseSelect">Pilih Mata Kuliah untuk Diubah Statusnya:</label>
+            <select id="toggleCourseSelect">
+              <option value="" disabled selected>-- Pilih salah satu --</option>
+              <option value="perancangandanppl">Praktikum Perancangan & Pengujian Perangkat Lunak</option>
+              <option value="pemrogramanweb">Praktikum Pemrograman Web</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCZAfnelUdrwUz856j2hC3yJWqUm-JJmiI",
-            authDomain: "ruangbelajar-52a67.firebaseapp.com",
-            databaseURL: "https://ruangbelajar-52a67-default-rtdb.firebaseio.com",
-            projectId: "ruangbelajar-52a67",
-            storageBucket: "ruangbelajar-52a67.appspot.com",
-            messagingSenderId: "545318863560",
-            appId: "1:545318863560:web:df392c010ff914aad49bfd",
-            measurementId: "G-9M8CKR66BW",
-        };
+      const firebaseConfig = {
+        apiKey: "AIzaSyCZAfnelUdrwUz856j2hC3yJWqUm-JJmiI",
+        authDomain: "ruangbelajar-52a67.firebaseapp.com",
+        databaseURL: "https://ruangbelajar-52a67-default-rtdb.firebaseio.com",
+        projectId: "ruangbelajar-52a67",
+        storageBucket: "ruangbelajar-52a67.appspot.com",
+        messagingSenderId: "545318863560",
+        appId: "1:545318863560:web:df392c010ff914aad49bfd",
+        measurementId: "G-9M8CKR66BW",
+      };
 
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
-        const database = firebase.database();
+      firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+      const database = firebase.database();
 
-        const pinDialogOverlay = document.getElementById("pinDialogOverlay");
-        const pinForm = document.getElementById("pinForm");
-        const pinInput = document.getElementById("pinInput");
-        const pinErrorMessage = document.getElementById("pinErrorMessage");
-        const pinDialogTitle = document.getElementById("pinDialogTitle");
-        const pinDialogMessage = document.getElementById("pinDialogMessage");
-        const fileListContainer = document.getElementById("fileList");
-        const courseFilter = document.getElementById("courseFilter");
-        const toggleAccessBtn = document.getElementById("toggleAccessBtn");
-        const fileSearchInput = document.getElementById("fileSearch");
+      const pinDialogOverlay = document.getElementById("pinDialogOverlay");
+      const pinForm = document.getElementById("pinForm");
+      const pinInput = document.getElementById("pinInput");
+      const pinErrorMessage = document.getElementById("pinErrorMessage");
+      const pinDialogTitle = document.getElementById("pinDialogTitle");
+      const pinDialogMessage = document.getElementById("pinDialogMessage");
+      const fileListContainer = document.getElementById("fileList");
+      const courseFilter = document.getElementById("courseFilter");
+      const toggleAccessBtn = document.getElementById("toggleAccessBtn");
+      const fileSearchInput = document.getElementById("fileSearch");
 
-        const courseAuthStatus = {};
-        let cachedFiles = []; // Menyimpan file yang dimuat dari Firebase
+      const toggleCourseSelect = document.getElementById("toggleCourseSelect");
+      const toggleCourseAccessBtn = document.getElementById("toggleCourseAccessBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
 
-        updateAccessButtonStatus();
+      const courseAuthStatus = {};
+      let cachedFiles = [];
 
-        courseFilter.addEventListener("change", () => {
-            const selectedPath = courseFilter.value;
-            const courseKey = selectedPath.split("/")[1];
-            fileSearchInput.value = ""; // Bersihkan kolom pencarian
+      updateAccessButtonStatus();
 
-            if (selectedPath === "dokumen/") {
-                fileListContainer.innerHTML = '<p class="status-message">Silakan pilih mata kuliah untuk melihat file.</p>';
-                return;
-            }
+      courseFilter.addEventListener("change", () => {
+        const selectedPath = courseFilter.value;
+        const courseKey = selectedPath.split("/")[1];
+        fileSearchInput.value = "";
 
-            if (courseAuthStatus[courseKey]) {
-                fetchFiles(selectedPath);
-            } else {
-                showPinDialog('course', courseKey, courseFilter.options[courseFilter.selectedIndex].text, selectedPath);
-            }
-        });
+        if (selectedPath === "dokumen/") {
+          fileListContainer.innerHTML = '<p class="status-message">Silakan pilih mata kuliah untuk melihat file.</p>';
+          return;
+        }
 
-        toggleAccessBtn.addEventListener("click", () => {
-            showPinDialog('toggle_access', 'toggle_access', 'mengubah status akses', null);
-        });
+        if (courseAuthStatus[courseKey]) {
+          fetchFiles(selectedPath);
+        } else {
+          showPinDialog("course", courseKey, courseFilter.options[courseFilter.selectedIndex].text, selectedPath);
+        }
+      });
 
-        fileSearchInput.addEventListener("keyup", () => {
-            filterFiles(fileSearchInput.value);
-        });
+      toggleAccessBtn.addEventListener("click", () => {
+        showPinDialog("toggle_access", "toggle_access", "mengubah status akses global", null);
+      });
 
-        pinForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const enteredPin = pinInput.value.trim();
-            const actionType = pinDialogOverlay.dataset.actionType;
-            const actionKey = pinDialogOverlay.dataset.actionKey;
-            const selectedPath = pinDialogOverlay.dataset.selectedPath;
+      toggleCourseSelect.addEventListener("change", () => {
+        const courseKey = toggleCourseSelect.value;
+        if (courseKey) {
+          updateCourseToggleButtonStatus(courseKey);
+        } else {
+          toggleCourseAccessBtn.textContent = "Status: Memuat...";
+          toggleCourseAccessBtn.classList.remove("access-open", "access-closed");
+        }
+      });
 
-            validatePin(enteredPin, actionType, actionKey, selectedPath);
-        });
+      toggleCourseAccessBtn.addEventListener("click", () => {
+        const courseKey = toggleCourseSelect.value;
+        if (courseKey) {
+          showPinDialog("toggle_course_access", courseKey, `mengubah status akses ${toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text}`, null);
+        } else {
+          alert("Mohon pilih mata kuliah terlebih dahulu.");
+        }
+      });
 
-        function showPinDialog(actionType, actionKey, dialogTitle, selectedPath) {
-            pinInput.value = "";
+      fileSearchInput.addEventListener("keyup", () => {
+        filterFiles(fileSearchInput.value);
+      });
+
+      pinForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const enteredPin = pinInput.value.trim();
+        const actionType = pinDialogOverlay.dataset.actionType;
+        const actionKey = pinDialogOverlay.dataset.actionKey;
+        const selectedPath = pinDialogOverlay.dataset.selectedPath;
+
+        validatePin(enteredPin, actionType, actionKey, selectedPath);
+      });
+
+      // Event listener untuk tombol Batal
+      cancelBtn.addEventListener("click", () => {
+        pinDialogOverlay.style.display = "none";
+        pinInput.value = "";
+        pinErrorMessage.textContent = "";
+      });
+
+      function showPinDialog(actionType, actionKey, dialogTitle, selectedPath) {
+        pinInput.value = "";
+        pinErrorMessage.textContent = "";
+
+        pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
+        if (actionType === "course") {
+          pinDialogMessage.textContent = "Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.";
+        } else if (actionType === "toggle_access" || actionType === "toggle_course_access") {
+          pinDialogMessage.textContent = "Masukkan PIN untuk mengonfirmasi perubahan status.";
+        }
+
+        pinDialogOverlay.dataset.actionType = actionType;
+        pinDialogOverlay.dataset.actionKey = actionKey;
+        if (selectedPath) {
+          pinDialogOverlay.dataset.selectedPath = selectedPath;
+        } else {
+          delete pinDialogOverlay.dataset.selectedPath;
+        }
+
+        pinDialogOverlay.style.display = "flex";
+      }
+
+      async function validatePin(enteredPin, actionType, actionKey, selectedPath) {
+        try {
+          const snapshot = await database.ref(`akses_pin/${actionKey}`).once("value");
+          const correctPin = snapshot.val();
+
+          if (enteredPin === correctPin) {
             pinErrorMessage.textContent = "";
+            pinDialogOverlay.style.display = "none";
 
-            pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
-            if (actionType === 'course') {
-                pinDialogMessage.textContent = 'Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.';
-            } else if (actionType === 'toggle_access') {
-                pinDialogMessage.textContent = 'Masukkan PIN untuk mengonfirmasi perubahan status akses.';
+            if (actionType === "course") {
+              courseAuthStatus[actionKey] = true;
+              fetchFiles(selectedPath);
+            } else if (actionType === "toggle_access") {
+              _toggleAccessStatusLogic("akses");
+            } else if (actionType === "toggle_course_access") {
+              _toggleAccessStatusLogic(`akses_unggah/${actionKey}`);
             }
+          } else {
+            pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
+          }
+        } catch (error) {
+          console.error("Gagal mendapatkan PIN dari database:", error);
+          pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
+        }
+      }
 
-            pinDialogOverlay.dataset.actionType = actionType;
-            pinDialogOverlay.dataset.actionKey = actionKey;
-            if (selectedPath) {
-                pinDialogOverlay.dataset.selectedPath = selectedPath;
+      async function fetchFiles(path) {
+        const storageRef = storage.ref(path);
+        fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
+
+        try {
+          const listResult = await storageRef.listAll();
+          cachedFiles = [];
+
+          const filePromises = listResult.items.map(async (itemRef) => {
+            const downloadURL = await itemRef.getDownloadURL();
+            const fileName = itemRef.name;
+            const filePath = itemRef.fullPath;
+            const fileExtension = fileName.split(".").pop().toLowerCase();
+            return { fileName, downloadURL, filePath, fileExtension };
+          });
+
+          cachedFiles = await Promise.all(filePromises);
+          displayFiles(cachedFiles);
+        } catch (error) {
+          console.error("Gagal mengambil data file:", error);
+          fileListContainer.innerHTML = `<p class="status-message" style="color:#dc3545;">Gagal memuat file: ${error.message}</p>`;
+        }
+      }
+
+      function filterFiles(searchTerm) {
+        const filtered = cachedFiles.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()));
+        displayFiles(filtered);
+      }
+
+      function displayFiles(files) {
+        fileListContainer.innerHTML = "";
+        if (files.length === 0) {
+          fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
+          return;
+        }
+
+        let fileNumber = 1;
+        files.forEach((file) => {
+          const li = document.createElement("li");
+
+          const fileNumberSpan = document.createElement("span");
+          fileNumberSpan.classList.add("file-number");
+          fileNumberSpan.textContent = `${fileNumber}.`;
+
+          const fileNameSpan = document.createElement("span");
+          fileNameSpan.classList.add("file-name-text");
+          fileNameSpan.textContent = file.fileName;
+
+          const actionButtonsDiv = document.createElement("div");
+          actionButtonsDiv.classList.add("action-buttons");
+
+          const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+          if (supportedPreviewExtensions.includes(file.fileExtension)) {
+            const previewBtn = document.createElement("a");
+            previewBtn.classList.add("preview-btn");
+            previewBtn.target = "_blank";
+
+            let viewerUrl = "";
+            if (file.fileExtension === "pdf") {
+              viewerUrl = file.downloadURL;
             } else {
-                delete pinDialogOverlay.dataset.selectedPath;
+              viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
             }
+            previewBtn.href = viewerUrl;
 
-            pinDialogOverlay.style.display = "flex";
-        }
+            const previewIcon = document.createElement("img");
+            previewIcon.src = "https://img.icons8.com/material-outlined/24/000000/visible.png";
+            previewIcon.alt = "Pratinjau";
+            previewBtn.appendChild(previewIcon);
+            actionButtonsDiv.appendChild(previewBtn);
+          }
 
-        async function validatePin(enteredPin, actionType, actionKey, selectedPath) {
-            try {
-                const snapshot = await database.ref(`akses_pin/${actionKey}`).once("value");
-                const correctPin = snapshot.val();
+          const downloadBtn = document.createElement("a");
+          downloadBtn.href = file.downloadURL;
+          downloadBtn.classList.add("download-btn");
+          downloadBtn.target = "_blank";
+          downloadBtn.download = file.fileName;
+          const downloadIcon = document.createElement("img");
+          downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
+          downloadIcon.alt = "Unduh";
+          downloadBtn.appendChild(downloadIcon);
+          actionButtonsDiv.appendChild(downloadBtn);
 
-                if (enteredPin === correctPin) {
-                    pinErrorMessage.textContent = "";
-                    pinDialogOverlay.style.display = "none";
+          const deleteBtn = document.createElement("button");
+          deleteBtn.classList.add("delete-btn");
+          const deleteIcon = document.createElement("img");
+          deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
+          deleteIcon.alt = "Hapus";
+          deleteBtn.appendChild(deleteIcon);
 
-                    if (actionType === 'course') {
-                        courseAuthStatus[actionKey] = true;
-                        fetchFiles(selectedPath);
-                    } else if (actionType === 'toggle_access') {
-                        _toggleAccessStatusLogic();
-                    }
-                } else {
-                    pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
-                }
-            } catch (error) {
-                console.error("Gagal mendapatkan PIN dari database:", error);
-                pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
+          deleteBtn.addEventListener("click", () => {
+            if (confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
+              deleteFile(file.filePath);
             }
+          });
+
+          actionButtonsDiv.appendChild(deleteBtn);
+
+          li.appendChild(fileNumberSpan);
+          li.appendChild(fileNameSpan);
+          li.appendChild(actionButtonsDiv);
+          fileListContainer.appendChild(li);
+
+          fileNumber++;
+        });
+      }
+
+      async function deleteFile(filePath) {
+        const fileRef = storage.ref(filePath);
+        try {
+          await fileRef.delete();
+          alert(`File berhasil dihapus.`);
+          const currentPath = courseFilter.value;
+          fetchFiles(currentPath);
+        } catch (error) {
+          console.error("Gagal menghapus file:", error);
+          alert(`Gagal menghapus file: ${error.message}`);
         }
+      }
 
-        async function fetchFiles(path) {
-            const storageRef = storage.ref(path);
-            fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
-
-            try {
-                const listResult = await storageRef.listAll();
-                cachedFiles = []; // Kosongkan cache
-                
-                const filePromises = listResult.items.map(async (itemRef) => {
-                    const downloadURL = await itemRef.getDownloadURL();
-                    const fileName = itemRef.name;
-                    const filePath = itemRef.fullPath;
-                    const fileExtension = fileName.split(".").pop().toLowerCase();
-                    return {
-                        fileName,
-                        downloadURL,
-                        filePath,
-                        fileExtension,
-                    };
-                });
-
-                cachedFiles = await Promise.all(filePromises);
-                displayFiles(cachedFiles);
-
-            } catch (error) {
-                console.error("Gagal mengambil data file:", error);
-                fileListContainer.innerHTML = `<p class="status-message" style="color:#dc3545;">Gagal memuat file: ${error.message}</p>`;
-            }
+      async function updateAccessButtonStatus() {
+        try {
+          const snapshot = await database.ref("akses").once("value");
+          const isOpen = snapshot.val();
+          if (isOpen === true) {
+            toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: BUKA ✅";
+            toggleAccessBtn.classList.remove("access-closed");
+            toggleAccessBtn.classList.add("access-open");
+          } else {
+            toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: TUTUP 🔒";
+            toggleAccessBtn.classList.remove("access-open");
+            toggleAccessBtn.classList.add("access-closed");
+          }
+        } catch (error) {
+          console.error("Gagal memperbarui status tombol:", error);
+          toggleAccessBtn.textContent = "Status tidak dapat dimuat.";
         }
+      }
 
-        function filterFiles(searchTerm) {
-            const filtered = cachedFiles.filter(file => 
-                file.fileName.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-            displayFiles(filtered);
+      async function updateCourseToggleButtonStatus(courseKey) {
+        try {
+          const snapshot = await database.ref(`akses_unggah/${courseKey}`).once("value");
+          const isOpen = snapshot.val();
+          if (isOpen === true) {
+            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: BUKA ✅";
+            toggleCourseAccessBtn.classList.remove("access-closed");
+            toggleCourseAccessBtn.classList.add("access-open");
+          } else {
+            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: TUTUP 🔒";
+            toggleCourseAccessBtn.classList.remove("access-open");
+            toggleCourseAccessBtn.classList.add("access-closed");
+          }
+        } catch (error) {
+          console.error("Gagal memperbarui status tombol mata kuliah:", error);
+          toggleCourseAccessBtn.textContent = "Status tidak dapat dimuat.";
         }
+      }
 
-        function displayFiles(files) {
-            fileListContainer.innerHTML = "";
-            if (files.length === 0) {
-                fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
-                return;
-            }
-            let fileNumber = 1;
-            files.forEach(file => {
-                const li = document.createElement("li");
+      async function _toggleAccessStatusLogic(dbPath) {
+        try {
+          const snapshot = await database.ref(dbPath).once("value");
+          const currentStatus = snapshot.val();
+          const newStatus = !currentStatus;
 
-                const fileNumberSpan = document.createElement("span");
-                fileNumberSpan.classList.add("file-number");
-                fileNumberSpan.textContent = `${fileNumber}.`;
-                
-                const fileNameSpan = document.createElement("span");
-                fileNameSpan.classList.add("file-name-text");
-                fileNameSpan.textContent = file.fileName;
+          await database.ref(dbPath).set(newStatus);
+          if (dbPath === "akses") {
+            updateAccessButtonStatus();
+          } else {
+            const courseKey = dbPath.split("/")[1];
+            updateCourseToggleButtonStatus(courseKey);
+          }
 
-                const actionButtonsDiv = document.createElement("div");
-                actionButtonsDiv.classList.add("action-buttons");
-
-                const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
-                if (supportedPreviewExtensions.includes(file.fileExtension)) {
-                    const previewBtn = document.createElement("a");
-                    previewBtn.classList.add("preview-btn");
-                    previewBtn.target = "_blank";
-                    
-                    let viewerUrl = '';
-                    if (file.fileExtension === 'pdf') {
-                        viewerUrl = file.downloadURL;
-                    } else {
-                        viewerUrl = `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
-                    }
-                    previewBtn.href = viewerUrl;
-                    
-                    const previewIcon = document.createElement("img");
-                    previewIcon.src = "https://img.icons8.com/material-outlined/24/000000/visible.png";
-                    previewIcon.alt = "Pratinjau";
-                    previewBtn.appendChild(previewIcon);
-                    actionButtonsDiv.appendChild(previewBtn);
-                }
-                
-                const downloadBtn = document.createElement("a");
-                downloadBtn.href = file.downloadURL;
-                downloadBtn.classList.add("download-btn");
-                downloadBtn.target = "_blank";
-                downloadBtn.download = file.fileName;
-                const downloadIcon = document.createElement("img");
-                downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
-                downloadIcon.alt = "Unduh";
-                downloadBtn.appendChild(downloadIcon);
-                actionButtonsDiv.appendChild(downloadBtn);
-                
-                const deleteBtn = document.createElement("button");
-                deleteBtn.classList.add("delete-btn");
-                const deleteIcon = document.createElement("img");
-                deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
-                deleteIcon.alt = "Hapus";
-                deleteBtn.appendChild(deleteIcon);
-
-                deleteBtn.addEventListener("click", () => {
-                    if (confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
-                        deleteFile(file.filePath);
-                    }
-                });
-
-                actionButtonsDiv.appendChild(deleteBtn);
-
-                li.appendChild(fileNumberSpan);
-                li.appendChild(fileNameSpan);
-                li.appendChild(actionButtonsDiv);
-                fileListContainer.appendChild(li);
-                
-                fileNumber++;
-            });
+          alert(`Akses berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
+        } catch (error) {
+          console.error("Gagal mengubah status akses:", error);
+          alert(`Gagal mengubah status akses: ${error.message}`);
         }
-
-        async function deleteFile(filePath) {
-            const fileRef = storage.ref(filePath);
-
-            try {
-                await fileRef.delete();
-                alert(`File berhasil dihapus.`);
-                const currentPath = courseFilter.value;
-                fetchFiles(currentPath);
-            } catch (error) {
-                console.error("Gagal menghapus file:", error);
-                alert(`Gagal menghapus file: ${error.message}`);
-            }
-        }
-
-        async function updateAccessButtonStatus() {
-            try {
-                const snapshot = await database.ref("akses").once("value");
-                const isOpen = snapshot.val();
-
-                if (isOpen === true) {
-                    toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: BUKA ✅";
-                    toggleAccessBtn.classList.remove("access-closed");
-                    toggleAccessBtn.classList.add("access-open");
-                } else {
-                    toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: TUTUP 🔒";
-                    toggleAccessBtn.classList.remove("access-open");
-                    toggleAccessBtn.classList.add("access-closed");
-                }
-            } catch (error) {
-                console.error("Gagal memperbarui status tombol:", error);
-                toggleAccessBtn.textContent = "Status tidak dapat dimuat.";
-            }
-        }
-
-        async function _toggleAccessStatusLogic() {
-            try {
-                const snapshot = await database.ref("akses").once("value");
-                const currentStatus = snapshot.val();
-                const newStatus = !currentStatus;
-
-                await database.ref("akses").set(newStatus);
-                updateAccessButtonStatus();
-
-                alert(`Akses pengumpulan tugas berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
-            } catch (error) {
-                console.error("Gagal mengubah status akses:", error);
-                alert(`Gagal mengubah status akses: ${error.message}`);
-            }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>
