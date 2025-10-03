@@ -1,7 +1,0 @@
-[
-  {
-    "origin": ["https://lihat-tugas-rpl.vercel.app"],
-    "method": ["GET", "DELETE"],
-    "maxAgeSeconds": 3600
-  }
-]
