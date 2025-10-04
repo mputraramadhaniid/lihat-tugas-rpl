@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Akses Dokumen</title>
+    <title>Akses Dokumen Tugas Mahasiswa Teknologi Informasi UM-Palembang</title>
+    <link rel="icon" type="image/x-icon" href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1" />
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
@@ -59,7 +60,6 @@
 
       .form-group select,
       .search-group input,
-      .move-file-section input,
       .create-folder-section input {
         width: 100%;
         padding: 10px;
@@ -229,6 +229,81 @@
         }
       }
 
+      /* --- Dialog Login --- */
+      .login-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .login-dialog-card {
+        background: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 40px;
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        animation: fadeIn 0.3s ease-in-out;
+      }
+
+      .login-dialog-card h3 {
+        color: #4a4a4a;
+        margin-bottom: 20px;
+      }
+
+      .login-dialog-card input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        box-sizing: border-box;
+      }
+
+      .login-dialog-card .dialog-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .login-dialog-card .dialog-actions button {
+        width: 40%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .login-dialog-card .dialog-actions #loginBtn {
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      .login-dialog-card .dialog-actions #loginBtn:hover {
+        background-color: #0056b3;
+      }
+
+      .login-dialog-card .dialog-actions #closeLoginBtn {
+        background-color: #6c757d;
+        color: #fff;
+      }
+
+      .login-dialog-card .dialog-actions #closeLoginBtn:hover {
+        background-color: #5a6268;
+      }
+
       /* Tombol Akses */
       .access-button {
         padding: 10px 20px;
@@ -266,7 +341,7 @@
       .drop-area-container {
         text-align: center;
         margin-bottom: 20px;
-        display: none; /* Hide this container */
+        display: none;
       }
 
       #dynamicDropArea {
@@ -370,13 +445,44 @@
       .create-folder-section .access-button {
         width: 100%;
       }
+
+      #login-button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+        float: right;
+      }
+
+      #login-button:hover {
+        background-color: #0056b3;
+      }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
   </head>
   <body>
+    <div id="loginDialogOverlay" class="login-dialog-overlay" style="display: none">
+      <div class="login-dialog-card">
+        <h3>Login Admin</h3>
+        <form id="loginForm">
+          <input type="email" id="emailInput" placeholder="Masukkan Email" required />
+          <input type="password" id="passwordInput" placeholder="Masukkan Password" required />
+          <p id="loginErrorMessage" class="error-message"></p>
+          <div class="dialog-actions">
+            <button type="submit" id="loginBtn">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <div id="pinDialogOverlay" class="pin-dialog-overlay">
       <div class="pin-dialog-card">
         <h3 id="pinDialogTitle">Masukkan PIN</h3>
@@ -392,48 +498,54 @@
       </div>
     </div>
 
-    <div id="mainContent" class="container">
+    <div id="mainContent" class="container" style="display: none">
       <div class="card">
-        <h2>Daftar Dokumen Tugas Mahasiswa Teknologi Informasi</h2>
-
-        <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
+        <h2>
+          Daftar Dokumen Tugas Mahasiswa Teknologi Informasi
+          <button id="login-button">Login Admin</button>
+        </h2>
 
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
-        <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses Per Mata Kuliah</h3>
-        <div class="toggle-section">
-          <div class="form-group">
-            <label for="toggleCourseSelect">Pilih Mata Kuliah untuk Diubah Statusnya:</label>
-            <select id="toggleCourseSelect">
-              <option value="" disabled selected>-- Pilih salah satu --</option>
-            </select>
+        <div id="admin-section" style="display: none">
+          <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
+
+          <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
+
+          <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses Per Mata Kuliah</h3>
+          <div class="toggle-section">
+            <div class="form-group">
+              <label for="toggleCourseSelect">Pilih Mata Kuliah untuk Diubah Statusnya:</label>
+              <select id="toggleCourseSelect">
+                <option value="" disabled selected>-- Pilih salah satu --</option>
+              </select>
+            </div>
+            <button id="toggleCourseAccessBtn" class="access-button access-closed">Status: Memuat...</button>
           </div>
-          <button id="toggleCourseAccessBtn" class="access-button access-closed">Status: Memuat...</button>
+
+          <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
+
+          <div class="create-folder-section">
+            <h4>Buat Folder Baru</h4>
+            <div class="form-group">
+              <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
+              <input type="text" id="newFolderName" placeholder="Masukkan nama folder" required />
+            </div>
+            <div class="form-group">
+              <label for="newFolderPin">PIN untuk Folder Baru:</label>
+              <input type="password" id="newFolderPin" placeholder="Masukkan PIN" required />
+            </div>
+            <button id="createFolderBtn" class="access-button access-open">Buat Folder & Atur PIN</button>
+          </div>
+
+          <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
         </div>
-
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
-
         <div class="folder-list-container">
           <h4>Pilih Folder untuk Melihat atau Unggah</h4>
           <ul id="folderList" class="folder-list">
             <p class="status-message">Memuat daftar folder...</p>
           </ul>
         </div>
-
-        <div class="create-folder-section">
-          <h4>Buat Folder Baru</h4>
-          <div class="form-group">
-            <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
-            <input type="text" id="newFolderName" placeholder="Masukkan nama folder" required />
-          </div>
-          <div class="form-group">
-            <label for="newFolderPin">PIN untuk Folder Baru:</label>
-            <input type="password" id="newFolderPin" placeholder="Masukkan PIN" required />
-          </div>
-          <button id="createFolderBtn" class="access-button access-open">Buat Folder & Atur PIN</button>
-        </div>
-
-        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
         <div class="search-group">
           <input type="text" id="fileSearch" placeholder="Cari nama file..." />
@@ -460,6 +572,16 @@
       firebase.initializeApp(firebaseConfig);
       const storage = firebase.storage();
       const database = firebase.database();
+      const auth = firebase.auth();
+
+      const mainContent = document.getElementById("mainContent");
+      const loginDialogOverlay = document.getElementById("loginDialogOverlay");
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("emailInput");
+      const passwordInput = document.getElementById("passwordInput");
+      const loginErrorMessage = document.getElementById("loginErrorMessage");
+      const adminSection = document.getElementById("admin-section");
+      const loginButton = document.getElementById("login-button");
 
       const pinDialogOverlay = document.getElementById("pinDialogOverlay");
       const pinForm = document.getElementById("pinForm");
@@ -467,12 +589,13 @@
       const pinErrorMessage = document.getElementById("pinErrorMessage");
       const pinDialogTitle = document.getElementById("pinDialogTitle");
       const pinDialogMessage = document.getElementById("pinDialogMessage");
+      const cancelBtn = document.getElementById("cancelBtn");
+
       const fileListContainer = document.getElementById("fileList");
       const toggleAccessBtn = document.getElementById("toggleAccessBtn");
       const fileSearchInput = document.getElementById("fileSearch");
       const toggleCourseSelect = document.getElementById("toggleCourseSelect");
       const toggleCourseAccessBtn = document.getElementById("toggleCourseAccessBtn");
-      const cancelBtn = document.getElementById("cancelBtn");
       const newFolderNameInput = document.getElementById("newFolderName");
       const newFolderPinInput = document.getElementById("newFolderPin");
       const folderListContainer = document.getElementById("folderList");
@@ -481,19 +604,372 @@
       const courseAuthStatus = {};
       let cachedFiles = [];
       let currentFolderPath = null;
-      let pendingDelete = null;
+      let pendingAction = null;
 
       // Inisialisasi
-      updateAccessButtonStatus();
-      fetchFolders();
-      fetchCourseList();
+      document.addEventListener("DOMContentLoaded", () => {
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            showAdminView();
+          } else {
+            showUserView();
+          }
+        });
+      });
 
+      // ======================= EVENT LISTENERS UMUM =======================
       fileSearchInput.addEventListener("keyup", () => {
         filterFiles(fileSearchInput.value);
       });
 
+      // ======================= LOGIC LOGIN ADMIN =======================
+      loginButton.addEventListener("click", () => {
+        if (auth.currentUser) {
+          auth
+            .signOut()
+            .then(() => {
+              showUserView();
+            })
+            .catch((error) => {
+              console.error("Logout failed:", error);
+              alert("Gagal logout. Silakan coba lagi.");
+            });
+        } else {
+          showUserView(); // Panggil fungsi ini untuk menampilkan dialog login
+        }
+      });
+
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        loginErrorMessage.textContent = "Sedang login...";
+        try {
+          const userCredential = await auth.signInWithEmailAndPassword(email, password);
+          const user = userCredential.user;
+          // Periksa apakah pengguna adalah admin (ganti UID ini dengan UID admin Anda)
+          const adminUIDs = {
+            rSaaJgKyEQRrh7nblW9pME6o7Ci1: true,
+          };
+
+          if (adminUIDs[user.uid]) {
+            alert("Login berhasil! Selamat datang, Admin.");
+            loginDialogOverlay.style.display = "none";
+            showAdminView();
+          } else {
+            await auth.signOut();
+            loginErrorMessage.textContent = "Akses ditolak. Hanya admin yang diizinkan.";
+          }
+        } catch (error) {
+          console.error("Login gagal:", error);
+          loginErrorMessage.textContent = "Email atau password salah. Coba lagi.";
+        }
+      });
+
+      function showAdminView() {
+        mainContent.style.display = "block";
+        loginDialogOverlay.style.display = "none";
+        loginButton.textContent = "Logout";
+        adminSection.style.display = "block";
+        updateAccessButtonStatus();
+        fetchFolders();
+        fetchCourseList();
+      }
+
+      function showUserView() {
+        mainContent.style.display = "none";
+        loginDialogOverlay.style.display = "flex";
+        loginButton.textContent = "Login Admin";
+        adminSection.style.display = "none";
+        fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+        fetchFolders();
+        fetchCourseList();
+      }
+
+      // ======================= LOGIC PIN UNTUK MAHASISWA & ADMIN =======================
+      pinForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const enteredPin = pinInput.value.trim();
+        const actionType = pinDialogOverlay.dataset.actionType;
+        const actionKey = pinDialogOverlay.dataset.actionKey;
+        const selectedPath = pinDialogOverlay.dataset.selectedPath;
+        validatePin(enteredPin, actionType, actionKey, selectedPath);
+      });
+
+      cancelBtn.addEventListener("click", () => {
+        pinDialogOverlay.style.display = "none";
+        pinInput.value = "";
+        pinErrorMessage.textContent = "";
+        pendingAction = null;
+      });
+
+      function showPinDialog(actionType, actionKey, dialogTitle, selectedPath, data = null) {
+        pinInput.value = "";
+        pinErrorMessage.textContent = "";
+        pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
+        pinDialogMessage.textContent = "Untuk melanjutkan, Anda harus memasukkan PIN.";
+        pinDialogOverlay.dataset.actionType = actionType;
+        pinDialogOverlay.dataset.actionKey = actionKey;
+        if (selectedPath) {
+          pinDialogOverlay.dataset.selectedPath = selectedPath;
+        } else {
+          delete pinDialogOverlay.dataset.selectedPath;
+        }
+        pendingAction = data;
+        pinDialogOverlay.style.display = "flex";
+      }
+
+      async function validatePin(enteredPin, actionType, actionKey, selectedPath) {
+        try {
+          const snapshot = await database.ref(`akses_pin/${actionKey}`).once("value");
+          const correctPin = snapshot.val();
+
+          if (enteredPin === correctPin) {
+            pinErrorMessage.textContent = "";
+            pinDialogOverlay.style.display = "none";
+
+            if (actionType === "view_folder") {
+              courseAuthStatus[actionKey] = true;
+              fetchFiles(selectedPath);
+            } else if (actionType === "toggle_access") {
+              await _toggleAccessStatusLogic("akses");
+            } else if (actionType === "toggle_course_access") {
+              await _toggleAccessStatusLogic(`akses_unggah/${actionKey}`);
+            } else if (actionType === "delete_folder") {
+              await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
+              pendingAction = null;
+            } else if (actionType === "create_folder") {
+              await createFolder(pendingAction.folderName, pendingAction.folderPin);
+              pendingAction = null;
+            }
+          } else {
+            pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
+          }
+        } catch (error) {
+          console.error("Gagal mendapatkan PIN dari database:", error);
+          pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
+        }
+      }
+
+      // ======================= LOGIC FOLDER DAN FILE =======================
+      async function fetchFolders() {
+        const storageRef = storage.ref("dokumen");
+        try {
+          const listResult = await storageRef.listAll();
+          displayFolders(listResult.prefixes);
+        } catch (error) {
+          console.error("Gagal mengambil daftar folder:", error);
+          folderListContainer.innerHTML = '<p class="status-message" style="color:#dc3545;">Gagal memuat folder: ' + error.message + "</p>";
+        }
+      }
+
+      function displayFolders(prefixes) {
+        folderListContainer.innerHTML = "";
+        if (prefixes.length === 0) {
+          folderListContainer.innerHTML = '<p class="empty-message">Belum ada folder yang dibuat.</p>';
+          return;
+        }
+
+        prefixes.forEach((prefix) => {
+          const folderName = prefix.name;
+          const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+          const folderItem = document.createElement("li");
+          folderItem.classList.add("folder-item");
+          folderItem.innerHTML = `
+            <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
+            <span>${folderName}</span>
+            <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
+              <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
+            </button>
+          `;
+
+          // Event listener untuk melihat folder
+          folderItem.querySelector("span").addEventListener("click", () => {
+            const path = `dokumen/${folderName}/`;
+            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path);
+          });
+          folderItem.querySelector("img.folder-icon").addEventListener("click", () => {
+            const path = `dokumen/${folderName}/`;
+            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path);
+          });
+
+          // Event listener untuk menghapus folder (hanya untuk admin)
+          folderItem.querySelector(".folder-delete-btn").addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
+              showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, { folderName, folderKey });
+            }
+          });
+
+          folderListContainer.appendChild(folderItem);
+        });
+      }
+
+      async function createFolder(folderName, folderPin) {
+        const folderPath = `dokumen/${folderName}/`;
+        const placeholderFileName = ".gitkeep";
+        const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+
+        try {
+          const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
+          if (snapshot.exists()) {
+            alert(`Folder "${folderName}" sudah ada.`);
+            return;
+          }
+
+          const placeholderBlob = new Blob([], { type: "text/plain" });
+          const storageRef = storage.ref(`${folderPath}${placeholderFileName}`);
+          await storageRef.put(placeholderBlob);
+
+          await database.ref(`akses_pin/${folderKey}`).set(folderPin);
+          await database.ref(`akses_unggah/${folderKey}`).set(true);
+          await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
+
+          alert(`Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`);
+          newFolderNameInput.value = "";
+          newFolderPinInput.value = "";
+          fetchFolders();
+          fetchCourseList();
+        } catch (error) {
+          console.error("Gagal membuat folder:", error);
+          alert(`Gagal membuat folder: ${error.message}`);
+        }
+      }
+
+      async function deleteFolder(folderName, folderKey) {
+        const folderRef = storage.ref(`dokumen/${folderName}`);
+        try {
+          const listResult = await folderRef.listAll();
+          const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
+          await Promise.all(deletePromises);
+
+          const dbPromises = [database.ref(`akses_pin/${folderKey}`).remove(), database.ref(`akses_unggah/${folderKey}`).remove(), database.ref(`mata_kuliah/${folderKey}`).remove()];
+          await Promise.all(dbPromises);
+
+          alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
+          fetchFolders();
+          fetchCourseList();
+          fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+        } catch (error) {
+          console.error("Gagal menghapus folder:", error);
+          alert(`Gagal menghapus folder: ${error.message}`);
+        }
+      }
+
+      async function fetchFiles(path) {
+        currentFolderPath = path;
+        const storageRef = storage.ref(path);
+        fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
+
+        try {
+          const listResult = await storageRef.listAll();
+          cachedFiles = [];
+          const filePromises = listResult.items.map(async (itemRef) => {
+            if (itemRef.name === ".gitkeep") return null;
+            const downloadURL = await itemRef.getDownloadURL();
+            const fileName = itemRef.name;
+            const filePath = itemRef.fullPath;
+            const fileExtension = fileName.split(".").pop().toLowerCase();
+            return { fileName, downloadURL, filePath, fileExtension };
+          });
+
+          cachedFiles = (await Promise.all(filePromises)).filter((file) => file !== null);
+          displayFiles(cachedFiles);
+        } catch (error) {
+          console.error("Gagal mengambil data file:", error);
+          fileListContainer.innerHTML = `<p class="status-message" style="color:#dc3545;">Gagal memuat file: ${error.message}</p>`;
+        }
+      }
+
+      function filterFiles(searchTerm) {
+        const filtered = cachedFiles.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()));
+        displayFiles(filtered);
+      }
+
+      function displayFiles(files) {
+        fileListContainer.innerHTML = "";
+        if (files.length === 0) {
+          fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
+          return;
+        }
+
+        let fileNumber = 1;
+        files.forEach((file) => {
+          const li = document.createElement("li");
+          const fileNumberSpan = document.createElement("span");
+          fileNumberSpan.classList.add("file-number");
+          fileNumberSpan.textContent = `${fileNumber}.`;
+
+          const fileNameSpan = document.createElement("span");
+          fileNameSpan.classList.add("file-name-text");
+          fileNameSpan.textContent = file.fileName;
+
+          const actionButtonsDiv = document.createElement("div");
+          actionButtonsDiv.classList.add("action-buttons");
+
+          const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+          if (supportedPreviewExtensions.includes(file.fileExtension)) {
+            const previewBtn = document.createElement("a");
+            previewBtn.classList.add("preview-btn");
+            previewBtn.target = "_blank";
+            let viewerUrl = file.fileExtension === "pdf" ? file.downloadURL : `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
+            previewBtn.href = viewerUrl;
+            const previewIcon = document.createElement("img");
+            previewIcon.src = "https://img.icons8.com/material-outlined/24/000000/visible.png";
+            previewIcon.alt = "Pratinjau";
+            previewBtn.appendChild(previewIcon);
+            actionButtonsDiv.appendChild(previewBtn);
+          }
+
+          const downloadBtn = document.createElement("a");
+          downloadBtn.href = file.downloadURL;
+          downloadBtn.classList.add("download-btn");
+          downloadBtn.target = "_blank";
+          downloadBtn.download = file.fileName;
+          const downloadIcon = document.createElement("img");
+          downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
+          downloadIcon.alt = "Unduh";
+          downloadBtn.appendChild(downloadIcon);
+          actionButtonsDiv.appendChild(downloadBtn);
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.classList.add("delete-btn");
+          const deleteIcon = document.createElement("img");
+          deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
+          deleteIcon.alt = "Hapus";
+          deleteBtn.appendChild(deleteIcon);
+          deleteBtn.style.display = auth.currentUser ? "block" : "none";
+
+          deleteBtn.addEventListener("click", () => {
+            if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
+              deleteFile(file.filePath);
+            }
+          });
+
+          actionButtonsDiv.appendChild(deleteBtn);
+          li.appendChild(fileNumberSpan);
+          li.appendChild(fileNameSpan);
+          li.appendChild(actionButtonsDiv);
+          fileListContainer.appendChild(li);
+          fileNumber++;
+        });
+      }
+
+      async function deleteFile(filePath) {
+        const fileRef = storage.ref(filePath);
+        try {
+          await fileRef.delete();
+          alert(`File berhasil dihapus.`);
+          fetchFiles(currentFolderPath);
+        } catch (error) {
+          console.error("Gagal menghapus file:", error);
+          alert(`Gagal menghapus file: ${error.message}`);
+        }
+      }
+
+      // ======================= LOGIC TOGGLE STATUS AKES =======================
       toggleAccessBtn.addEventListener("click", () => {
-        showPinDialog("toggle_access", "toggle_access", "mengubah status akses global", null);
+        showPinDialog("toggle_access", "toggle_access_pin", "mengubah status akses global", null);
       });
 
       toggleCourseSelect.addEventListener("change", () => {
@@ -509,26 +985,11 @@
       toggleCourseAccessBtn.addEventListener("click", () => {
         const courseKey = toggleCourseSelect.value;
         if (courseKey) {
-          showPinDialog("toggle_course_access", courseKey, `mengubah status akses ${toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text}`, null);
+          const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
+          showPinDialog("toggle_course_access", courseKey, `mengubah status akses ${courseName}`, null);
         } else {
           alert("Mohon pilih mata kuliah terlebih dahulu.");
         }
-      });
-
-      pinForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const enteredPin = pinInput.value.trim();
-        const actionType = pinDialogOverlay.dataset.actionType;
-        const actionKey = pinDialogOverlay.dataset.actionKey;
-        const selectedPath = pinDialogOverlay.dataset.selectedPath;
-        validatePin(enteredPin, actionType, actionKey, selectedPath);
-      });
-
-      cancelBtn.addEventListener("click", () => {
-        pinDialogOverlay.style.display = "none";
-        pinInput.value = "";
-        pinErrorMessage.textContent = "";
-        pendingDelete = null; // Reset pending state
       });
 
       createFolderBtn.addEventListener("click", () => {
@@ -538,10 +999,9 @@
           alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
           return;
         }
-        createFolder(folderName, folderPin);
+        showPinDialog("create_folder", "create_folder_pin", "membuat folder baru", null, { folderName, folderPin });
       });
 
-      // ======================= FUNGSI BARU =======================
       async function fetchCourseList() {
         try {
           const snapshot = await database.ref("mata_kuliah").once("value");
@@ -569,329 +1029,16 @@
         }
       }
 
-      // ======================= FUNGSI UTAMA =======================
-      async function fetchFolders() {
-        const storageRef = storage.ref("dokumen");
-        try {
-          const listResult = await storageRef.listAll();
-          displayFolders(listResult.prefixes);
-        } catch (error) {
-          console.error("Gagal mengambil daftar folder:", error);
-          folderListContainer.innerHTML = '<p class="status-message" style="color:#dc3545;">Gagal memuat folder: ' + error.message + "</p>";
-        }
-      }
-
-      async function createFolder(folderName, folderPin) {
-        const folderPath = `dokumen/${folderName}/`;
-        const placeholderFileName = ".gitkeep";
-        const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-
-        try {
-          const folderExists = (await storage.ref(folderPath).listAll()).prefixes.length > 0;
-          if (folderExists) {
-            alert(`Folder "${folderName}" sudah ada.`);
-            return;
-          }
-
-          const pinExists = (await database.ref(`akses_pin/${folderKey}`).once("value")).exists();
-          if (pinExists) {
-            alert(`PIN untuk mata kuliah ini sudah ada. Silakan gunakan nama folder lain.`);
-            return;
-          }
-
-          const placeholderBlob = new Blob([], { type: "text/plain" });
-          const storageRef = storage.ref(`${folderPath}${placeholderFileName}`);
-          await storageRef.put(placeholderBlob);
-
-          await database.ref(`akses_pin/${folderKey}`).set(folderPin);
-          await database.ref(`akses_unggah/${folderKey}`).set(true);
-          await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
-
-          alert(`Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`);
-          fetchFolders();
-          fetchCourseList();
-        } catch (error) {
-          console.error("Gagal membuat folder:", error);
-          alert(`Gagal membuat folder: ${error.message}`);
-        }
-      }
-
-      function displayFolders(prefixes) {
-        folderListContainer.innerHTML = "";
-
-        if (prefixes.length === 0) {
-          folderListContainer.innerHTML = '<p class="empty-message">Belum ada folder yang dibuat.</p>';
-          return;
-        }
-
-        prefixes.forEach((prefix) => {
-          const folderName = prefix.name;
-          const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-          const folderItem = document.createElement("li");
-          folderItem.classList.add("folder-item");
-          folderItem.innerHTML = `
-            <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
-            <span>${folderName}</span>
-            <button class="folder-delete-btn" data-folder-name="${folderName}">
-              <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
-            </button>
-          `;
-
-          // Event listener untuk melihat folder
-          folderItem.querySelector("img.folder-icon").addEventListener("click", () => {
-            const path = `dokumen/${folderName}/`;
-            if (courseAuthStatus[folderKey]) {
-              fetchFiles(path);
-            } else {
-              showPinDialog("course", folderKey, `melihat folder ${folderName}`, path);
-            }
-          });
-
-          folderItem.querySelector("span").addEventListener("click", () => {
-            const path = `dokumen/${folderName}/`;
-            if (courseAuthStatus[folderKey]) {
-              fetchFiles(path);
-            } else {
-              showPinDialog("course", folderKey, `melihat folder ${folderName}`, path);
-            }
-          });
-
-          // Event listener untuk menghapus folder
-          folderItem.querySelector(".folder-delete-btn").addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent folder view click
-            if (confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
-              pendingDelete = { folderName, folderKey };
-              showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null);
-            }
-          });
-
-          folderListContainer.appendChild(folderItem);
-        });
-      }
-
-      function showPinDialog(actionType, actionKey, dialogTitle, selectedPath, filesToUpload = null) {
-        pinInput.value = "";
-        pinErrorMessage.textContent = "";
-        pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
-        if (actionType === "course" || actionType === "upload") {
-          pinDialogMessage.textContent = "Untuk melanjutkan, Anda harus memasukkan PIN mata pelajaran.";
-        } else if (actionType === "toggle_access" || actionType === "toggle_course_access" || actionType === "delete_folder") {
-          pinDialogMessage.textContent = "Masukkan PIN untuk mengonfirmasi perubahan status.";
-        }
-
-        pinDialogOverlay.dataset.actionType = actionType;
-        pinDialogOverlay.dataset.actionKey = actionKey;
-        if (selectedPath) {
-          pinDialogOverlay.dataset.selectedPath = selectedPath;
-        } else {
-          delete pinDialogOverlay.dataset.selectedPath;
-        }
-
-        window.filesToUpload = filesToUpload;
-        pinDialogOverlay.style.display = "flex";
-      }
-
-      async function validatePin(enteredPin, actionType, actionKey, selectedPath) {
-        try {
-          const snapshot = await database.ref(`akses_pin/${actionKey}`).once("value");
-          const correctPin = snapshot.val();
-
-          if (enteredPin === correctPin) {
-            pinErrorMessage.textContent = "";
-            pinDialogOverlay.style.display = "none";
-
-            if (actionType === "course") {
-              courseAuthStatus[actionKey] = true;
-              fetchFiles(selectedPath);
-            } else if (actionType === "upload") {
-              const courseKeyForUpload = newFolderNameInput.value.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-              courseAuthStatus[courseKeyForUpload] = true;
-              if (window.filesToUpload && window.filesToUpload.length > 0) {
-                uploadFilesToFolder(window.filesToUpload, selectedPath);
-              }
-            } else if (actionType === "toggle_access") {
-              _toggleAccessStatusLogic("akses");
-            } else if (actionType === "toggle_course_access") {
-              _toggleAccessStatusLogic(`akses_unggah/${actionKey}`);
-            } else if (actionType === "delete_folder") {
-              await deleteFolder(pendingDelete.folderName, pendingDelete.folderKey);
-              pendingDelete = null;
-            }
-          } else {
-            pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
-          }
-        } catch (error) {
-          console.error("Gagal mendapatkan PIN dari database:", error);
-          pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
-        }
-      }
-
-      async function deleteFolder(folderName, folderKey) {
-        const folderRef = storage.ref(`dokumen/${folderName}`);
-        try {
-          // 1. Hapus semua file di dalam folder
-          const listResult = await folderRef.listAll();
-          const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
-          await Promise.all(deletePromises);
-
-          // 2. Hapus entri dari database
-          const dbPromises = [database.ref(`akses_pin/${folderKey}`).remove(), database.ref(`akses_unggah/${folderKey}`).remove(), database.ref(`mata_kuliah/${folderKey}`).remove()];
-          await Promise.all(dbPromises);
-
-          alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
-          fetchFolders();
-          fetchCourseList();
-          fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
-        } catch (error) {
-          console.error("Gagal menghapus folder:", error);
-          alert(`Gagal menghapus folder: ${error.message}`);
-        }
-      }
-
-      async function uploadFilesToFolder(files, path) {
-        const folderPath = path.endsWith("/") ? path : `${path}/`;
-
-        for (const file of files) {
-          const storageRef = storage.ref(`${folderPath}${file.name}`);
-
-          try {
-            await storageRef.put(file);
-            console.log(`File ${file.name} berhasil diunggah.`);
-          } catch (error) {
-            console.error(`Gagal mengunggah file ${file.name}:`, error);
-            alert(`Gagal mengunggah file ${file.name}: ${error.message}`);
-          }
-        }
-
-        alert(`${files.length} file berhasil diunggah!`);
-        fetchFolders();
-        fetchFiles(folderPath);
-      }
-
-      async function fetchFiles(path) {
-        currentFolderPath = path;
-        const storageRef = storage.ref(path);
-        fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
-
-        try {
-          const listResult = await storageRef.listAll();
-          cachedFiles = [];
-          const filePromises = listResult.items.map(async (itemRef) => {
-            if (itemRef.name === ".gitkeep") {
-              return null;
-            }
-            const downloadURL = await itemRef.getDownloadURL();
-            const fileName = itemRef.name;
-            const filePath = itemRef.fullPath;
-            const fileExtension = fileName.split(".").pop().toLowerCase();
-            return { fileName, downloadURL, filePath, fileExtension };
-          });
-
-          cachedFiles = (await Promise.all(filePromises)).filter((file) => file !== null);
-          displayFiles(cachedFiles);
-        } catch (error) {
-          console.error("Gagal mengambil data file:", error);
-          fileListContainer.innerHTML = `<p class="status-message" style="color:#dc3545;">Gagal memuat file: ${error.message}</p>`;
-        }
-      }
-
-      function filterFiles(searchTerm) {
-        const filtered = cachedFiles.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()));
-        displayFiles(filtered);
-      }
-
-      function displayFiles(files) {
-        fileListContainer.innerHTML = "";
-
-        if (files.length === 0) {
-          fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
-          return;
-        }
-
-        let fileNumber = 1;
-        files.forEach((file) => {
-          const li = document.createElement("li");
-          const fileNumberSpan = document.createElement("span");
-          fileNumberSpan.classList.add("file-number");
-          fileNumberSpan.textContent = `${fileNumber}.`;
-
-          const fileNameSpan = document.createElement("span");
-          fileNameSpan.classList.add("file-name-text");
-          fileNameSpan.textContent = file.fileName;
-
-          const actionButtonsDiv = document.createElement("div");
-          actionButtonsDiv.classList.add("action-buttons");
-
-          const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
-          if (supportedPreviewExtensions.includes(file.fileExtension)) {
-            const previewBtn = document.createElement("a");
-            previewBtn.classList.add("preview-btn");
-            previewBtn.target = "_blank";
-            let viewerUrl = file.fileExtension === "pdf" ? file.downloadURL : `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
-            previewBtn.href = viewerUrl;
-
-            const previewIcon = document.createElement("img");
-            previewIcon.src = "https://img.icons8.com/material-outlined/24/000000/visible.png";
-            previewIcon.alt = "Pratinjau";
-            previewBtn.appendChild(previewIcon);
-            actionButtonsDiv.appendChild(previewBtn);
-          }
-
-          const downloadBtn = document.createElement("a");
-          downloadBtn.href = file.downloadURL;
-          downloadBtn.classList.add("download-btn");
-          downloadBtn.target = "_blank";
-          downloadBtn.download = file.fileName;
-          const downloadIcon = document.createElement("img");
-          downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
-          downloadIcon.alt = "Unduh";
-          downloadBtn.appendChild(downloadIcon);
-          actionButtonsDiv.appendChild(downloadBtn);
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.classList.add("delete-btn");
-          const deleteIcon = document.createElement("img");
-          deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
-          deleteIcon.alt = "Hapus";
-          deleteBtn.appendChild(deleteIcon);
-
-          deleteBtn.addEventListener("click", () => {
-            if (confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
-              deleteFile(file.filePath);
-            }
-          });
-
-          actionButtonsDiv.appendChild(deleteBtn);
-          li.appendChild(fileNumberSpan);
-          li.appendChild(fileNameSpan);
-          li.appendChild(actionButtonsDiv);
-          fileListContainer.appendChild(li);
-          fileNumber++;
-        });
-      }
-
-      async function deleteFile(filePath) {
-        const fileRef = storage.ref(filePath);
-        try {
-          await fileRef.delete();
-          alert(`File berhasil dihapus.`);
-          fetchFiles(currentFolderPath);
-        } catch (error) {
-          console.error("Gagal menghapus file:", error);
-          alert(`Gagal menghapus file: ${error.message}`);
-        }
-      }
-
       async function updateAccessButtonStatus() {
         try {
           const snapshot = await database.ref("akses").once("value");
           const isOpen = snapshot.val();
           if (isOpen === true) {
-            toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: BUKA ✅";
+            toggleAccessBtn.textContent = "Akses Website: BUKA ✅";
             toggleAccessBtn.classList.remove("access-closed");
             toggleAccessBtn.classList.add("access-open");
           } else {
-            toggleAccessBtn.textContent = "Akses Pengumpulan Tugas: TUTUP 🔒";
+            toggleAccessBtn.textContent = "Akses Website: TUTUP 🔒";
             toggleAccessBtn.classList.remove("access-open");
             toggleAccessBtn.classList.add("access-closed");
           }
@@ -925,7 +1072,6 @@
           const snapshot = await database.ref(dbPath).once("value");
           const currentStatus = snapshot.val();
           const newStatus = !currentStatus;
-
           await database.ref(dbPath).set(newStatus);
           if (dbPath === "akses") {
             updateAccessButtonStatus();
@@ -933,7 +1079,6 @@
             const courseKey = dbPath.split("/")[1];
             updateCourseToggleButtonStatus(courseKey);
           }
-
           alert(`Akses berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
         } catch (error) {
           console.error("Gagal mengubah status akses:", error);
