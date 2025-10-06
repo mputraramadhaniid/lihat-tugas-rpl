@@ -805,7 +805,7 @@
       }
 
       async function createFolder(folderName, folderPin) {
-        const folderPath = `dokumen/${folderName}/`;
+        const folderPath = `dokumen/${folderName.replace(/[()\s]/g, "")}/`;
         const placeholderFileName = ".gitkeep";
         const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
