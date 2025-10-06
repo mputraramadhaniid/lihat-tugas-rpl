@@ -544,6 +544,7 @@
           <ul id="folderList" class="folder-list">
             <p class="status-message">Memuat daftar folder...</p>
           </ul>
+          <p class="status-message" id="folder-status-message"></p>
         </div>
 
         <div class="search-group">
@@ -599,6 +600,7 @@
       const newFolderPinInput = document.getElementById("newFolderPin");
       const folderListContainer = document.getElementById("folderList");
       const createFolderBtn = document.getElementById("createFolderBtn");
+      const folderStatusMessage = document.getElementById("folder-status-message");
 
       const courseAuthStatus = {};
       let cachedFiles = [];
@@ -634,7 +636,10 @@
               alert("Gagal logout. Silakan coba lagi.");
             });
         } else {
-          showUserView(); // Panggil fungsi ini untuk menampilkan dialog login
+          loginDialogOverlay.style.display = "flex";
+          emailInput.value = "";
+          passwordInput.value = "";
+          loginErrorMessage.textContent = "";
         }
       });
 
@@ -646,7 +651,6 @@
         try {
           const userCredential = await auth.signInWithEmailAndPassword(email, password);
           const user = userCredential.user;
-          // Periksa apakah pengguna adalah admin (ganti UID ini dengan UID admin Anda)
           const adminUIDs = {
             rSaaJgKyEQRrh7nblW9pME6o7Ci1: true,
           };
@@ -676,8 +680,8 @@
       }
 
       function showUserView() {
-        mainContent.style.display = "none";
-        loginDialogOverlay.style.display = "flex";
+        mainContent.style.display = "block";
+        loginDialogOverlay.style.display = "none";
         loginButton.textContent = "Login Admin";
         adminSection.style.display = "none";
         fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
@@ -753,12 +757,18 @@
       // ======================= LOGIC FOLDER DAN FILE =======================
       async function fetchFolders() {
         const storageRef = storage.ref("dokumen");
+        folderStatusMessage.textContent = "Memuat daftar folder...";
         try {
           const listResult = await storageRef.listAll();
           displayFolders(listResult.prefixes);
+          if (listResult.prefixes.length > 0) {
+            folderStatusMessage.textContent = "";
+          } else {
+            folderStatusMessage.textContent = "Belum ada folder yang dibuat.";
+          }
         } catch (error) {
           console.error("Gagal mengambil daftar folder:", error);
-          folderListContainer.innerHTML = '<p class="status-message" style="color:#dc3545;">Gagal memuat folder: ' + error.message + "</p>";
+          folderStatusMessage.textContent = `Gagal memuat folder: ${error.message}`;
         }
       }
 
@@ -782,7 +792,6 @@
             </button>
           `;
 
-          // Event listener untuk melihat folder
           folderItem.querySelector("span").addEventListener("click", () => {
             const path = `dokumen/${folderName}/`;
             showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path);
@@ -792,7 +801,6 @@
             showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path);
           });
 
-          // Event listener untuk menghapus folder (hanya untuk admin)
           folderItem.querySelector(".folder-delete-btn").addEventListener("click", (e) => {
             e.stopPropagation();
             if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
@@ -805,7 +813,13 @@
       }
 
       async function createFolder(folderName, folderPin) {
-        const folderPath = `dokumen/${folderName.replace(/[()\s]/g, "")}/`;
+        // Mencegah spam klik
+        createFolderBtn.disabled = true;
+        const originalBtnText = createFolderBtn.textContent;
+        createFolderBtn.textContent = "Sedang membuat...";
+
+        const cleanedFolderName = folderName.replace(/[()\s]/g, "").toLowerCase();
+        const folderPath = `dokumen/${cleanedFolderName}/`;
         const placeholderFileName = ".gitkeep";
         const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
@@ -832,6 +846,10 @@
         } catch (error) {
           console.error("Gagal membuat folder:", error);
           alert(`Gagal membuat folder: ${error.message}`);
+        } finally {
+          // Aktifkan kembali tombol setelah proses selesai
+          createFolderBtn.disabled = false;
+          createFolderBtn.textContent = originalBtnText;
         }
       }
 
@@ -998,7 +1016,6 @@
           alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
           return;
         }
-        // Langsung panggil fungsi untuk membuat folder, tanpa verifikasi PIN
         createFolder(folderName, folderPin);
       });
 
