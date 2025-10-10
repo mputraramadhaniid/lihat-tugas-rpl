@@ -46,6 +46,17 @@
         text-align: left;
       }
 
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+        resize: vertical;
+      }
+
       .search-group {
         margin-bottom: 20px;
         text-align: left;
@@ -58,9 +69,23 @@
         color: #555;
       }
 
-      .form-group select,
-      .search-group input,
-      .create-folder-section input {
+      .form-group input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      }
+
+      .form-group select {
         width: 100%;
         padding: 10px;
         border-radius: 8px;
@@ -295,11 +320,6 @@
         background-color: #0056b3;
       }
 
-      .login-dialog-card .dialog-actions #closeLoginBtn {
-        background-color: #6c757d;
-        color: #fff;
-      }
-
       .login-dialog-card .dialog-actions #closeLoginBtn:hover {
         background-color: #5a6268;
       }
@@ -335,6 +355,15 @@
 
       .toggle-section button {
         width: 100%;
+      }
+
+      .notification-section {
+        text-align: left;
+        margin-bottom: 20px;
+      }
+
+      .notification-section textarea {
+        min-height: 100px;
       }
 
       /* CSS for drag-and-drop feature */
@@ -432,6 +461,12 @@
         filter: invert(100%) sepia(50%) saturate(1500%) hue-rotate(330deg) brightness(95%) contrast(100%);
       }
 
+      /* Kelas baru untuk folder yang sedang aktif */
+      .active-folder {
+        background-color: #cce5ff !important;
+        border-color: #007bff !important;
+      }
+
       /* CSS for move-file feature */
       .move-file-section {
         display: none;
@@ -461,6 +496,50 @@
       #login-button:hover {
         background-color: #0056b3;
       }
+
+      /* Media queries for desktop view */
+      @media (min-width: 768px) {
+        .container {
+          max-width: 1000px;
+        }
+
+        .admin-flex-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
+
+        .admin-flex-item {
+          flex: 1 1 calc(50% - 10px);
+          margin-bottom: 20px;
+        }
+
+        .admin-flex-item:first-child {
+          flex-basis: 100%;
+        }
+
+        .admin-flex-item .form-group,
+        .admin-flex-item .access-button {
+          max-width: 400px;
+        }
+
+        .folder-list-container,
+        #fileList {
+          max-width: 100%;
+        }
+
+        .folder-list {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          gap: 15px;
+        }
+
+        .card {
+          padding: 40px;
+        }
+      }
     </style>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -468,8 +547,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
   </head>
+
   <body>
-    <div id="loginDialogOverlay" class="login-dialog-overlay" style="display: none">
+    <div id="loginDialogOverlay" class="login-dialog-overlay">
       <div class="login-dialog-card">
         <h3>Login Admin</h3>
         <form id="loginForm">
@@ -483,7 +563,7 @@
       </div>
     </div>
 
-    <div id="pinDialogOverlay" class="pin-dialog-overlay">
+    <div id="pinDialogOverlay" class="pin-dialog-overlay" style="display: none">
       <div class="pin-dialog-card">
         <h3 id="pinDialogTitle">Masukkan PIN</h3>
         <p id="pinDialogMessage">Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.</p>
@@ -503,42 +583,59 @@
         <button id="login-button">Login Admin</button>
         <br />
         <h2>Daftar Dokumen Tugas Mahasiswa Teknologi Informasi</h2>
-
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
         <div id="admin-section" style="display: none">
           <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
-
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
-          <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses Per Mata Kuliah</h3>
-          <div class="toggle-section">
-            <div class="form-group">
-              <label for="toggleCourseSelect">Pilih Mata Kuliah untuk Diubah Statusnya:</label>
-              <select id="toggleCourseSelect">
-                <option value="" disabled selected>-- Pilih salah satu --</option>
-              </select>
+          <div class="admin-flex-container">
+            <div class="admin-flex-item">
+              <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses Per Mata Kuliah</h3>
+              <div class="toggle-section">
+                <div class="form-group">
+                  <label for="toggleCourseSelect">Pilih Mata Kuliah untuk Diubah Statusnya:</label>
+                  <select id="toggleCourseSelect">
+                    <option value="" disabled selected>-- Pilih salah satu --</option>
+                  </select>
+                </div>
+                <button id="toggleCourseAccessBtn" class="access-button access-closed" disabled>Status: Memuat...</button>
+              </div>
             </div>
-            <button id="toggleCourseAccessBtn" class="access-button access-closed">Status: Memuat...</button>
+
+            <div class="admin-flex-item">
+              <div class="create-folder-section">
+                <h4>Buat Folder Baru</h4>
+                <div class="form-group">
+                  <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
+                  <input type="text" id="newFolderName" placeholder="Masukkan nama folder" required />
+                </div>
+                <div class="form-group">
+                  <label for="newFolderPin">PIN untuk Folder Baru:</label>
+                  <input type="password" id="newFolderPin" placeholder="Masukkan PIN" required />
+                </div>
+                <button id="createFolderBtn" class="access-button access-open">Buat Folder & Atur PIN</button>
+              </div>
+            </div>
+
+            <div class="admin-flex-item">
+              <div class="notification-section">
+                <h4>Kirim Notifikasi Manual</h4>
+                <div class="form-group">
+                  <label for="notificationTitle">Judul Notifikasi:</label>
+                  <input type="text" id="notificationTitle" placeholder="Misal: Info Penting TI" required />
+                </div>
+                <div class="form-group">
+                  <label for="notificationMessage">Pesan Notifikasi:</label>
+                  <textarea id="notificationMessage" placeholder="Masukkan pesan notifikasi" rows="4" required></textarea>
+                </div>
+                <button id="sendNotificationBtn" class="access-button access-open">Kirim Notifikasi</button>
+              </div>
+            </div>
           </div>
-
-          <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
-
-          <div class="create-folder-section">
-            <h4>Buat Folder Baru</h4>
-            <div class="form-group">
-              <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
-              <input type="text" id="newFolderName" placeholder="Masukkan nama folder" required />
-            </div>
-            <div class="form-group">
-              <label for="newFolderPin">PIN untuk Folder Baru:</label>
-              <input type="password" id="newFolderPin" placeholder="Masukkan PIN" required />
-            </div>
-            <button id="createFolderBtn" class="access-button access-open">Buat Folder & Atur PIN</button>
-          </div>
-
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
         </div>
+
         <div class="folder-list-container">
           <h4>Pilih Folder untuk Melihat atau Unggah</h4>
           <ul id="folderList" class="folder-list">
@@ -602,44 +699,43 @@
       const createFolderBtn = document.getElementById("createFolderBtn");
       const folderStatusMessage = document.getElementById("folder-status-message");
 
+      const notificationTitleInput = document.getElementById("notificationTitle");
+      const notificationMessageInput = document.getElementById("notificationMessage");
+      const sendNotificationBtn = document.getElementById("sendNotificationBtn");
+
       const courseAuthStatus = {};
       let cachedFiles = [];
       let currentFolderPath = null;
       let pendingAction = null;
+      let activeFolderElement = null;
 
-      // Inisialisasi
       document.addEventListener("DOMContentLoaded", () => {
         auth.onAuthStateChanged((user) => {
           if (user) {
             showAdminView();
           } else {
-            showUserView();
+            showLoginView();
           }
         });
       });
 
-      // ======================= EVENT LISTENERS UMUM =======================
       fileSearchInput.addEventListener("keyup", () => {
         filterFiles(fileSearchInput.value);
       });
 
-      // ======================= LOGIC LOGIN ADMIN =======================
       loginButton.addEventListener("click", () => {
         if (auth.currentUser) {
           auth
             .signOut()
             .then(() => {
-              showUserView();
+              showLoginView();
             })
             .catch((error) => {
               console.error("Logout failed:", error);
               alert("Gagal logout. Silakan coba lagi.");
             });
         } else {
-          loginDialogOverlay.style.display = "flex";
-          emailInput.value = "";
-          passwordInput.value = "";
-          loginErrorMessage.textContent = "";
+          showLoginView();
         }
       });
 
@@ -654,10 +750,8 @@
           const adminUIDs = {
             rSaaJgKyEQRrh7nblW9pME6o7Ci1: true,
           };
-
           if (adminUIDs[user.uid]) {
             alert("Login berhasil! Selamat datang, Admin.");
-            loginDialogOverlay.style.display = "none";
             showAdminView();
           } else {
             await auth.signOut();
@@ -689,14 +783,24 @@
         fetchCourseList();
       }
 
-      // ======================= LOGIC PIN UNTUK MAHASISWA & ADMIN =======================
+      function showLoginView() {
+        mainContent.style.display = "none";
+        loginDialogOverlay.style.display = "flex";
+        loginButton.textContent = "Login Admin";
+        adminSection.style.display = "none";
+        emailInput.value = "";
+        passwordInput.value = "";
+        loginErrorMessage.textContent = "";
+      }
+
       pinForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const enteredPin = pinInput.value.trim();
         const actionType = pinDialogOverlay.dataset.actionType;
         const actionKey = pinDialogOverlay.dataset.actionKey;
         const selectedPath = pinDialogOverlay.dataset.selectedPath;
-        validatePin(enteredPin, actionType, actionKey, selectedPath);
+        const folderName = pinDialogOverlay.dataset.folderName;
+        validatePin(enteredPin, actionType, actionKey, selectedPath, folderName);
       });
 
       cancelBtn.addEventListener("click", () => {
@@ -718,11 +822,16 @@
         } else {
           delete pinDialogOverlay.dataset.selectedPath;
         }
+        if (data && data.folderName) {
+          pinDialogOverlay.dataset.folderName = data.folderName;
+        } else {
+          delete pinDialogOverlay.dataset.folderName;
+        }
         pendingAction = data;
         pinDialogOverlay.style.display = "flex";
       }
 
-      async function validatePin(enteredPin, actionType, actionKey, selectedPath) {
+      async function validatePin(enteredPin, actionType, actionKey, selectedPath, folderName) {
         try {
           const snapshot = await database.ref(`akses_pin/${actionKey}`).once("value");
           const correctPin = snapshot.val();
@@ -732,6 +841,15 @@
             pinDialogOverlay.style.display = "none";
 
             if (actionType === "view_folder") {
+              if (activeFolderElement) {
+                activeFolderElement.classList.remove("active-folder");
+              }
+              const folderElement = document.querySelector(`.folder-item[data-folder-name="${folderName}"]`);
+              if (folderElement) {
+                folderElement.classList.add("active-folder");
+                activeFolderElement = folderElement;
+              }
+
               courseAuthStatus[actionKey] = true;
               fetchFiles(selectedPath);
             } else if (actionType === "toggle_access") {
@@ -754,7 +872,6 @@
         }
       }
 
-      // ======================= LOGIC FOLDER DAN FILE =======================
       async function fetchFolders() {
         const storageRef = storage.ref("dokumen");
         folderStatusMessage.textContent = "Memuat daftar folder...";
@@ -784,44 +901,52 @@
           const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
           const folderItem = document.createElement("li");
           folderItem.classList.add("folder-item");
+          folderItem.dataset.folderName = folderName;
           folderItem.innerHTML = `
-            <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
-            <span>${folderName}</span>
-            <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
-              <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
-            </button>
-          `;
+                    <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
+                    <span>${folderName}</span>
+                    <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
+                        <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
+                    </button>
+                `;
 
-          folderItem.querySelector("span").addEventListener("click", () => {
+          folderItem.addEventListener("click", () => {
             const path = `dokumen/${folderName}/`;
-            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path);
-          });
-          folderItem.querySelector("img.folder-icon").addEventListener("click", () => {
-            const path = `dokumen/${folderName}/`;
-            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path);
+            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path, { folderName });
           });
 
-          folderItem.querySelector(".folder-delete-btn").addEventListener("click", (e) => {
-            e.stopPropagation();
-            if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
-              showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, { folderName, folderKey });
-            }
-          });
-
+          const deleteButton = folderItem.querySelector(".folder-delete-btn");
+          if (deleteButton) {
+            deleteButton.addEventListener("click", (e) => {
+              e.stopPropagation();
+              if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
+                showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, { folderName, folderKey });
+              }
+            });
+          }
           folderListContainer.appendChild(folderItem);
         });
       }
 
+      createFolderBtn.addEventListener("click", () => {
+        const folderName = newFolderNameInput.value.trim();
+        const folderPin = newFolderPinInput.value.trim();
+        if (!folderName || !folderPin) {
+          alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
+          return;
+        }
+        const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+        showPinDialog("create_folder", "create_folder_pin", "membuat folder", null, { folderName, folderPin, folderKey });
+      });
+
       async function createFolder(folderName, folderPin) {
-        // Mencegah spam klik
         createFolderBtn.disabled = true;
         const originalBtnText = createFolderBtn.textContent;
         createFolderBtn.textContent = "Sedang membuat...";
 
-        const cleanedFolderName = folderName.replace(/[()\s]/g, "").toLowerCase();
-        const folderPath = `dokumen/${cleanedFolderName}/`;
-        const placeholderFileName = ".gitkeep";
         const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+        const folderPath = `dokumen/${folderName}/`;
+        const placeholderFileName = ".gitkeep";
 
         try {
           const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
@@ -847,7 +972,6 @@
           console.error("Gagal membuat folder:", error);
           alert(`Gagal membuat folder: ${error.message}`);
         } finally {
-          // Aktifkan kembali tombol setelah proses selesai
           createFolderBtn.disabled = false;
           createFolderBtn.textContent = originalBtnText;
         }
@@ -984,7 +1108,6 @@
         }
       }
 
-      // ======================= LOGIC TOGGLE STATUS AKES =======================
       toggleAccessBtn.addEventListener("click", () => {
         showPinDialog("toggle_access", "toggle_access_pin", "mengubah status akses global", null);
       });
@@ -992,10 +1115,12 @@
       toggleCourseSelect.addEventListener("change", () => {
         const courseKey = toggleCourseSelect.value;
         if (courseKey) {
+          toggleCourseAccessBtn.disabled = false;
           updateCourseToggleButtonStatus(courseKey);
         } else {
           toggleCourseAccessBtn.textContent = "Status: Memuat...";
           toggleCourseAccessBtn.classList.remove("access-open", "access-closed");
+          toggleCourseAccessBtn.disabled = true;
         }
       });
 
@@ -1009,25 +1134,13 @@
         }
       });
 
-      createFolderBtn.addEventListener("click", () => {
-        const folderName = newFolderNameInput.value.trim();
-        const folderPin = newFolderPinInput.value.trim();
-        if (!folderName || !folderPin) {
-          alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
-          return;
-        }
-        createFolder(folderName, folderPin);
-      });
-
       async function fetchCourseList() {
         try {
           const snapshot = await database.ref("mata_kuliah").once("value");
           const courses = snapshot.val();
-
           while (toggleCourseSelect.options.length > 1) {
             toggleCourseSelect.remove(1);
           }
-
           if (courses) {
             for (const key in courses) {
               if (Object.hasOwnProperty.call(courses, key)) {
@@ -1040,6 +1153,10 @@
             }
           } else {
             console.log("No courses found in the database.");
+          }
+          const currentSelection = toggleCourseSelect.value;
+          if (currentSelection) {
+            updateCourseToggleButtonStatus(currentSelection);
           }
         } catch (error) {
           console.error("Gagal memuat daftar mata kuliah:", error);
@@ -1100,6 +1217,58 @@
         } catch (error) {
           console.error("Gagal mengubah status akses:", error);
           alert(`Gagal mengubah status akses: ${error.message}`);
+        }
+      }
+
+      sendNotificationBtn.addEventListener("click", () => {
+        const title = notificationTitleInput.value.trim();
+        const message = notificationMessageInput.value.trim();
+        if (!title || !message) {
+          alert("Judul dan pesan tidak boleh kosong.");
+          return;
+        }
+        sendManualNotification(title, message);
+      });
+
+      async function sendManualNotification(title, message) {
+        sendNotificationBtn.disabled = true;
+        const originalBtnText = sendNotificationBtn.textContent;
+        sendNotificationBtn.textContent = "Mengirim...";
+
+        try {
+          const notifRef = database.ref("notifikasi_manual");
+          const snapshot = await notifRef.once("value");
+          const currentNotif = snapshot.val();
+
+          let newIdNumber = 1;
+          if (currentNotif && currentNotif.id) {
+            const lastId = currentNotif.id;
+            const numberString = lastId.split("-").pop();
+            const lastNumber = parseInt(numberString);
+            if (!isNaN(lastNumber)) {
+              newIdNumber = lastNumber + 1;
+            }
+          }
+
+          const newId = `notif-penting-${String(newIdNumber).padStart(2, "0")}`;
+
+          await notifRef.set({
+            aktif: true,
+            id: newId,
+            judul: title,
+            isi: message,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+          });
+
+          alert("Notifikasi berhasil dikirim!");
+          notificationTitleInput.value = "";
+          notificationMessageInput.value = "";
+        } catch (error) {
+          console.error("Gagal mengirim notifikasi:", error);
+          alert(`Gagal mengirim notifikasi: ${error.message}`);
+        } finally {
+          sendNotificationBtn.disabled = false;
+          sendNotificationBtn.textContent = originalBtnText;
         }
       }
     </script>
