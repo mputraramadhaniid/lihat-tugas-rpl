@@ -566,7 +566,7 @@
     <div id="pinDialogOverlay" class="pin-dialog-overlay" style="display: none">
       <div class="pin-dialog-card">
         <h3 id="pinDialogTitle">Masukkan PIN</h3>
-        <p id="pinDialogMessage">Untuk melihat file, Anda harus memasukkan PIN mata pelajaran.</p>
+        <p id="pinDialogMessage">Untuk melanjutkan, Anda harus memasukkan PIN.</p>
         <form id="pinForm">
           <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
           <p id="pinErrorMessage" class="error-message"></p>
@@ -714,7 +714,7 @@
           if (user) {
             showAdminView();
           } else {
-            showLoginView();
+            showUserView();
           }
         });
       });
@@ -728,7 +728,7 @@
           auth
             .signOut()
             .then(() => {
-              showLoginView();
+              showUserView();
             })
             .catch((error) => {
               console.error("Logout failed:", error);
@@ -860,8 +860,8 @@
               await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
               pendingAction = null;
             } else if (actionType === "create_folder") {
-              await createFolder(pendingAction.folderName, pendingAction.folderPin);
-              pendingAction = null;
+              // This part of the code is now obsolete.
+              // The createFolder function will be called directly.
             }
           } else {
             pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
@@ -903,12 +903,12 @@
           folderItem.classList.add("folder-item");
           folderItem.dataset.folderName = folderName;
           folderItem.innerHTML = `
-                    <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
-                    <span>${folderName}</span>
-                    <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
-                        <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
-                    </button>
-                `;
+                              <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
+                              <span>${folderName}</span>
+                              <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
+                                  <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
+                              </button>
+                          `;
 
           folderItem.addEventListener("click", () => {
             const path = `dokumen/${folderName}/`;
@@ -935,8 +935,7 @@
           alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
           return;
         }
-        const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-        showPinDialog("create_folder", "create_folder_pin", "membuat folder", null, { folderName, folderPin, folderKey });
+        createFolder(folderName, folderPin);
       });
 
       async function createFolder(folderName, folderPin) {
@@ -944,21 +943,27 @@
         const originalBtnText = createFolderBtn.textContent;
         createFolderBtn.textContent = "Sedang membuat...";
 
+        // 1. Buat key yang unik dan aman dari nama folder
         const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-        const folderPath = `dokumen/${folderName}/`;
-        const placeholderFileName = ".gitkeep";
 
         try {
+          // 2. Cek apakah folder dengan key ini sudah ada di database
           const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
           if (snapshot.exists()) {
-            alert(`Folder "${folderName}" sudah ada.`);
-            return;
+            alert(`Folder "${folderName}" sudah ada. Mohon gunakan nama lain.`);
+            return; // Hentikan proses jika folder sudah ada
           }
 
+          // Lanjutkan proses pembuatan jika folder belum ada
+          const folderPath = `dokumen/${folderName}/`;
+          const placeholderFileName = ".gitkeep";
           const placeholderBlob = new Blob([], { type: "text/plain" });
+
+          // Buat file placeholder di Firebase Storage untuk "membuat" folder
           const storageRef = storage.ref(`${folderPath}${placeholderFileName}`);
           await storageRef.put(placeholderBlob);
 
+          // Simpan data folder baru ke database
           await database.ref(`akses_pin/${folderKey}`).set(folderPin);
           await database.ref(`akses_unggah/${folderKey}`).set(true);
           await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
