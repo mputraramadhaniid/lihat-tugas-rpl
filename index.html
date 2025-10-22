@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Akses Dokumen Tugas Mahasiswa Teknologi Informasi UM-Palembang</title>
-    <link rel="icon" type="image/x-icon" href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1" />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1"
+    />
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
@@ -458,7 +462,8 @@
       .folder-delete-btn img {
         width: 18px;
         height: 18px;
-        filter: invert(100%) sepia(50%) saturate(1500%) hue-rotate(330deg) brightness(95%) contrast(100%);
+        filter: invert(100%) sepia(50%) saturate(1500%) hue-rotate(330deg)
+          brightness(95%) contrast(100%);
       }
 
       /* Kelas baru untuk folder yang sedang aktif */
@@ -553,8 +558,18 @@
       <div class="login-dialog-card">
         <h3>Login Admin</h3>
         <form id="loginForm">
-          <input type="email" id="emailInput" placeholder="Masukkan Email" required />
-          <input type="password" id="passwordInput" placeholder="Masukkan Password" required />
+          <input
+            type="email"
+            id="emailInput"
+            placeholder="Masukkan Email"
+            required
+          />
+          <input
+            type="password"
+            id="passwordInput"
+            placeholder="Masukkan Password"
+            required
+          />
           <p id="loginErrorMessage" class="error-message"></p>
           <div class="dialog-actions">
             <button type="submit" id="loginBtn">Login</button>
@@ -563,12 +578,23 @@
       </div>
     </div>
 
-    <div id="pinDialogOverlay" class="pin-dialog-overlay" style="display: none">
+    <div
+      id="pinDialogOverlay"
+      class="pin-dialog-overlay"
+      style="display: none"
+    >
       <div class="pin-dialog-card">
         <h3 id="pinDialogTitle">Masukkan PIN</h3>
-        <p id="pinDialogMessage">Untuk melanjutkan, Anda harus memasukkan PIN.</p>
+        <p id="pinDialogMessage">
+          Untuk melanjutkan, Anda harus memasukkan PIN.
+        </p>
         <form id="pinForm">
-          <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
+          <input
+            type="password"
+            id="pinInput"
+            placeholder="Masukkan PIN"
+            required
+          />
           <p id="pinErrorMessage" class="error-message"></p>
           <div class="dialog-actions">
             <button type="button" id="cancelBtn">Batal</button>
@@ -578,7 +604,7 @@
       </div>
     </div>
 
-    <div id="mainContent" class="container" style="display: none">
+    <div id="mainContent" class="container"> 
       <div class="card">
         <button id="login-button">Login Admin</button>
         <br />
@@ -586,20 +612,48 @@
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
         <div id="admin-section" style="display: none">
-          <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
+          <button id="toggleAccessBtn" class="access-button">
+            Memuat Status Akses...
+          </button>
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
           <div class="admin-flex-container">
             <div class="admin-flex-item">
-              <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses Per Mata Kuliah</h3>
+              <h3
+                style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px"
+              >
+                Kelola Akses & Deadline Per Mata Kuliah
+              </h3>
               <div class="toggle-section">
                 <div class="form-group">
-                  <label for="toggleCourseSelect">Pilih Mata Kuliah untuk Diubah Statusnya:</label>
+                  <label for="toggleCourseSelect">Pilih Mata Kuliah:</label>
                   <select id="toggleCourseSelect">
-                    <option value="" disabled selected>-- Pilih salah satu --</option>
+                    <option value="" disabled selected>
+                      -- Pilih salah satu --
+                    </option>
                   </select>
                 </div>
-                <button id="toggleCourseAccessBtn" class="access-button access-closed" disabled>Status: Memuat...</button>
+                <button
+                  id="toggleCourseAccessBtn"
+                  class="access-button access-closed"
+                  disabled
+                >
+                  Status: Memuat...
+                </button>
+
+                <div class="form-group">
+                  <label for="courseDeadlineInput"
+                    >Atur Batas Waktu Pengumpulan (Deadline):</label
+                  >
+                  <input type="datetime-local" id="courseDeadlineInput" />
+                </div>
+                <button
+                  id="setDeadlineBtn"
+                  class="access-button access-open"
+                  disabled
+                >
+                  Atur Deadline
+                </button>
               </div>
             </div>
 
@@ -608,13 +662,25 @@
                 <h4>Buat Folder Baru</h4>
                 <div class="form-group">
                   <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
-                  <input type="text" id="newFolderName" placeholder="Masukkan nama folder" required />
+                  <input
+                    type="text"
+                    id="newFolderName"
+                    placeholder="Masukkan nama folder"
+                    required
+                  />
                 </div>
                 <div class="form-group">
                   <label for="newFolderPin">PIN untuk Folder Baru:</label>
-                  <input type="password" id="newFolderPin" placeholder="Masukkan PIN" required />
+                  <input
+                    type="password"
+                    id="newFolderPin"
+                    placeholder="Masukkan PIN"
+                    required
+                  />
                 </div>
-                <button id="createFolderBtn" class="access-button access-open">Buat Folder & Atur PIN</button>
+                <button id="createFolderBtn" class="access-button access-open">
+                  Buat Folder & Atur PIN
+                </button>
               </div>
             </div>
 
@@ -623,13 +689,28 @@
                 <h4>Kirim Notifikasi Manual</h4>
                 <div class="form-group">
                   <label for="notificationTitle">Judul Notifikasi:</label>
-                  <input type="text" id="notificationTitle" placeholder="Misal: Info Penting TI" required />
+                  <input
+                    type="text"
+                    id="notificationTitle"
+                    placeholder="Misal: Info Penting TI"
+                    required
+                  />
                 </div>
                 <div class="form-group">
                   <label for="notificationMessage">Pesan Notifikasi:</label>
-                  <textarea id="notificationMessage" placeholder="Masukkan pesan notifikasi" rows="4" required></textarea>
+                  <textarea
+                    id="notificationMessage"
+                    placeholder="Masukkan pesan notifikasi"
+                    rows="4"
+                    required
+                  ></textarea>
                 </div>
-                <button id="sendNotificationBtn" class="access-button access-open">Kirim Notifikasi</button>
+                <button
+                  id="sendNotificationBtn"
+                  class="access-button access-open"
+                >
+                  Kirim Notifikasi
+                </button>
               </div>
             </div>
           </div>
@@ -655,6 +736,7 @@
     </div>
 
     <script>
+      // Konfigurasi Firebase Anda
       const firebaseConfig = {
         apiKey: "AIzaSyCZAfnelUdrwUz856j2hC3yJWqUm-JJmiI",
         authDomain: "ruangbelajar-52a67.firebaseapp.com",
@@ -666,11 +748,13 @@
         measurementId: "G-9M8CKR66BW",
       };
 
+      // Inisialisasi Firebase
       firebase.initializeApp(firebaseConfig);
       const storage = firebase.storage();
       const database = firebase.database();
       const auth = firebase.auth();
 
+      // Elemen DOM
       const mainContent = document.getElementById("mainContent");
       const loginDialogOverlay = document.getElementById("loginDialogOverlay");
       const loginForm = document.getElementById("loginForm");
@@ -692,43 +776,180 @@
       const toggleAccessBtn = document.getElementById("toggleAccessBtn");
       const fileSearchInput = document.getElementById("fileSearch");
       const toggleCourseSelect = document.getElementById("toggleCourseSelect");
-      const toggleCourseAccessBtn = document.getElementById("toggleCourseAccessBtn");
+      const toggleCourseAccessBtn = document.getElementById(
+        "toggleCourseAccessBtn"
+      );
       const newFolderNameInput = document.getElementById("newFolderName");
       const newFolderPinInput = document.getElementById("newFolderPin");
       const folderListContainer = document.getElementById("folderList");
       const createFolderBtn = document.getElementById("createFolderBtn");
-      const folderStatusMessage = document.getElementById("folder-status-message");
+      const folderStatusMessage = document.getElementById(
+        "folder-status-message"
+      );
 
-      const notificationTitleInput = document.getElementById("notificationTitle");
-      const notificationMessageInput = document.getElementById("notificationMessage");
+      // DEADLINE ELEMENTS
+      const courseDeadlineInput = document.getElementById("courseDeadlineInput");
+      const setDeadlineBtn = document.getElementById("setDeadlineBtn");
+
+      const notificationTitleInput =
+        document.getElementById("notificationTitle");
+      const notificationMessageInput = document.getElementById(
+        "notificationMessage"
+      );
       const sendNotificationBtn = document.getElementById("sendNotificationBtn");
 
+      // Variabel State
       const courseAuthStatus = {};
       let cachedFiles = [];
       let currentFolderPath = null;
       let pendingAction = null;
       let activeFolderElement = null;
 
+      // ===============================================
+      //         INIT & AUTH
+      // ===============================================
+
       document.addEventListener("DOMContentLoaded", () => {
         auth.onAuthStateChanged((user) => {
           if (user) {
             showAdminView();
           } else {
-            showUserView();
+            // Jika user tidak login, langsung tampilkan Login View
+            showLoginView(); 
           }
         });
       });
+
+      // ===============================================
+      //         DEADLINE & COURSE ACCESS LOGIC
+      // ===============================================
+
+      toggleCourseSelect.addEventListener("change", () => {
+        const courseKey = toggleCourseSelect.value;
+        if (courseKey) {
+          toggleCourseAccessBtn.disabled = false;
+          setDeadlineBtn.disabled = false;
+          updateCourseToggleButtonStatus(courseKey);
+        } else {
+          toggleCourseAccessBtn.textContent = "Status: Memuat...";
+          toggleCourseAccessBtn.classList.remove("access-open", "access-closed");
+          toggleCourseAccessBtn.disabled = true;
+          setDeadlineBtn.disabled = true;
+          courseDeadlineInput.value = "";
+        }
+      });
+
+      setDeadlineBtn.addEventListener("click", () => {
+        const courseKey = toggleCourseSelect.value;
+        const courseName =
+          toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
+        const deadline = courseDeadlineInput.value;
+
+        if (!courseKey || !deadline) {
+          alert(
+            "Mohon pilih Mata Kuliah dan atur waktu deadline terlebih dahulu."
+          );
+          return;
+        }
+
+        if (auth.currentUser) {
+          showPinDialog(
+            "set_deadline",
+            courseKey,
+            `mengatur deadline ${courseName}`,
+            null,
+            { deadline }
+          );
+        } else {
+          alert("Anda harus login sebagai Admin untuk mengatur deadline.");
+        }
+      });
+
+      async function setCourseDeadline(courseKey, deadlineString) {
+        setDeadlineBtn.disabled = true;
+        const originalText = setDeadlineBtn.textContent;
+        setDeadlineBtn.textContent = "Menyimpan Deadline...";
+
+        try {
+          // Simpan deadline dalam format ISO string ke Firebase
+          await database.ref(`akses_unggah/${courseKey}/deadline`).set(deadlineString);
+
+          // Atur juga isOpen menjadi true saat deadline diatur, agar mahasiswa bisa unggah
+          await database.ref(`akses_unggah/${courseKey}/isOpen`).set(true);
+
+          alert(
+            `Deadline untuk Mata Kuliah berhasil diatur pada: ${new Date(
+              deadlineString
+            ).toLocaleString()}`
+          );
+          updateCourseToggleButtonStatus(courseKey);
+        } catch (error) {
+          console.error("Gagal mengatur deadline:", error);
+          alert(`Gagal mengatur deadline: ${error.message}`);
+        } finally {
+          setDeadlineBtn.disabled = false;
+          setDeadlineBtn.textContent = originalText;
+        }
+      }
+
+      async function updateCourseToggleButtonStatus(courseKey) {
+        try {
+          const snapshot = await database
+            .ref(`akses_unggah/${courseKey}`)
+            .once("value");
+          const courseData = snapshot.val() || {};
+          const isOpen = courseData.isOpen === true;
+          const deadline = courseData.deadline;
+
+          // 1. Update status tombol BUKA/TUTUP
+          if (isOpen) {
+            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: BUKA ✅";
+            toggleCourseAccessBtn.classList.remove("access-closed");
+            toggleCourseAccessBtn.classList.add("access-open");
+          } else {
+            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: TUTUP 🔒";
+            toggleCourseAccessBtn.classList.remove("access-open");
+            toggleCourseAccessBtn.classList.add("access-closed");
+          }
+
+          // 2. Update input deadline
+          if (deadline) {
+            // Set nilai input datetime-local
+            courseDeadlineInput.value = deadline.substring(0, 16);
+            // Ubah teks tombol deadline untuk menunjukkan status
+            setDeadlineBtn.textContent = `Deadline Diatur: ${new Date(
+              deadline
+            ).toLocaleString()}`;
+          } else {
+            courseDeadlineInput.value = "";
+            setDeadlineBtn.textContent = "Atur Deadline";
+          }
+        } catch (error) {
+          console.error(
+            "Gagal memperbarui status tombol mata kuliah:",
+            error
+          );
+          toggleCourseAccessBtn.textContent = "Status tidak dapat dimuat.";
+          setDeadlineBtn.textContent = "Gagal memuat deadline.";
+        }
+      }
+
+      // ===============================================
+      //         UI & EVENT LISTENERS UMUM
+      // ===============================================
 
       fileSearchInput.addEventListener("keyup", () => {
         filterFiles(fileSearchInput.value);
       });
 
+      // PERBAIKAN LOGOUT
       loginButton.addEventListener("click", () => {
         if (auth.currentUser) {
           auth
             .signOut()
             .then(() => {
-              showUserView();
+              // Setelah berhasil logout, panggil showLoginView()
+              showLoginView(); 
             })
             .catch((error) => {
               console.error("Logout failed:", error);
@@ -745,8 +966,12 @@
         const password = passwordInput.value;
         loginErrorMessage.textContent = "Sedang login...";
         try {
-          const userCredential = await auth.signInWithEmailAndPassword(email, password);
+          const userCredential = await auth.signInWithEmailAndPassword(
+            email,
+            password
+          );
           const user = userCredential.user;
+          // Hanya UID admin yang diizinkan
           const adminUIDs = {
             rSaaJgKyEQRrh7nblW9pME6o7Ci1: true,
           };
@@ -755,17 +980,21 @@
             showAdminView();
           } else {
             await auth.signOut();
-            loginErrorMessage.textContent = "Akses ditolak. Hanya admin yang diizinkan.";
+            loginErrorMessage.textContent =
+              "Akses ditolak. Hanya admin yang diizinkan.";
+            // Setelah auth.signOut() jika bukan admin, tetap tampilkan dialog login
+            showLoginView(); 
           }
         } catch (error) {
           console.error("Login gagal:", error);
-          loginErrorMessage.textContent = "Email atau password salah. Coba lagi.";
+          loginErrorMessage.textContent =
+            "Email atau password salah. Coba lagi.";
         }
       });
 
       function showAdminView() {
-        mainContent.style.display = "block";
-        loginDialogOverlay.style.display = "none";
+        mainContent.style.display = "block"; // Tampilkan konten utama
+        loginDialogOverlay.style.display = "none"; // Sembunyikan dialog login
         loginButton.textContent = "Logout";
         adminSection.style.display = "block";
         updateAccessButtonStatus();
@@ -773,25 +1002,30 @@
         fetchCourseList();
       }
 
+      // Fungsi ini tidak lagi digunakan oleh auth.onAuthStateChanged
+      // tapi tetap ada jika suatu saat diperlukan untuk user non-admin.
       function showUserView() {
-        mainContent.style.display = "block";
-        loginDialogOverlay.style.display = "none";
+        mainContent.style.display = "block"; 
         loginButton.textContent = "Login Admin";
         adminSection.style.display = "none";
-        fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+        fileListContainer.innerHTML =
+          '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
         fetchFolders();
-        fetchCourseList();
       }
 
       function showLoginView() {
-        mainContent.style.display = "none";
-        loginDialogOverlay.style.display = "flex";
+        mainContent.style.display = "none"; // ✅ Sembunyikan konten utama
+        loginDialogOverlay.style.display = "flex"; // Tampilkan overlay login
         loginButton.textContent = "Login Admin";
         adminSection.style.display = "none";
         emailInput.value = "";
         passwordInput.value = "";
         loginErrorMessage.textContent = "";
       }
+
+      // ===============================================
+      //         PIN DIALOG LOGIC
+      // ===============================================
 
       pinForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -810,11 +1044,18 @@
         pendingAction = null;
       });
 
-      function showPinDialog(actionType, actionKey, dialogTitle, selectedPath, data = null) {
+      function showPinDialog(
+        actionType,
+        actionKey,
+        dialogTitle,
+        selectedPath,
+        data = null
+      ) {
         pinInput.value = "";
         pinErrorMessage.textContent = "";
         pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
-        pinDialogMessage.textContent = "Untuk melanjutkan, Anda harus memasukkan PIN.";
+        pinDialogMessage.textContent =
+          "Untuk melanjutkan, Anda harus memasukkan PIN.";
         pinDialogOverlay.dataset.actionType = actionType;
         pinDialogOverlay.dataset.actionKey = actionKey;
         if (selectedPath) {
@@ -831,46 +1072,75 @@
         pinDialogOverlay.style.display = "flex";
       }
 
-      async function validatePin(enteredPin, actionType, actionKey, selectedPath, folderName) {
-        try {
-          const snapshot = await database.ref(`akses_pin/${actionKey}`).once("value");
-          const correctPin = snapshot.val();
+      async function validatePin(
+        enteredPin,
+        actionType,
+        actionKey,
+        selectedPath,
+        folderName
+      ) {
+        let pinToCheck = "";
 
-          if (enteredPin === correctPin) {
-            pinErrorMessage.textContent = "";
-            pinDialogOverlay.style.display = "none";
+        if (actionType === "toggle_access") {
+          // PIN khusus untuk akses global
+          pinToCheck = await database
+            .ref(`akses_pin/toggle_access_pin`)
+            .once("value")
+            .then((snap) => snap.val());
+        } else if (
+          actionType === "toggle_course_access" ||
+          actionType === "set_deadline"
+        ) {
+          // PIN per mata kuliah
+          pinToCheck = await database
+            .ref(`akses_pin/${actionKey}`)
+            .once("value")
+            .then((snap) => snap.val());
+        } else {
+          // Untuk view/delete/create folder, PIN ada di node aksess_pin/folderKey
+          pinToCheck = await database
+            .ref(`akses_pin/${actionKey}`)
+            .once("value")
+            .then((snap) => snap.val());
+        }
 
-            if (actionType === "view_folder") {
-              if (activeFolderElement) {
-                activeFolderElement.classList.remove("active-folder");
-              }
-              const folderElement = document.querySelector(`.folder-item[data-folder-name="${folderName}"]`);
-              if (folderElement) {
-                folderElement.classList.add("active-folder");
-                activeFolderElement = folderElement;
-              }
+        if (enteredPin === pinToCheck) {
+          pinErrorMessage.textContent = "";
+          pinDialogOverlay.style.display = "none";
 
-              courseAuthStatus[actionKey] = true;
-              fetchFiles(selectedPath);
-            } else if (actionType === "toggle_access") {
-              await _toggleAccessStatusLogic("akses");
-            } else if (actionType === "toggle_course_access") {
-              await _toggleAccessStatusLogic(`akses_unggah/${actionKey}`);
-            } else if (actionType === "delete_folder") {
-              await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
-              pendingAction = null;
-            } else if (actionType === "create_folder") {
-              // This part of the code is now obsolete.
-              // The createFolder function will be called directly.
+          if (actionType === "view_folder") {
+            if (activeFolderElement) {
+              activeFolderElement.classList.remove("active-folder");
             }
-          } else {
-            pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
+            const folderElement = document.querySelector(
+              `.folder-item[data-folder-name="${folderName}"]`
+            );
+            if (folderElement) {
+              folderElement.classList.add("active-folder");
+              activeFolderElement = folderElement;
+            }
+
+            courseAuthStatus[actionKey] = true;
+            fetchFiles(selectedPath);
+          } else if (actionType === "toggle_access") {
+            await _toggleAccessStatusLogic("akses");
+          } else if (actionType === "toggle_course_access") {
+            await _toggleAccessStatusLogic(`akses_unggah/${actionKey}/isOpen`);
+          } else if (actionType === "delete_folder") {
+            await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
+            pendingAction = null;
+          } else if (actionType === "set_deadline") {
+            await setCourseDeadline(actionKey, pendingAction.deadline);
+            pendingAction = null;
           }
-        } catch (error) {
-          console.error("Gagal mendapatkan PIN dari database:", error);
-          pinErrorMessage.textContent = `Gagal memuat PIN: ${error.message}`;
+        } else {
+          pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
         }
       }
+
+      // ===============================================
+      //         FOLDER & FILE LOGIC
+      // ===============================================
 
       async function fetchFolders() {
         const storageRef = storage.ref("dokumen");
@@ -892,7 +1162,8 @@
       function displayFolders(prefixes) {
         folderListContainer.innerHTML = "";
         if (prefixes.length === 0) {
-          folderListContainer.innerHTML = '<p class="empty-message">Belum ada folder yang dibuat.</p>';
+          folderListContainer.innerHTML =
+            '<p class="empty-message">Belum ada folder yang dibuat.</p>';
           return;
         }
 
@@ -903,24 +1174,43 @@
           folderItem.classList.add("folder-item");
           folderItem.dataset.folderName = folderName;
           folderItem.innerHTML = `
-                              <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
-                              <span>${folderName}</span>
-                              <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
-                                  <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
-                              </button>
-                          `;
+                <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
+                <span>${folderName}</span>
+                <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${
+              auth.currentUser ? "block" : "none"
+            };">
+                    <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
+                </button>
+            `;
 
           folderItem.addEventListener("click", () => {
             const path = `dokumen/${folderName}/`;
-            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path, { folderName });
+            showPinDialog(
+              "view_folder",
+              folderKey,
+              `melihat folder ${folderName}`,
+              path,
+              { folderName }
+            );
           });
 
           const deleteButton = folderItem.querySelector(".folder-delete-btn");
           if (deleteButton) {
             deleteButton.addEventListener("click", (e) => {
               e.stopPropagation();
-              if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
-                showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, { folderName, folderKey });
+              if (
+                auth.currentUser &&
+                confirm(
+                  `Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`
+                )
+              ) {
+                showPinDialog(
+                  "delete_folder",
+                  folderKey,
+                  `menghapus folder ${folderName}`,
+                  null,
+                  { folderName, folderKey }
+                );
               }
             });
           }
@@ -944,11 +1234,15 @@
         createFolderBtn.textContent = "Sedang membuat...";
 
         // 1. Buat key yang unik dan aman dari nama folder
-        const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+        const folderKey = folderName
+          .replace(/[^a-zA-Z0-9]/g, "")
+          .toLowerCase();
 
         try {
           // 2. Cek apakah folder dengan key ini sudah ada di database
-          const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
+          const snapshot = await database
+            .ref(`mata_kuliah/${folderKey}`)
+            .once("value");
           if (snapshot.exists()) {
             alert(`Folder "${folderName}" sudah ada. Mohon gunakan nama lain.`);
             return; // Hentikan proses jika folder sudah ada
@@ -965,10 +1259,12 @@
 
           // Simpan data folder baru ke database
           await database.ref(`akses_pin/${folderKey}`).set(folderPin);
-          await database.ref(`akses_unggah/${folderKey}`).set(true);
+          await database.ref(`akses_unggah/${folderKey}/isOpen`).set(true); // Default open
           await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
 
-          alert(`Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`);
+          alert(
+            `Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`
+          );
           newFolderNameInput.value = "";
           newFolderPinInput.value = "";
           fetchFolders();
@@ -985,17 +1281,28 @@
       async function deleteFolder(folderName, folderKey) {
         const folderRef = storage.ref(`dokumen/${folderName}`);
         try {
+          // Hapus semua file di dalam folder (termasuk .gitkeep jika ada)
           const listResult = await folderRef.listAll();
-          const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
+          const deletePromises = listResult.items.map((fileRef) =>
+            fileRef.delete()
+          );
           await Promise.all(deletePromises);
 
-          const dbPromises = [database.ref(`akses_pin/${folderKey}`).remove(), database.ref(`akses_unggah/${folderKey}`).remove(), database.ref(`mata_kuliah/${folderKey}`).remove()];
+          // Hapus entri dari Realtime Database
+          const dbPromises = [
+            database.ref(`akses_pin/${folderKey}`).remove(),
+            database.ref(`akses_unggah/${folderKey}`).remove(),
+            database.ref(`mata_kuliah/${folderKey}`).remove(),
+          ];
           await Promise.all(dbPromises);
 
-          alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
+          alert(
+            `Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`
+          );
           fetchFolders();
           fetchCourseList();
-          fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+          fileListContainer.innerHTML =
+            '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
         } catch (error) {
           console.error("Gagal menghapus folder:", error);
           alert(`Gagal menghapus folder: ${error.message}`);
@@ -1005,7 +1312,8 @@
       async function fetchFiles(path) {
         currentFolderPath = path;
         const storageRef = storage.ref(path);
-        fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
+        fileListContainer.innerHTML =
+          '<p class="status-message">Memuat daftar file...</p>';
 
         try {
           const listResult = await storageRef.listAll();
@@ -1019,7 +1327,9 @@
             return { fileName, downloadURL, filePath, fileExtension };
           });
 
-          cachedFiles = (await Promise.all(filePromises)).filter((file) => file !== null);
+          cachedFiles = (await Promise.all(filePromises)).filter(
+            (file) => file !== null
+          );
           displayFiles(cachedFiles);
         } catch (error) {
           console.error("Gagal mengambil data file:", error);
@@ -1028,14 +1338,17 @@
       }
 
       function filterFiles(searchTerm) {
-        const filtered = cachedFiles.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()));
+        const filtered = cachedFiles.filter((file) =>
+          file.fileName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
         displayFiles(filtered);
       }
 
       function displayFiles(files) {
         fileListContainer.innerHTML = "";
         if (files.length === 0) {
-          fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
+          fileListContainer.innerHTML =
+            '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
           return;
         }
 
@@ -1053,41 +1366,63 @@
           const actionButtonsDiv = document.createElement("div");
           actionButtonsDiv.classList.add("action-buttons");
 
-          const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+          // Preview Button Logic
+          const supportedPreviewExtensions = [
+            "pdf",
+            "doc",
+            "docx",
+            "ppt",
+            "pptx",
+            "xls",
+            "xlsx",
+          ];
           if (supportedPreviewExtensions.includes(file.fileExtension)) {
             const previewBtn = document.createElement("a");
             previewBtn.classList.add("preview-btn");
             previewBtn.target = "_blank";
-            let viewerUrl = file.fileExtension === "pdf" ? file.downloadURL : `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
+            let viewerUrl =
+              file.fileExtension === "pdf"
+                ? file.downloadURL
+                : `https://docs.google.com/gview?url=${encodeURIComponent(
+                    file.downloadURL
+                  )}&embedded=true`;
             previewBtn.href = viewerUrl;
             const previewIcon = document.createElement("img");
-            previewIcon.src = "https://img.icons8.com/material-outlined/24/000000/visible.png";
+            previewIcon.src =
+              "https://img.icons8.com/material-outlined/24/000000/visible.png";
             previewIcon.alt = "Pratinjau";
             previewBtn.appendChild(previewIcon);
             actionButtonsDiv.appendChild(previewBtn);
           }
 
+          // Download Button
           const downloadBtn = document.createElement("a");
           downloadBtn.href = file.downloadURL;
           downloadBtn.classList.add("download-btn");
           downloadBtn.target = "_blank";
           downloadBtn.download = file.fileName;
           const downloadIcon = document.createElement("img");
-          downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
+          downloadIcon.src =
+            "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
           downloadIcon.alt = "Unduh";
           downloadBtn.appendChild(downloadIcon);
           actionButtonsDiv.appendChild(downloadBtn);
 
+          // Delete Button (Admin Only)
           const deleteBtn = document.createElement("button");
           deleteBtn.classList.add("delete-btn");
           const deleteIcon = document.createElement("img");
-          deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
+          deleteIcon.src =
+            "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
           deleteIcon.alt = "Hapus";
           deleteBtn.appendChild(deleteIcon);
           deleteBtn.style.display = auth.currentUser ? "block" : "none";
 
           deleteBtn.addEventListener("click", () => {
-            if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
+            if (
+              auth.currentUser &&
+              confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)
+            ) {
               deleteFile(file.filePath);
             }
           });
@@ -1113,27 +1448,30 @@
         }
       }
 
-      toggleAccessBtn.addEventListener("click", () => {
-        showPinDialog("toggle_access", "toggle_access_pin", "mengubah status akses global", null);
-      });
+      // ===============================================
+      //         ACCESS TOGGLE & NOTIFICATION LOGIC
+      // ===============================================
 
-      toggleCourseSelect.addEventListener("change", () => {
-        const courseKey = toggleCourseSelect.value;
-        if (courseKey) {
-          toggleCourseAccessBtn.disabled = false;
-          updateCourseToggleButtonStatus(courseKey);
-        } else {
-          toggleCourseAccessBtn.textContent = "Status: Memuat...";
-          toggleCourseAccessBtn.classList.remove("access-open", "access-closed");
-          toggleCourseAccessBtn.disabled = true;
-        }
+      toggleAccessBtn.addEventListener("click", () => {
+        showPinDialog(
+          "toggle_access",
+          "toggle_access_pin",
+          "mengubah status akses global",
+          null
+        );
       });
 
       toggleCourseAccessBtn.addEventListener("click", () => {
         const courseKey = toggleCourseSelect.value;
         if (courseKey) {
-          const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
-          showPinDialog("toggle_course_access", courseKey, `mengubah status akses ${courseName}`, null);
+          const courseName =
+            toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
+          showPinDialog(
+            "toggle_course_access",
+            courseKey,
+            `mengubah status akses ${courseName}`,
+            null
+          );
         } else {
           alert("Mohon pilih mata kuliah terlebih dahulu.");
         }
@@ -1143,9 +1481,12 @@
         try {
           const snapshot = await database.ref("mata_kuliah").once("value");
           const courses = snapshot.val();
+
+          // Bersihkan dropdown
           while (toggleCourseSelect.options.length > 1) {
             toggleCourseSelect.remove(1);
           }
+
           if (courses) {
             for (const key in courses) {
               if (Object.hasOwnProperty.call(courses, key)) {
@@ -1187,38 +1528,26 @@
         }
       }
 
-      async function updateCourseToggleButtonStatus(courseKey) {
-        try {
-          const snapshot = await database.ref(`akses_unggah/${courseKey}`).once("value");
-          const isOpen = snapshot.val();
-          if (isOpen === true) {
-            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: BUKA ✅";
-            toggleCourseAccessBtn.classList.remove("access-closed");
-            toggleCourseAccessBtn.classList.add("access-open");
-          } else {
-            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: TUTUP 🔒";
-            toggleCourseAccessBtn.classList.remove("access-open");
-            toggleCourseAccessBtn.classList.add("access-closed");
-          }
-        } catch (error) {
-          console.error("Gagal memperbarui status tombol mata kuliah:", error);
-          toggleCourseAccessBtn.textContent = "Status tidak dapat dimuat.";
-        }
-      }
-
       async function _toggleAccessStatusLogic(dbPath) {
         try {
           const snapshot = await database.ref(dbPath).once("value");
           const currentStatus = snapshot.val();
           const newStatus = !currentStatus;
           await database.ref(dbPath).set(newStatus);
+
           if (dbPath === "akses") {
             updateAccessButtonStatus();
           } else {
-            const courseKey = dbPath.split("/")[1];
+            // dbPath is like 'akses_unggah/mk_key/isOpen'
+            const parts = dbPath.split("/");
+            const courseKey = parts[1];
             updateCourseToggleButtonStatus(courseKey);
           }
-          alert(`Akses berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
+          alert(
+            `Akses berhasil diubah menjadi: ${
+              newStatus ? "DIBUKA" : "DITUTUP"
+            }`
+          );
         } catch (error) {
           console.error("Gagal mengubah status akses:", error);
           alert(`Gagal mengubah status akses: ${error.message}`);
@@ -1255,7 +1584,10 @@
             }
           }
 
-          const newId = `notif-penting-${String(newIdNumber).padStart(2, "0")}`;
+          const newId = `notif-penting-${String(newIdNumber).padStart(
+            2,
+            "0"
+          )}`;
 
           await notifRef.set({
             aktif: true,
