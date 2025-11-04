@@ -4,11 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Akses Dokumen Tugas Mahasiswa Teknologi Informasi UM-Palembang</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1"
-    />
+    <link rel="icon" type="image/x-icon" href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1" />
 
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap");
@@ -462,8 +458,7 @@
       .folder-delete-btn img {
         width: 18px;
         height: 18px;
-        filter: invert(100%) sepia(50%) saturate(1500%) hue-rotate(330deg)
-          brightness(95%) contrast(100%);
+        filter: invert(100%) sepia(50%) saturate(1500%) hue-rotate(330deg) brightness(95%) contrast(100%);
       }
 
       /* Kelas baru untuk folder yang sedang aktif */
@@ -504,6 +499,7 @@
 
       /* Media queries for desktop view */
       @media (min-width: 768px) {
+        /* MENGEMBALIKAN LEBAR CONTAINER KE NORMAL */
         .container {
           max-width: 1000px;
         }
@@ -544,6 +540,20 @@
         .card {
           padding: 40px;
         }
+
+        /* MENGEMBALIKAN KONTROL SCROLL KE BROWSER UTAMA */
+        #report-table-fixed-container {
+          overflow-x: auto; /* Aktifkan scroll horizontal pada kontainer */
+        }
+
+        /* Hapus lebar paksa agar browser menentukan lebar terbaik, dan tampilkan scrollbar jika terlalu lebar */
+        .report-table-fixed th {
+          white-space: nowrap;
+        }
+
+        .report-table-fixed input {
+          width: 55px !important; /* Biarkan input tetap terukur */
+        }
       }
     </style>
 
@@ -558,18 +568,8 @@
       <div class="login-dialog-card">
         <h3>Login Admin</h3>
         <form id="loginForm">
-          <input
-            type="email"
-            id="emailInput"
-            placeholder="Masukkan Email"
-            required
-          />
-          <input
-            type="password"
-            id="passwordInput"
-            placeholder="Masukkan Password"
-            required
-          />
+          <input type="email" id="emailInput" placeholder="Masukkan Email" required />
+          <input type="password" id="passwordInput" placeholder="Masukkan Password" required />
           <p id="loginErrorMessage" class="error-message"></p>
           <div class="dialog-actions">
             <button type="submit" id="loginBtn">Login</button>
@@ -578,23 +578,12 @@
       </div>
     </div>
 
-    <div
-      id="pinDialogOverlay"
-      class="pin-dialog-overlay"
-      style="display: none"
-    >
+    <div id="pinDialogOverlay" class="pin-dialog-overlay" style="display: none">
       <div class="pin-dialog-card">
         <h3 id="pinDialogTitle">Masukkan PIN</h3>
-        <p id="pinDialogMessage">
-          Untuk melanjutkan, Anda harus memasukkan PIN.
-        </p>
+        <p id="pinDialogMessage">Untuk melanjutkan, Anda harus memasukkan PIN.</p>
         <form id="pinForm">
-          <input
-            type="password"
-            id="pinInput"
-            placeholder="Masukkan PIN"
-            required
-          />
+          <input type="password" id="pinInput" placeholder="Masukkan PIN" required />
           <p id="pinErrorMessage" class="error-message"></p>
           <div class="dialog-actions">
             <button type="button" id="cancelBtn">Batal</button>
@@ -604,7 +593,7 @@
       </div>
     </div>
 
-    <div id="mainContent" class="container"> 
+    <div id="mainContent" class="container">
       <div class="card">
         <button id="login-button">Login Admin</button>
         <br />
@@ -612,48 +601,44 @@
         <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
         <div id="admin-section" style="display: none">
-          <button id="toggleAccessBtn" class="access-button">
-            Memuat Status Akses...
-          </button>
+          <button id="toggleAccessBtn" class="access-button">Memuat Status Akses...</button>
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #e0e0e0" />
 
           <div class="admin-flex-container">
             <div class="admin-flex-item">
-              <h3
-                style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px"
-              >
-                Kelola Akses & Deadline Per Mata Kuliah
-              </h3>
+              <h3 style="color: #4a4a4a; font-weight: 600; margin-bottom: 10px">Kelola Akses & Deadline Per Mata Kuliah</h3>
               <div class="toggle-section">
                 <div class="form-group">
                   <label for="toggleCourseSelect">Pilih Mata Kuliah:</label>
                   <select id="toggleCourseSelect">
-                    <option value="" disabled selected>
-                      -- Pilih salah satu --
-                    </option>
+                    <option value="" disabled selected>-- Pilih salah satu --</option>
                   </select>
                 </div>
-                <button
-                  id="toggleCourseAccessBtn"
-                  class="access-button access-closed"
-                  disabled
-                >
-                  Status: Memuat...
-                </button>
+                <button id="toggleCourseAccessBtn" class="access-button access-closed" disabled>Status: Memuat...</button>
 
                 <div class="form-group">
-                  <label for="courseDeadlineInput"
-                    >Atur Batas Waktu Pengumpulan (Deadline):</label
-                  >
+                  <label for="courseDeadlineInput">Atur Batas Waktu Pengumpulan (Deadline):</label>
                   <input type="datetime-local" id="courseDeadlineInput" />
                 </div>
-                <button
-                  id="setDeadlineBtn"
-                  class="access-button access-open"
-                  disabled
-                >
-                  Atur Deadline
-                </button>
+                <button id="setDeadlineBtn" class="access-button access-open" disabled>Atur Deadline</button>
+              </div>
+            </div>
+
+            <div class="admin-flex-item">
+              <div class="create-report-section">
+                <h4>Kelola Laporan Nilai 📊</h4>
+                <ul id="reportListContainer" class="folder-list" style="margin-bottom: 20px">
+                  <p class="status-message">Memuat daftar laporan...</p>
+                </ul>
+                <div class="form-group">
+                  <label for="newReportName">Nama Laporan Baru:</label>
+                  <input type="text" id="newReportName" placeholder="Contoh: Nilai Akhir TI-5B" required />
+                </div>
+                <div class="form-group">
+                  <label for="newReportPin">PIN untuk Laporan Baru:</label>
+                  <input type="password" id="newReportPin" placeholder="Masukkan PIN" required />
+                </div>
+                <button id="createReportBtn" class="access-button access-open">Buat Laporan Baru</button>
               </div>
             </div>
 
@@ -662,25 +647,13 @@
                 <h4>Buat Folder Baru</h4>
                 <div class="form-group">
                   <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
-                  <input
-                    type="text"
-                    id="newFolderName"
-                    placeholder="Masukkan nama folder"
-                    required
-                  />
+                  <input type="text" id="newFolderName" placeholder="Masukkan nama folder" required />
                 </div>
                 <div class="form-group">
                   <label for="newFolderPin">PIN untuk Folder Baru:</label>
-                  <input
-                    type="password"
-                    id="newFolderPin"
-                    placeholder="Masukkan PIN"
-                    required
-                  />
+                  <input type="password" id="newFolderPin" placeholder="Masukkan PIN" required />
                 </div>
-                <button id="createFolderBtn" class="access-button access-open">
-                  Buat Folder & Atur PIN
-                </button>
+                <button id="createFolderBtn" class="access-button access-open">Buat Folder & Atur PIN</button>
               </div>
             </div>
 
@@ -689,28 +662,13 @@
                 <h4>Kirim Notifikasi Manual</h4>
                 <div class="form-group">
                   <label for="notificationTitle">Judul Notifikasi:</label>
-                  <input
-                    type="text"
-                    id="notificationTitle"
-                    placeholder="Misal: Info Penting TI"
-                    required
-                  />
+                  <input type="text" id="notificationTitle" placeholder="Misal: Info Penting TI" required />
                 </div>
                 <div class="form-group">
                   <label for="notificationMessage">Pesan Notifikasi:</label>
-                  <textarea
-                    id="notificationMessage"
-                    placeholder="Masukkan pesan notifikasi"
-                    rows="4"
-                    required
-                  ></textarea>
+                  <textarea id="notificationMessage" placeholder="Masukkan pesan notifikasi" rows="4" required></textarea>
                 </div>
-                <button
-                  id="sendNotificationBtn"
-                  class="access-button access-open"
-                >
-                  Kirim Notifikasi
-                </button>
+                <button id="sendNotificationBtn" class="access-button access-open">Kirim Notifikasi</button>
               </div>
             </div>
           </div>
@@ -776,27 +734,28 @@
       const toggleAccessBtn = document.getElementById("toggleAccessBtn");
       const fileSearchInput = document.getElementById("fileSearch");
       const toggleCourseSelect = document.getElementById("toggleCourseSelect");
-      const toggleCourseAccessBtn = document.getElementById(
-        "toggleCourseAccessBtn"
-      );
+      const toggleCourseAccessBtn = document.getElementById("toggleCourseAccessBtn");
       const newFolderNameInput = document.getElementById("newFolderName");
       const newFolderPinInput = document.getElementById("newFolderPin");
       const folderListContainer = document.getElementById("folderList");
       const createFolderBtn = document.getElementById("createFolderBtn");
-      const folderStatusMessage = document.getElementById(
-        "folder-status-message"
-      );
+      const folderStatusMessage = document.getElementById("folder-status-message");
 
       // DEADLINE ELEMENTS
       const courseDeadlineInput = document.getElementById("courseDeadlineInput");
       const setDeadlineBtn = document.getElementById("setDeadlineBtn");
 
-      const notificationTitleInput =
-        document.getElementById("notificationTitle");
-      const notificationMessageInput = document.getElementById(
-        "notificationMessage"
-      );
+      const notificationTitleInput = document.getElementById("notificationTitle");
+      const notificationMessageInput = document.getElementById("notificationMessage");
       const sendNotificationBtn = document.getElementById("sendNotificationBtn");
+
+      // ====== ELEMEN BARU UNTUK LAPORAN NILAI ======
+      const reportListContainer = document.getElementById("reportListContainer");
+      const newReportNameInput = document.getElementById("newReportName");
+      const newReportPinInput = document.getElementById("newReportPin");
+      const createReportBtn = document.getElementById("createReportBtn");
+      const mainCard = document.querySelector(".card");
+      // ============================================
 
       // Variabel State
       const courseAuthStatus = {};
@@ -804,6 +763,89 @@
       let currentFolderPath = null;
       let pendingAction = null;
       let activeFolderElement = null;
+
+      // KOLOM-KOLOM HASIL PERHITUNGAN
+      const RESULT_COLUMNS = ["NILAI TUGAS", "NILAI AKHIR", "NILAI HURUF", "BOBOT AKHIR"];
+
+      // ===============================================
+      //         UTILITY FUNCTIONS FOR GRADES
+      // ===============================================
+
+      function getLetterGrade(score) {
+        // Rentang Skor Akhir: 80-100 (A, 4), 68-79 (B, 3), 56-67 (C, 2), 40-55 (D, 1), 0-39 (E, 0)
+        if (score >= 80) return { letter: "A", weight: 4, meaning: "Sangat Baik" };
+        if (score >= 68) return { letter: "B", weight: 3, meaning: "Baik" };
+        if (score >= 56) return { letter: "C", weight: 2, meaning: "Cukup" };
+        if (score >= 40) return { letter: "D", weight: 1, meaning: "Gagal" };
+        if (score >= 0) return { letter: "E", weight: 0, meaning: "Gagal" };
+        // Kasus nilai negatif (Seharusnya tidak terjadi karena input min 0)
+        return { letter: "T", weight: 0, meaning: "Tidak Ada" };
+      }
+
+      function calculateFinalGrade(row) {
+        // Bobot: Tugas 20%, UTS 30%, UAS 50%
+        const uts = parseFloat(row.UTS || 0);
+        const uas = parseFloat(row.UAS || 0);
+
+        let totalAssignmentScore = 0;
+        let assignmentCount = 0;
+
+        // Hitung rata-rata Nilai Tugas (semua TUGAS kecuali UTS dan UAS)
+
+        for (let i = 1; i <= 16; i++) {
+          const key = `TUGAS ${i}`;
+          if (i !== 8 && i !== 16 && row.hasOwnProperty(key)) {
+            const score = parseFloat(row[key]) || 0;
+            totalAssignmentScore += score;
+            assignmentCount++;
+          }
+        }
+
+        const nilaitugas = assignmentCount > 0 ? totalAssignmentScore / assignmentCount : 0;
+
+        // Formula: (NilaiTugas*20 + NilaiUTS*30 + NilaiUAS*50) / 100
+        const nilaiAkhir = (nilaitugas * 20 + uts * 30 + uas * 50) / 100;
+
+        const grade = getLetterGrade(nilaiAkhir);
+
+        return {
+          "NILAI TUGAS": nilaitugas.toFixed(2),
+          "NILAI AKHIR": nilaiAkhir.toFixed(2),
+          "NILAI HURUF": grade.letter,
+          "BOBOT AKHIR": grade.weight,
+        };
+      }
+
+      /**
+       * Memperbarui kolom hasil (NILAI TUGAS, NILAI AKHIR, HURUF, BOBOT) di tabel HTML
+       * untuk baris tertentu.
+       * @param {Object} rowData - Data baris yang diperbarui (dari reportData.data[index]).
+       * @param {number} rowIndex - Index baris (0-based) dalam array yang diurutkan.
+       * @param {Array} columnNames - Daftar nama kolom laporan.
+       */
+      function updateResultColumns(rowData, rowIndex, columnNames) {
+        const finalGrades = calculateFinalGrade(rowData);
+        const tbody = document.querySelector(`#report-tbody-${window.currentReportKey}`);
+        if (!tbody) return;
+
+        // Cari elemen <tr> berdasarkan urutan tampilan (rowIndex)
+        const rowElement = tbody.children[rowIndex];
+        if (!rowElement) return;
+
+        // Iterasi melalui kolom yang merupakan HASIL
+        columnNames.forEach((colName, colIndex) => {
+          if (RESULT_COLUMNS.includes(colName)) {
+            // Temukan sel <td> yang sesuai
+            const tdIndex = columnNames.indexOf(colName);
+            const tdElement = rowElement.children[tdIndex];
+
+            if (tdElement) {
+              tdElement.textContent = finalGrades[colName];
+              tdElement.style.backgroundColor = "#e9f8ff"; // Pastikan warna background hasil tetap
+            }
+          }
+        });
+      }
 
       // ===============================================
       //         INIT & AUTH
@@ -814,8 +856,7 @@
           if (user) {
             showAdminView();
           } else {
-            // Jika user tidak login, langsung tampilkan Login View
-            showLoginView(); 
+            showLoginView();
           }
         });
       });
@@ -841,25 +882,16 @@
 
       setDeadlineBtn.addEventListener("click", () => {
         const courseKey = toggleCourseSelect.value;
-        const courseName =
-          toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
+        const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
         const deadline = courseDeadlineInput.value;
 
         if (!courseKey || !deadline) {
-          alert(
-            "Mohon pilih Mata Kuliah dan atur waktu deadline terlebih dahulu."
-          );
+          alert("Mohon pilih Mata Kuliah dan atur waktu deadline terlebih dahulu.");
           return;
         }
 
         if (auth.currentUser) {
-          showPinDialog(
-            "set_deadline",
-            courseKey,
-            `mengatur deadline ${courseName}`,
-            null,
-            { deadline }
-          );
+          showPinDialog("set_deadline", courseKey, `mengatur deadline ${courseName}`, null, { deadline });
         } else {
           alert("Anda harus login sebagai Admin untuk mengatur deadline.");
         }
@@ -877,11 +909,7 @@
           // Atur juga isOpen menjadi true saat deadline diatur, agar mahasiswa bisa unggah
           await database.ref(`akses_unggah/${courseKey}/isOpen`).set(true);
 
-          alert(
-            `Deadline untuk Mata Kuliah berhasil diatur pada: ${new Date(
-              deadlineString
-            ).toLocaleString()}`
-          );
+          alert(`Deadline untuk Mata Kuliah berhasil diatur pada: ${new Date(deadlineString).toLocaleString()}`);
           updateCourseToggleButtonStatus(courseKey);
         } catch (error) {
           console.error("Gagal mengatur deadline:", error);
@@ -894,9 +922,7 @@
 
       async function updateCourseToggleButtonStatus(courseKey) {
         try {
-          const snapshot = await database
-            .ref(`akses_unggah/${courseKey}`)
-            .once("value");
+          const snapshot = await database.ref(`akses_unggah/${courseKey}`).once("value");
           const courseData = snapshot.val() || {};
           const isOpen = courseData.isOpen === true;
           const deadline = courseData.deadline;
@@ -917,18 +943,13 @@
             // Set nilai input datetime-local
             courseDeadlineInput.value = deadline.substring(0, 16);
             // Ubah teks tombol deadline untuk menunjukkan status
-            setDeadlineBtn.textContent = `Deadline Diatur: ${new Date(
-              deadline
-            ).toLocaleString()}`;
+            setDeadlineBtn.textContent = `Deadline Diatur: ${new Date(deadline).toLocaleString()}`;
           } else {
             courseDeadlineInput.value = "";
             setDeadlineBtn.textContent = "Atur Deadline";
           }
         } catch (error) {
-          console.error(
-            "Gagal memperbarui status tombol mata kuliah:",
-            error
-          );
+          console.error("Gagal memperbarui status tombol mata kuliah:", error);
           toggleCourseAccessBtn.textContent = "Status tidak dapat dimuat.";
           setDeadlineBtn.textContent = "Gagal memuat deadline.";
         }
@@ -948,8 +969,7 @@
           auth
             .signOut()
             .then(() => {
-              // Setelah berhasil logout, panggil showLoginView()
-              showLoginView(); 
+              showLoginView();
             })
             .catch((error) => {
               console.error("Logout failed:", error);
@@ -966,10 +986,7 @@
         const password = passwordInput.value;
         loginErrorMessage.textContent = "Sedang login...";
         try {
-          const userCredential = await auth.signInWithEmailAndPassword(
-            email,
-            password
-          );
+          const userCredential = await auth.signInWithEmailAndPassword(email, password);
           const user = userCredential.user;
           // Hanya UID admin yang diizinkan
           const adminUIDs = {
@@ -980,15 +997,12 @@
             showAdminView();
           } else {
             await auth.signOut();
-            loginErrorMessage.textContent =
-              "Akses ditolak. Hanya admin yang diizinkan.";
-            // Setelah auth.signOut() jika bukan admin, tetap tampilkan dialog login
-            showLoginView(); 
+            loginErrorMessage.textContent = "Akses ditolak. Hanya admin yang diizinkan.";
+            showLoginView();
           }
         } catch (error) {
           console.error("Login gagal:", error);
-          loginErrorMessage.textContent =
-            "Email atau password salah. Coba lagi.";
+          loginErrorMessage.textContent = "Email atau password salah. Coba lagi.";
         }
       });
 
@@ -996,21 +1010,20 @@
         mainContent.style.display = "block"; // Tampilkan konten utama
         loginDialogOverlay.style.display = "none"; // Sembunyikan dialog login
         loginButton.textContent = "Logout";
+        loginButton.style.display = "block"; // Pastikan tombol login/logout terlihat
         adminSection.style.display = "block";
         updateAccessButtonStatus();
         fetchFolders();
         fetchCourseList();
-      }
+        fetchReportList(); // <--- PANGGIL FUNGSI BARU
 
-      // Fungsi ini tidak lagi digunakan oleh auth.onAuthStateChanged
-      // tapi tetap ada jika suatu saat diperlukan untuk user non-admin.
-      function showUserView() {
-        mainContent.style.display = "block"; 
-        loginButton.textContent = "Login Admin";
-        adminSection.style.display = "none";
-        fileListContainer.innerHTML =
-          '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
-        fetchFolders();
+        // Pastikan tampilan default file/folder aktif
+        document.querySelectorAll(".folder-list-container, .search-group, #fileList").forEach((el) => (el.style.display = "block"));
+        document.querySelector("h2").textContent = "Daftar Dokumen Tugas Mahasiswa Teknologi Informasi";
+        document.querySelector("hr").style.display = "block";
+
+        // Sembunyikan semua tabel laporan jika ada
+        document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
       }
 
       function showLoginView() {
@@ -1044,18 +1057,11 @@
         pendingAction = null;
       });
 
-      function showPinDialog(
-        actionType,
-        actionKey,
-        dialogTitle,
-        selectedPath,
-        data = null
-      ) {
+      function showPinDialog(actionType, actionKey, dialogTitle, selectedPath, data = null) {
         pinInput.value = "";
         pinErrorMessage.textContent = "";
         pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
-        pinDialogMessage.textContent =
-          "Untuk melanjutkan, Anda harus memasukkan PIN.";
+        pinDialogMessage.textContent = "Untuk melanjutkan, Anda harus memasukkan PIN.";
         pinDialogOverlay.dataset.actionType = actionType;
         pinDialogOverlay.dataset.actionKey = actionKey;
         if (selectedPath) {
@@ -1072,36 +1078,32 @@
         pinDialogOverlay.style.display = "flex";
       }
 
-      async function validatePin(
-        enteredPin,
-        actionType,
-        actionKey,
-        selectedPath,
-        folderName
-      ) {
+      async function validatePin(enteredPin, actionType, actionKey, selectedPath, folderName) {
         let pinToCheck = "";
 
-        if (actionType === "toggle_access") {
-          // PIN khusus untuk akses global
+        // PIN UNTUK LAPORAN NILAI
+        if (actionType === "view_report" || actionType === "delete_report") {
+          pinToCheck = await database
+            .ref(`akses_pin/${actionKey}`) // actionKey adalah reportKey
+            .once("value")
+            .then((snap) => snap.val());
+        }
+        // PIN UNTUK AKSES GLOBAL
+        else if (actionType === "toggle_access") {
           pinToCheck = await database
             .ref(`akses_pin/toggle_access_pin`)
             .once("value")
             .then((snap) => snap.val());
-        } else if (
-          actionType === "toggle_course_access" ||
-          actionType === "set_deadline"
-        ) {
-          // PIN per mata kuliah
+        }
+        // PIN PER MATA KULIAH / FOLDER
+        else if (actionType === "toggle_course_access" || actionType === "set_deadline" || actionType === "view_folder" || actionType === "delete_folder") {
           pinToCheck = await database
             .ref(`akses_pin/${actionKey}`)
             .once("value")
             .then((snap) => snap.val());
         } else {
-          // Untuk view/delete/create folder, PIN ada di node aksess_pin/folderKey
-          pinToCheck = await database
-            .ref(`akses_pin/${actionKey}`)
-            .once("value")
-            .then((snap) => snap.val());
+          // Fallback, harusnya tidak tercapai
+          pinToCheck = null;
         }
 
         if (enteredPin === pinToCheck) {
@@ -1112,9 +1114,7 @@
             if (activeFolderElement) {
               activeFolderElement.classList.remove("active-folder");
             }
-            const folderElement = document.querySelector(
-              `.folder-item[data-folder-name="${folderName}"]`
-            );
+            const folderElement = document.querySelector(`.folder-item[data-folder-name="${folderName}"]`);
             if (folderElement) {
               folderElement.classList.add("active-folder");
               activeFolderElement = folderElement;
@@ -1122,6 +1122,27 @@
 
             courseAuthStatus[actionKey] = true;
             fetchFiles(selectedPath);
+          }
+          // LOGIKA UNTUK TAMPILKAN LAPORAN NILAI SETELAH PIN BENAR
+          else if (actionType === "view_report") {
+            const reportKey = actionKey;
+            const reportName = pendingAction.reportName;
+
+            // Hapus semua tabel laporan yang mungkin sudah dibuat, untuk memastikan hanya 1 yang aktif
+            document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
+
+            const reportTableId = `report-table-${reportKey}`;
+            let reportElement = document.createElement("div");
+            reportElement.id = reportTableId;
+            reportElement.style.marginTop = "20px";
+            mainCard.appendChild(reportElement);
+
+            displayReportTable(reportKey, reportName); // Panggil fungsi render utama
+          }
+          // LOGIKA UNTUK HAPUS LAPORAN SETELAH PIN BENAR
+          else if (actionType === "delete_report") {
+            await deleteReport(actionKey, pendingAction.reportName);
+            pendingAction = null;
           } else if (actionType === "toggle_access") {
             await _toggleAccessStatusLogic("akses");
           } else if (actionType === "toggle_course_access") {
@@ -1130,7 +1151,6 @@
             await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
             pendingAction = null;
           } else if (actionType === "set_deadline") {
-            await setCourseDeadline(actionKey, pendingAction.deadline);
             pendingAction = null;
           }
         } else {
@@ -1162,8 +1182,7 @@
       function displayFolders(prefixes) {
         folderListContainer.innerHTML = "";
         if (prefixes.length === 0) {
-          folderListContainer.innerHTML =
-            '<p class="empty-message">Belum ada folder yang dibuat.</p>';
+          folderListContainer.innerHTML = '<p class="empty-message">Belum ada folder yang dibuat.</p>';
           return;
         }
 
@@ -1174,43 +1193,24 @@
           folderItem.classList.add("folder-item");
           folderItem.dataset.folderName = folderName;
           folderItem.innerHTML = `
-                <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
-                <span>${folderName}</span>
-                <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${
-              auth.currentUser ? "block" : "none"
-            };">
-                    <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
-                </button>
-            `;
+                            <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
+                            <span>${folderName}</span>
+                            <button class="folder-delete-btn" data-folder-name="${folderName}" style="display: ${auth.currentUser ? "block" : "none"};">
+                                <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Folder" />
+                            </button>
+                        `;
 
           folderItem.addEventListener("click", () => {
             const path = `dokumen/${folderName}/`;
-            showPinDialog(
-              "view_folder",
-              folderKey,
-              `melihat folder ${folderName}`,
-              path,
-              { folderName }
-            );
+            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path, { folderName });
           });
 
           const deleteButton = folderItem.querySelector(".folder-delete-btn");
           if (deleteButton) {
             deleteButton.addEventListener("click", (e) => {
               e.stopPropagation();
-              if (
-                auth.currentUser &&
-                confirm(
-                  `Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`
-                )
-              ) {
-                showPinDialog(
-                  "delete_folder",
-                  folderKey,
-                  `menghapus folder ${folderName}`,
-                  null,
-                  { folderName, folderKey }
-                );
+              if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
+                showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, { folderName, folderKey });
               }
             });
           }
@@ -1234,15 +1234,11 @@
         createFolderBtn.textContent = "Sedang membuat...";
 
         // 1. Buat key yang unik dan aman dari nama folder
-        const folderKey = folderName
-          .replace(/[^a-zA-Z0-9]/g, "")
-          .toLowerCase();
+        const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
         try {
           // 2. Cek apakah folder dengan key ini sudah ada di database
-          const snapshot = await database
-            .ref(`mata_kuliah/${folderKey}`)
-            .once("value");
+          const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
           if (snapshot.exists()) {
             alert(`Folder "${folderName}" sudah ada. Mohon gunakan nama lain.`);
             return; // Hentikan proses jika folder sudah ada
@@ -1262,9 +1258,7 @@
           await database.ref(`akses_unggah/${folderKey}/isOpen`).set(true); // Default open
           await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
 
-          alert(
-            `Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`
-          );
+          alert(`Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`);
           newFolderNameInput.value = "";
           newFolderPinInput.value = "";
           fetchFolders();
@@ -1283,26 +1277,17 @@
         try {
           // Hapus semua file di dalam folder (termasuk .gitkeep jika ada)
           const listResult = await folderRef.listAll();
-          const deletePromises = listResult.items.map((fileRef) =>
-            fileRef.delete()
-          );
+          const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
           await Promise.all(deletePromises);
 
           // Hapus entri dari Realtime Database
-          const dbPromises = [
-            database.ref(`akses_pin/${folderKey}`).remove(),
-            database.ref(`akses_unggah/${folderKey}`).remove(),
-            database.ref(`mata_kuliah/${folderKey}`).remove(),
-          ];
+          const dbPromises = [database.ref(`akses_pin/${folderKey}`).remove(), database.ref(`akses_unggah/${folderKey}`).remove(), database.ref(`mata_kuliah/${folderKey}`).remove()];
           await Promise.all(dbPromises);
 
-          alert(
-            `Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`
-          );
+          alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
           fetchFolders();
           fetchCourseList();
-          fileListContainer.innerHTML =
-            '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+          fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
         } catch (error) {
           console.error("Gagal menghapus folder:", error);
           alert(`Gagal menghapus folder: ${error.message}`);
@@ -1312,8 +1297,7 @@
       async function fetchFiles(path) {
         currentFolderPath = path;
         const storageRef = storage.ref(path);
-        fileListContainer.innerHTML =
-          '<p class="status-message">Memuat daftar file...</p>';
+        fileListContainer.innerHTML = '<p class="status-message">Memuat daftar file...</p>';
 
         try {
           const listResult = await storageRef.listAll();
@@ -1327,9 +1311,7 @@
             return { fileName, downloadURL, filePath, fileExtension };
           });
 
-          cachedFiles = (await Promise.all(filePromises)).filter(
-            (file) => file !== null
-          );
+          cachedFiles = (await Promise.all(filePromises)).filter((file) => file !== null);
           displayFiles(cachedFiles);
         } catch (error) {
           console.error("Gagal mengambil data file:", error);
@@ -1338,17 +1320,14 @@
       }
 
       function filterFiles(searchTerm) {
-        const filtered = cachedFiles.filter((file) =>
-          file.fileName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const filtered = cachedFiles.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()));
         displayFiles(filtered);
       }
 
       function displayFiles(files) {
         fileListContainer.innerHTML = "";
         if (files.length === 0) {
-          fileListContainer.innerHTML =
-            '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
+          fileListContainer.innerHTML = '<p class="empty-message">Tidak ada file yang ditemukan.</p>';
           return;
         }
 
@@ -1367,29 +1346,15 @@
           actionButtonsDiv.classList.add("action-buttons");
 
           // Preview Button Logic
-          const supportedPreviewExtensions = [
-            "pdf",
-            "doc",
-            "docx",
-            "ppt",
-            "pptx",
-            "xls",
-            "xlsx",
-          ];
+          const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
           if (supportedPreviewExtensions.includes(file.fileExtension)) {
             const previewBtn = document.createElement("a");
             previewBtn.classList.add("preview-btn");
             previewBtn.target = "_blank";
-            let viewerUrl =
-              file.fileExtension === "pdf"
-                ? file.downloadURL
-                : `https://docs.google.com/gview?url=${encodeURIComponent(
-                    file.downloadURL
-                  )}&embedded=true`;
+            let viewerUrl = file.fileExtension === "pdf" ? file.downloadURL : `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
             previewBtn.href = viewerUrl;
             const previewIcon = document.createElement("img");
-            previewIcon.src =
-              "https://img.icons8.com/material-outlined/24/000000/visible.png";
+            previewIcon.src = "https://img.icons8.com/material-outlined/24/000000/visible.png";
             previewIcon.alt = "Pratinjau";
             previewBtn.appendChild(previewIcon);
             actionButtonsDiv.appendChild(previewBtn);
@@ -1402,8 +1367,7 @@
           downloadBtn.target = "_blank";
           downloadBtn.download = file.fileName;
           const downloadIcon = document.createElement("img");
-          downloadIcon.src =
-            "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
+          downloadIcon.src = "https://img.icons8.com/material-outlined/24/000000/download--v1.png";
           downloadIcon.alt = "Unduh";
           downloadBtn.appendChild(downloadIcon);
           actionButtonsDiv.appendChild(downloadBtn);
@@ -1412,17 +1376,13 @@
           const deleteBtn = document.createElement("button");
           deleteBtn.classList.add("delete-btn");
           const deleteIcon = document.createElement("img");
-          deleteIcon.src =
-            "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
+          deleteIcon.src = "https://img.icons8.com/material-outlined/24/000000/trash--v1.png";
           deleteIcon.alt = "Hapus";
           deleteBtn.appendChild(deleteIcon);
           deleteBtn.style.display = auth.currentUser ? "block" : "none";
 
           deleteBtn.addEventListener("click", () => {
-            if (
-              auth.currentUser &&
-              confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)
-            ) {
+            if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
               deleteFile(file.filePath);
             }
           });
@@ -1453,25 +1413,14 @@
       // ===============================================
 
       toggleAccessBtn.addEventListener("click", () => {
-        showPinDialog(
-          "toggle_access",
-          "toggle_access_pin",
-          "mengubah status akses global",
-          null
-        );
+        showPinDialog("toggle_access", "toggle_access_pin", "mengubah status akses global", null);
       });
 
       toggleCourseAccessBtn.addEventListener("click", () => {
         const courseKey = toggleCourseSelect.value;
         if (courseKey) {
-          const courseName =
-            toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
-          showPinDialog(
-            "toggle_course_access",
-            courseKey,
-            `mengubah status akses ${courseName}`,
-            null
-          );
+          const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
+          showPinDialog("toggle_course_access", courseKey, `mengubah status akses ${courseName}`, null);
         } else {
           alert("Mohon pilih mata kuliah terlebih dahulu.");
         }
@@ -1543,11 +1492,7 @@
             const courseKey = parts[1];
             updateCourseToggleButtonStatus(courseKey);
           }
-          alert(
-            `Akses berhasil diubah menjadi: ${
-              newStatus ? "DIBUKA" : "DITUTUP"
-            }`
-          );
+          alert(`Akses berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
         } catch (error) {
           console.error("Gagal mengubah status akses:", error);
           alert(`Gagal mengubah status akses: ${error.message}`);
@@ -1584,10 +1529,7 @@
             }
           }
 
-          const newId = `notif-penting-${String(newIdNumber).padStart(
-            2,
-            "0"
-          )}`;
+          const newId = `notif-penting-${String(newIdNumber).padStart(2, "0")}`;
 
           await notifRef.set({
             aktif: true,
@@ -1606,6 +1548,657 @@
         } finally {
           sendNotificationBtn.disabled = false;
           sendNotificationBtn.textContent = originalBtnText;
+        }
+      }
+
+      // ===============================================
+      //         LAPORAN NILAI LOGIC (FITUR BARU)
+      // ===============================================
+
+      async function fetchReportList() {
+        reportListContainer.innerHTML = '<p class="status-message">Memuat daftar laporan...</p>';
+        try {
+          const snapshot = await database.ref("laporan_nilai").once("value");
+          const reports = snapshot.val();
+          reportListContainer.innerHTML = "";
+
+          if (reports) {
+            for (const key in reports) {
+              const reportName = reports[key].name || key; // Gunakan key jika name tidak ada
+              const reportItem = document.createElement("li");
+              reportItem.classList.add("folder-item"); // Reuse folder-item style
+              reportItem.dataset.reportKey = key;
+
+              const deleteBtnHtml = `
+                    <button 
+                        class="folder-delete-btn delete-report-btn" 
+                        data-report-key="${key}" 
+                        data-report-name="${reportName}"
+                        style="display: ${auth.currentUser ? "block" : "none"};"
+                    >
+                        <img src="https://img.icons8.com/material-outlined/24/000000/trash--v1.png" alt="Hapus Laporan" />
+                    </button>
+                `;
+
+              reportItem.innerHTML = `
+                                <img src="https://img.icons8.com/color/48/000000/documents.png" alt="Report Icon" class="folder-icon" />
+                                <span>${reportName}</span>
+                                ${deleteBtnHtml}
+                            `;
+
+              // Event listener untuk melihat laporan
+              reportItem.addEventListener("click", (e) => {
+                // Jika yang diklik adalah tombol hapus, jangan tampilkan laporan
+                if (e.target.closest(".delete-report-btn")) return;
+
+                // --- MINTA PIN SEBELUM MELIHAT LAPORAN ---
+                showPinDialog("view_report", key, `melihat laporan ${reportName}`, null, { reportName });
+                // ----------------------------------------
+              });
+
+              // Event listener untuk menghapus laporan
+              const deleteButton = reportItem.querySelector(".delete-report-btn");
+              if (deleteButton) {
+                deleteButton.addEventListener("click", (e) => {
+                  e.stopPropagation();
+                  if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus Laporan Nilai "${reportName}"? Aksi ini tidak dapat dibatalkan.`)) {
+                    showPinDialog("delete_report", key, `menghapus laporan ${reportName}`, null, { reportName: reportName });
+                  }
+                });
+              }
+
+              reportListContainer.appendChild(reportItem);
+            }
+          } else {
+            reportListContainer.innerHTML = '<p class="empty-message">Belum ada laporan nilai yang dibuat.</p>';
+          }
+        } catch (error) {
+          console.error("Gagal memuat daftar laporan:", error);
+          reportListContainer.innerHTML = `<p class="status-message" style="color:#dc3545;">Gagal memuat laporan: ${error.message}</p>`;
+        }
+      }
+
+      // FUNGSI BARU: HAPUS LAPORAN
+      async function deleteReport(reportKey, reportName) {
+        try {
+          // 1. Hapus data laporan dari laporan_nilai
+          await database.ref(`laporan_nilai/${reportKey}`).remove();
+
+          // 2. Hapus PIN terkait dari akses_pin
+          await database.ref(`akses_pin/${reportKey}`).remove();
+
+          alert(`Laporan "${reportName}" berhasil dihapus.`);
+          fetchReportList(); // Muat ulang daftar laporan
+
+          // Bersihkan tampilan jika laporan yang dihapus sedang aktif
+          document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
+          showAdminView();
+        } catch (error) {
+          console.error("Gagal menghapus laporan:", error);
+          alert(`Gagal menghapus laporan: ${error.message}`);
+        }
+      }
+
+      createReportBtn.addEventListener("click", () => {
+        const reportName = newReportNameInput.value.trim();
+        if (!reportName) {
+          alert("Mohon masukkan nama laporan.");
+          return;
+        }
+        createReport(reportName);
+      });
+
+      async function createReport(reportName) {
+        createReportBtn.disabled = true;
+        const originalBtnText = createReportBtn.textContent;
+        createReportBtn.textContent = "Sedang membuat...";
+
+        // --- AMBIL PIN BARU ---
+        const reportPin = newReportPinInput.value.trim();
+        if (!reportPin) {
+          alert("PIN untuk Laporan Baru tidak boleh kosong.");
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+          return;
+        }
+        // -----------------------
+
+        // 1. Dapatkan daftar mahasiswa dari input user via prompt
+        const studentListInput = prompt("Masukkan daftar mahasiswa (NIM, Nama Mahasiswa, L/P) per baris.\nContoh:\n162024001,NADA MAHARANI,P\n162024002,JUNIAIN RISKI,L\n\n(Kosongkan untuk data demo 3 mahasiswa)");
+
+        if (studentListInput === null) {
+          // User membatalkan prompt
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+          return;
+        }
+
+        let rawStudents = [];
+        if (studentListInput.trim() === "") {
+          // Data demo jika user kosongkan
+          rawStudents = ["162024001,NAMA DEMO SATU,P", "162024002,NAMA DEMO DUA,L", "162024003,NAMA DEMO TIGA,P"];
+        } else {
+          rawStudents = studentListInput
+            .trim()
+            .split("\n")
+            .filter((line) => line.trim() !== ""); // Filter baris kosong
+        }
+
+        const taskColumns = [];
+        for (let i = 1; i <= 16; i++) {
+          // Kolom TUGAS 1 sampai TUGAS 16
+          // Mengganti TUGAS 8 dan TUGAS 16
+          if (i === 8) taskColumns.push("UTS");
+          else if (i === 16) taskColumns.push("UAS");
+          else taskColumns.push(`TUGAS ${i}`);
+        }
+
+        const studentData = [];
+
+        // 2. Proses data input
+        rawStudents.forEach((line) => {
+          const parts = line.split(",").map((p) => p.trim());
+          if (parts.length >= 3) {
+            const nim = parts[0];
+            const name = parts[1];
+            const lp = parts[2].toUpperCase().substring(0, 1); // Ambil L atau P
+
+            let studentRow = {
+              NIM: nim,
+              "NAMA MAHASISWA": name,
+              L_P: lp,
+              // Inisiasi nilai untuk kolom ujian
+              UTS: 0,
+              UAS: 0,
+            };
+
+            // Tambahkan kolom Tugas (1-7, 9-15) dengan nilai awal 0
+            for (let i = 1; i <= 16; i++) {
+              if (i === 8) studentRow["UTS"] = 0;
+              else if (i === 16) studentRow["UAS"] = 0;
+              else studentRow[`TUGAS ${i}`] = 0;
+            }
+
+            studentData.push(studentRow);
+          }
+        });
+
+        if (studentData.length === 0) {
+          alert("Input data mahasiswa tidak valid. Pastikan formatnya adalah NIM, Nama Mahasiswa, L/P dan minimal ada 1 mahasiswa.");
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+          return;
+        }
+
+        // --- PENGURUTAN SEBELUM DISIMPAN KE FIREBASE ---
+        studentData.sort((a, b) => {
+          const nimA = parseInt(a.NIM);
+          const nimB = parseInt(b.NIM);
+          if (!isNaN(nimA) && !isNaN(nimB)) {
+            return nimA - nimB; // Urutan berdasarkan angka NIM
+          }
+          return a.NIM.localeCompare(b.NIM); // Fallback ke pengurutan string
+        });
+        // ----------------------------------------------
+
+        // 4. Tambahkan kolom hasil ke array kolom utama
+        const columnsArray = ["NO", "NAMA MAHASISWA", "NIM", "L_P", ...taskColumns, ...RESULT_COLUMNS];
+
+        try {
+          const newReportRef = database.ref("laporan_nilai").push();
+          const reportKey = newReportRef.key;
+
+          await newReportRef.set({
+            name: reportName, // Simpan nama laporan
+            columns: columnsArray,
+            data: studentData,
+          });
+
+          // --- SIMPAN PIN DI NODE AKSES_PIN ---
+          await database.ref(`akses_pin/${reportKey}`).set(reportPin);
+          // ------------------------------------
+
+          alert(`Laporan "${reportName}" berhasil dibuat dengan PIN. Gunakan PIN ini untuk mengakses.`);
+          newReportNameInput.value = "";
+          newReportPinInput.value = ""; // Bersihkan input PIN
+          fetchReportList();
+        } catch (error) {
+          console.error("Gagal membuat laporan:", error);
+          alert(`Gagal membuat laporan: ${error.message}`);
+        } finally {
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+        }
+      }
+
+      function displayReportTable(reportKey, reportName) {
+        // Simpan reportKey yang sedang aktif untuk fungsi update live
+        window.currentReportKey = reportKey;
+
+        // Sembunyikan semua konten utama
+        document.querySelectorAll(".folder-list-container, .search-group, #fileList, #admin-section").forEach((el) => (el.style.display = "none"));
+        document.querySelector("h2").textContent = `Laporan Nilai: ${reportName}`;
+        document.querySelector("hr").style.display = "none";
+        loginButton.style.display = "none";
+
+        // Hapus semua tabel laporan yang mungkin sudah dibuat
+        document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
+
+        const reportTableId = `report-table-${reportKey}`;
+        let reportElement = document.createElement("div");
+        reportElement.id = reportTableId;
+        reportElement.style.marginTop = "20px";
+        mainCard.appendChild(reportElement); // Sisipkan ke dalam card utama
+
+        renderReportContent(reportElement, reportKey, reportName);
+      }
+
+      async function renderReportContent(container, reportKey, reportName) {
+        container.innerHTML = `<p class="status-message">Memuat detail laporan...</p>`;
+
+        // Tombol-tombol Aksi (BACK & EXPORT)
+        const actionDiv = document.createElement("div");
+        actionDiv.style.marginBottom = "15px";
+
+        const backBtn = document.createElement("button");
+        backBtn.textContent = "⬅️ Kembali ke Admin Dashboard";
+        backBtn.classList.add("access-button", "access-closed");
+        backBtn.style.marginRight = "10px";
+        backBtn.style.marginBottom = "0";
+        backBtn.addEventListener("click", () => {
+          container.remove(); // Hapus tabel saat kembali
+          delete window.currentReportKey; // Hapus state reportKey yang aktif
+          showAdminView(); // Tampilkan kembali Admin View
+        });
+        actionDiv.appendChild(backBtn);
+
+        const exportBtn = document.createElement("button");
+        exportBtn.textContent = "Export ke CSV 📄";
+        exportBtn.classList.add("access-button", "access-open");
+        exportBtn.style.marginBottom = "0";
+        exportBtn.addEventListener("click", () => exportReportToCSV(reportKey, reportName));
+        actionDiv.appendChild(exportBtn);
+
+        container.innerHTML = "";
+        container.appendChild(actionDiv);
+
+        const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+        const reportData = dataSnapshot.val();
+
+        if (!reportData || !reportData.data || reportData.data.length === 0) {
+          container.innerHTML += '<p class="empty-message">Tidak ada data mahasiswa dalam laporan ini.</p>';
+
+          // Tambahkan tombol Add Student di sini juga jika list kosong
+          const addStudentBtn = document.createElement("button");
+          addStudentBtn.textContent = "⬇️ Tambah Baris Mahasiswa Baru";
+          addStudentBtn.classList.add("access-button", "access-open");
+          addStudentBtn.style.marginTop = "15px";
+          addStudentBtn.style.width = "100%";
+          addStudentBtn.addEventListener("click", () => addNewStudentRow(reportKey, reportData.name));
+          container.appendChild(addStudentBtn);
+
+          return;
+        }
+
+        // --- PENGURUTAN SEBELUM DITAMPILKAN ---
+        reportData.data.sort((a, b) => {
+          const nimA = parseInt(a.NIM);
+          const nimB = parseInt(b.NIM);
+          if (!isNaN(nimA) && !isNaN(nimB)) {
+            return nimA - nimB; // Urutan berdasarkan angka NIM
+          }
+          return a.NIM.localeCompare(b.NIM); // Fallback ke pengurutan string
+        });
+        // ------------------------------------
+
+        const tableContainer = document.createElement("div");
+        // Kontainer ini akan memiliki scrollbar jika tabel terlalu lebar
+        tableContainer.id = "report-table-fixed-container";
+        container.appendChild(tableContainer);
+
+        const table = document.createElement("table");
+        table.style.width = "auto"; // Mengizinkan tabel menyusut/melebar sesuai konten
+        table.style.minWidth = "100%"; // Agar tetap memenuhi 100% jika layarnya cukup lebar
+        table.style.borderCollapse = "collapse";
+
+        // Buat kolom header
+        let headerHtml = "<tr>";
+        reportData.columns.forEach((col) => {
+          let minWidth = "auto";
+          let bgColor = "#007bff";
+
+          // Tentukan lebar kolom nilai agar tampilan desktop optimal
+          if (col.includes("TUGAS")) {
+            minWidth = "80px";
+          } else if (col === "NIM") {
+            minWidth = "100px";
+          } else if (col === "NAMA MAHASISWA") {
+            minWidth = "150px";
+          } else if (col === "UTS" || col === "UAS" || RESULT_COLUMNS.includes(col)) {
+            minWidth = "100px";
+          } else if (col === "NO" || col === "L_P") {
+            minWidth = "40px";
+          }
+
+          if (RESULT_COLUMNS.includes(col)) {
+            bgColor = "#17a2b8"; // Warna berbeda untuk hasil perhitungan
+          }
+
+          headerHtml += `<th class="report-table-fixed" style="border: 1px solid #ddd; padding: 8px; min-width: ${minWidth}; background-color: ${bgColor}; color: white; white-space: nowrap;">${col}</th>`;
+        });
+        headerHtml += "</tr>";
+
+        table.innerHTML = `
+          <thead style="color: white;">
+            ${headerHtml}
+          </thead>
+          <tbody id="report-tbody-${reportKey}">
+            </tbody>
+        `;
+        tableContainer.appendChild(table);
+
+        const tbody = document.getElementById(`report-tbody-${reportKey}`);
+        reportData.data.forEach((row, rowIndex) => {
+          // Hitung nilai akhir untuk baris ini
+          const finalGrades = calculateFinalGrade(row);
+
+          const tr = document.createElement("tr");
+          tr.dataset.rowIndex = rowIndex; // Simpan index urutan TAMPILAN
+
+          reportData.columns.forEach((colName, colIndex) => {
+            const td = document.createElement("td");
+            td.style.border = "1px solid #ddd";
+            td.style.padding = "8px";
+
+            td.style.textAlign = ["NO", "L_P"].includes(colName) || colName.includes("TUGAS") || colName === "UTS" || colName === "UAS" ? "center" : "left";
+
+            if (colName === "NO") {
+              td.textContent = rowIndex + 1;
+            } else if (RESULT_COLUMNS.includes(colName)) {
+              // Kolom Hasil Perhitungan
+              td.textContent = finalGrades[colName];
+              td.style.backgroundColor = "#e9f8ff";
+            } else if (["NAMA MAHASISWA", "NIM", "L_P"].includes(colName)) {
+              // Kolom data identitas
+              td.textContent = row[colName];
+            } else {
+              // Kolom nilai yang bisa diedit (TUGAS, UTS, UAS, dll.)
+              const input = document.createElement("input");
+              input.type = "number";
+              input.min = 0;
+              input.max = 100;
+              input.value = row[colName] || 0;
+              // Gunakan style inline untuk lebar input agar konsisten
+              input.style.width = "55px";
+              input.style.textAlign = "center";
+              input.style.border = "1px solid #ccc";
+              input.style.borderRadius = "4px";
+              input.style.padding = "5px";
+              input.style.boxSizing = "border-box";
+              input.style.transition = "background-color 0.2s";
+
+              input.dataset.colName = colName;
+              input.dataset.rowIndex = rowIndex;
+
+              input.addEventListener("change", async (e) => {
+                const changedRowIndex = parseInt(e.target.dataset.rowIndex);
+                const changedColName = e.target.dataset.colName;
+                const newValue = parseInt(e.target.value) || 0;
+
+                e.target.disabled = true;
+                e.target.style.backgroundColor = "#fff3cd"; // Kuning: Menyimpan
+
+                try {
+                  // 1. Update data di array lokal (yang sudah diurutkan)
+                  reportData.data[changedRowIndex][changedColName] = newValue;
+
+                  // 2. Simpan SELURUH array data ke Firebase (Lebih aman untuk data yang diurutkan)
+                  await database.ref(`laporan_nilai/${reportKey}/data`).set(reportData.data);
+
+                  // 3. Update Kolom Hasil secara LIVE (tanpa render ulang tabel)
+                  updateResultColumns(reportData.data[changedRowIndex], changedRowIndex, reportData.columns);
+
+                  e.target.style.backgroundColor = "#d4edda"; // Hijau: Berhasil
+                  setTimeout(() => {
+                    e.target.style.backgroundColor = "white";
+                    e.target.disabled = false;
+                  }, 500);
+                } catch (error) {
+                  console.error("Gagal menyimpan nilai:", error);
+                  e.target.style.backgroundColor = "#f8d7da"; // Merah: Error
+                  alert("Gagal menyimpan nilai. Cek koneksi.");
+                  setTimeout(() => {
+                    e.target.style.backgroundColor = "white";
+                    e.target.disabled = false;
+                  }, 2000);
+                }
+              });
+              td.appendChild(input);
+            }
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
+        });
+
+        // Tombol Tambah Kolom Nilai Baru (horizontal)
+        const newColumnBtn = document.createElement("button");
+        newColumnBtn.textContent = "➕ Tambah Kolom Nilai Baru";
+        newColumnBtn.classList.add("access-button", "access-open");
+        newColumnBtn.style.marginTop = "15px";
+        newColumnBtn.style.width = "100%";
+        newColumnBtn.addEventListener("click", () => {
+          const newColName = prompt("Masukkan nama kolom nilai baru (Contoh: QUIZ atau TUGAS 17):");
+          if (newColName && newColName.trim()) {
+            addNewColumn(reportKey, newColName.trim().toUpperCase());
+          } else if (newColName !== null) {
+            alert("Nama kolom tidak boleh kosong.");
+          }
+        });
+        container.appendChild(newColumnBtn);
+
+        // Tombol Tambah Baris Mahasiswa Baru (vertikal)
+        const addStudentBtn = document.createElement("button");
+        addStudentBtn.textContent = "⬇️ Tambah Baris Mahasiswa Baru (Otomatis Diurutkan)";
+        addStudentBtn.classList.add("access-button", "access-open");
+        addStudentBtn.style.marginTop = "15px";
+        addStudentBtn.style.width = "100%";
+        addStudentBtn.addEventListener("click", () => addNewStudentRow(reportKey, reportData.name));
+        container.appendChild(addStudentBtn);
+      }
+
+      // ===============================================
+      //         FUNGSI TAMBAH BARIS MAHASISWA BARU
+      // ===============================================
+      async function addNewStudentRow(reportKey, reportName) {
+        const studentInput = prompt("Masukkan data mahasiswa baru (NIM, Nama Mahasiswa, L/P).\nContoh: 162024099,JOHN DOE,L");
+
+        if (!studentInput) return; // Batal atau input kosong
+
+        const parts = studentInput.split(",").map((p) => p.trim());
+        if (parts.length < 3) {
+          alert("Format input salah. Harap masukkan NIM, Nama Mahasiswa, dan L/P dipisahkan koma.");
+          return;
+        }
+
+        const [nim, name, lpRaw] = parts;
+        const lp = lpRaw.toUpperCase().substring(0, 1);
+
+        if (!nim || !name || (lp !== "L" && lp !== "P")) {
+          alert("Data tidak lengkap atau Jenis Kelamin (L/P) tidak valid.");
+          return;
+        }
+
+        try {
+          // 1. Ambil data laporan yang sudah ada
+          const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+          const reportData = dataSnapshot.val();
+          let currentData = reportData.data || [];
+          const columns = reportData.columns;
+
+          // Cek duplikasi NIM
+          if (currentData.some((row) => row.NIM === nim)) {
+            alert(`Mahasiswa dengan NIM ${nim} sudah ada di laporan ini.`);
+            return;
+          }
+
+          // 2. Buat objek data mahasiswa baru
+          let newStudentRow = {
+            NIM: nim,
+            "NAMA MAHASISWA": name,
+            L_P: lp,
+            UTS: 0,
+            UAS: 0,
+          };
+
+          // 3. Isi nilai 0 untuk semua kolom tugas/nilai yang sudah ada
+          columns.forEach((col) => {
+            if (col.startsWith("TUGAS") || col === "UTS" || col === "UAS") {
+              newStudentRow[col] = 0;
+            }
+          });
+
+          // 4. Tambahkan ke array data saat ini
+          currentData.push(newStudentRow);
+
+          // 5. Urutkan kembali array data
+          currentData.sort((a, b) => {
+            const nimA = parseInt(a.NIM);
+            const nimB = parseInt(b.NIM);
+            if (!isNaN(nimA) && !isNaN(nimB)) {
+              return nimA - nimB; // Urutan berdasarkan angka NIM
+            }
+            return a.NIM.localeCompare(b.NIM); // Fallback ke pengurutan string
+          });
+
+          // 6. Simpan kembali ke Firebase
+          await database.ref(`laporan_nilai/${reportKey}/data`).set(currentData);
+
+          alert(`Mahasiswa "${name}" berhasil ditambahkan ke laporan dan diurutkan berdasarkan NIM.`);
+
+          // Render ulang tabel untuk menampilkan baris baru dengan urutan yang benar
+          const oldTable = document.getElementById(`report-table-${reportKey}`);
+          if (oldTable) oldTable.remove();
+          displayReportTable(reportKey, reportName);
+        } catch (error) {
+          console.error("Gagal menambahkan baris mahasiswa:", error);
+          alert(`Gagal menambahkan mahasiswa: ${error.message}`);
+        }
+      }
+
+      async function addNewColumn(reportKey, newColName) {
+        try {
+          const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+          const reportData = dataSnapshot.val();
+
+          if (reportData.columns.includes(newColName)) {
+            alert(`Kolom dengan nama "${newColName}" sudah ada.`);
+            return;
+          }
+
+          // Cek apakah kolom hasil akan tertimpa
+          if (RESULT_COLUMNS.includes(newColName)) {
+            alert(`Nama kolom "${newColName}" dicadangkan untuk hasil perhitungan.`);
+            return;
+          }
+
+          // 1. Ambil kolom original tanpa kolom hasil
+          const originalColumns = reportData.columns.filter((col) => !RESULT_COLUMNS.includes(col));
+
+          // 2. Tambahkan kolom baru di sebelum kolom hasil
+          const newColumns = [...originalColumns, newColName, ...RESULT_COLUMNS];
+
+          await database.ref(`laporan_nilai/${reportKey}/columns`).set(newColumns);
+
+          // 3. Inisialisasi nilai 0 untuk kolom baru di setiap baris data
+          const newData = reportData.data.map((row) => ({
+            ...row,
+            [newColName]: 0, // Nilai awal 0
+          }));
+          await database.ref(`laporan_nilai/${reportKey}/data`).set(newData);
+
+          alert(`Kolom "${newColName}" berhasil ditambahkan. Memuat ulang tabel...`);
+
+          // Render ulang tabel untuk menampilkan kolom baru
+          const oldTable = document.getElementById(`report-table-${reportKey}`);
+          const reportName = reportData.name;
+          if (oldTable) oldTable.remove();
+          displayReportTable(reportKey, reportName);
+        } catch (error) {
+          console.error("Gagal menambahkan kolom:", error);
+          alert(`Gagal menambahkan kolom: ${error.message}`);
+        }
+      }
+
+      // Fungsi untuk Ekspor ke CSV
+      async function exportReportToCSV(reportKey, reportName) {
+        try {
+          const snapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+          const reportData = snapshot.val();
+
+          if (!reportData || !reportData.data || reportData.data.length === 0) {
+            alert("Tidak ada data untuk diekspor.");
+            return;
+          }
+
+          const columns = reportData.columns;
+          let data = reportData.data;
+
+          // Urutkan data berdasarkan NIM sebelum diekspor
+          data.sort((a, b) => {
+            const nimA = parseInt(a.NIM);
+            const nimB = parseInt(b.NIM);
+            if (!isNaN(nimA) && !isNaN(nimB)) {
+              return nimA - nimB;
+            }
+            return a.NIM.localeCompare(b.NIM);
+          });
+
+          // Siapkan data dengan kolom hasil yang sudah dihitung
+          const dataWithGrades = data.map((row) => {
+            const grades = calculateFinalGrade(row);
+            return { ...row, ...grades };
+          });
+
+          // Header CSV
+          let csvContent = columns.join(",") + "\n";
+
+          // Isi Data
+          dataWithGrades.forEach((row, index) => {
+            const rowValues = columns.map((col) => {
+              if (col === "NO") return index + 1;
+              let value = row[col];
+
+              // Logika Khusus untuk memastikan nilai numerik diekspor tanpa tanda kutip
+              if (RESULT_COLUMNS.includes(col) || col.includes("TUGAS") || col === "UTS" || col === "UAS") {
+                value = parseFloat(value); // Pastikan numerik
+              }
+
+              // Mengatasi koma/newline dalam data string (jika ada)
+              if (typeof value === "string" && (value.includes(",") || value.includes("\n"))) {
+                return `"${value.replace(/"/g, '""')}"`;
+              }
+              return value;
+            });
+            csvContent += rowValues.join(",") + "\n";
+          });
+
+          // Buat Blob dan Download
+          const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+          const link = document.createElement("a");
+          if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `${reportName.replace(/\s/g, "_")}_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            alert("Browser Anda tidak mendukung fitur download otomatis. Mohon salin konten CSV secara manual.");
+          }
+        } catch (error) {
+          console.error("Gagal ekspor CSV:", error);
+          alert(`Gagal mengekspor data: ${error.message}`);
         }
       }
     </script>
