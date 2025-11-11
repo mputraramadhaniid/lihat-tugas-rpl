@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Akses Dokumen Tugas Mahasiswa TI UM-Palembang</title>
-    <link
-        rel="icon"
-        type="image/x-icon"
-        href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1"
-    />
+    <link rel="icon" type="image/x-icon" href="https://firebasestorage.googleapis.com/v0/b/ruangbelajar-52a67.appspot.com/o/LOGO%20PRODI%202025.png?alt=media&token=a13b26cd-23c0-40bb-bd96-c4ff014673a1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -17,442 +13,421 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
-    
+
     <style>
-        /* CSS Variables untuk Dark Theme */
-        :root {
-            --primary: #4e73df; /* Biru */
-            --accent-red: #e74a3b; /* Merah */
-            --text-light: #ecf0f1;
-            --text-muted: #95a5a6;
-            --bg-dark: #1f2a3a; /* Background gelap utama */
-            --card-bg: #2b394d; /* Background Card/Kontainer */
-            --border-dark: #44546c; /* Border/garis pemisah */
-        }
+      /* CSS Variables untuk Dark Theme */
+      :root {
+        --primary: #4e73df; /* Biru */
+        --accent-red: #e74a3b; /* Merah */
+        --text-light: #ecf0f1;
+        --text-muted: #95a5a6;
+        --bg-dark: #1f2a3a; /* Background gelap utama */
+        --card-bg: #2b394d; /* Background Card/Kontainer */
+        --border-dark: #44546c; /* Border/garis pemisah */
+      }
 
-        body {
-            font-family: "Poppins", sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            min-height: 100vh;
-            padding: 20px 0;
-        }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-dark);
+        color: var(--text-light);
+        min-height: 100vh;
+        padding: 20px 0;
+      }
 
-        /* Container & Card Overrides */
-        .container {
-            max-width: 1200px;
-        }
+      /* Container & Card Overrides */
+      .container {
+        max-width: 1200px;
+      }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-dark);
-        }
+      .card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        border: 1px solid var(--border-dark);
+      }
 
-        h2, h3, h4, h5 {
-            color: var(--text-light);
-            font-weight: 600;
-        }
+      h2,
+      h3,
+      h4,
+      h5 {
+        color: var(--text-light);
+        font-weight: 600;
+      }
 
-        hr {
-            border-top: 1px solid var(--border-dark) !important;
-            opacity: 1;
-        }
+      hr {
+        border-top: 1px solid var(--border-dark) !important;
+        opacity: 1;
+      }
 
-        /* Form Controls */
-        .form-control, .form-select {
-            background-color: var(--bg-dark) !important;
-            border-color: var(--border-dark) !important;
-            color: var(--text-light) !important;
-        }
+      /* Form Controls */
+      .form-control,
+      .form-select {
+        background-color: var(--bg-dark) !important;
+        border-color: var(--border-dark) !important;
+        color: var(--text-light) !important;
+      }
 
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary) !important;
-            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25) !important;
-        }
-        
-        .form-group label {
-            color: var(--text-light);
-            font-weight: 500;
-        }
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25) !important;
+      }
 
+      .form-group label {
+        color: var(--text-light);
+        font-weight: 500;
+      }
 
-        /* Action Buttons (Admin Custom) */
-        .access-button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+      /* Action Buttons (Admin Custom) */
+      .access-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
 
-        .access-open {
-            background-color: var(--primary);
-            color: white;
-        }
+      .access-open {
+        background-color: var(--primary);
+        color: white;
+      }
 
-        .access-closed {
-            background-color: var(--accent-red);
-            color: white;
-        }
+      .access-closed {
+        background-color: var(--accent-red);
+        color: white;
+      }
 
-        .access-open:hover { background-color: #3f65c9; }
-        .access-closed:hover { background-color: #c73729; }
+      .access-open:hover {
+        background-color: #3f65c9;
+      }
+      .access-closed:hover {
+        background-color: #c73729;
+      }
 
-        /* Dialog Styles - KRITIS UNTUK POP-UP */
-        .pin-dialog-overlay, .login-dialog-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.85);
-            display: flex; /* Kritis: untuk menengahkan konten */
-            justify-content: center;
-            align-items: center;
-            z-index: 2000; /* Nilai tinggi agar di atas semua konten */
-        }
-        
-        .pin-dialog-card, .login-dialog-card {
-            background: var(--card-bg);
-            color: var(--text-light);
-            border: 1px solid var(--border-dark);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            padding: 40px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 450px;
-        }
+      /* Dialog Styles - KRITIS UNTUK POP-UP */
+      .pin-dialog-overlay,
+      .login-dialog-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.85);
+        display: flex; /* Kritis: untuk menengahkan konten */
+        justify-content: center;
+        align-items: center;
+        z-index: 2000; /* Nilai tinggi agar di atas semua konten */
+      }
 
-        .error-message {
-            color: var(--accent-red);
-        }
-        /* End Kritis Dialog Style */
+      .pin-dialog-card,
+      .login-dialog-card {
+        background: var(--card-bg);
+        color: var(--text-light);
+        border: 1px solid var(--border-dark);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        padding: 40px;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 450px;
+      }
 
-        /* Folder & File List Styles */
-        .folder-list, #fileList {
-            list-style: none;
-            padding: 0;
-        }
-        
+      .error-message {
+        color: var(--accent-red);
+      }
+      /* End Kritis Dialog Style */
+
+      /* Folder & File List Styles */
+      .folder-list,
+      #fileList {
+        list-style: none;
+        padding: 0;
+      }
+
+      .folder-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 15px;
+      }
+
+      .folder-item {
+        background-color: var(--bg-dark);
+        border: 1px solid var(--border-dark);
+        color: var(--text-light);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+        position: relative;
+      }
+      .folder-item:hover {
+        background-color: #34495e;
+        transform: translateY(-2px);
+      }
+
+      .active-folder {
+        background-color: var(--primary) !important;
+        border-color: var(--primary) !important;
+      }
+
+      .folder-delete-btn img {
+        filter: invert(100%);
+        width: 18px;
+        height: 18px;
+      }
+
+      #fileList li {
+        background-color: var(--bg-dark);
+        border: 1px solid var(--border-dark);
+        margin-bottom: 8px;
+        padding: 12px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      #fileList li .file-name-text {
+        color: var(--primary);
+        font-weight: 500;
+        flex-grow: 1;
+        margin-right: 15px;
+      }
+
+      .action-buttons img {
+        filter: invert(100%);
+        width: 24px;
+        height: 24px;
+      }
+
+      /* Quiz Management Styles */
+      #quizQuestionsList {
+        list-style: none;
+        padding-left: 0;
+        border: 1px solid var(--border-dark);
+        border-radius: 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 10px;
+      }
+
+      #quizQuestionsList li {
+        background-color: var(--bg-dark);
+        padding: 10px;
+        border-bottom: 1px dashed var(--border-dark);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 1200px) {
         .folder-list {
-             display: grid;
-             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-             gap: 15px;
+          grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
         }
-        
-        .folder-item {
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border-dark);
-            color: var(--text-light);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            position: relative;
+      }
+      @media (max-width: 768px) {
+        .folder-list {
+          grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         }
-        .folder-item:hover {
-            background-color: #34495e;
-            transform: translateY(-2px);
+        .admin-flex-item {
+          flex-basis: 100% !important;
         }
-        
-        .active-folder {
-            background-color: var(--primary) !important;
-            border-color: var(--primary) !important;
-        }
-        
-        .folder-delete-btn img {
-            filter: invert(100%);
-            width: 18px;
-            height: 18px;
-        }
-        
-        #fileList li {
-            background-color: var(--bg-dark);
-            border: 1px solid var(--border-dark);
-            margin-bottom: 8px;
-            padding: 12px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        #fileList li .file-name-text {
-            color: var(--primary);
-            font-weight: 500;
-            flex-grow: 1;
-            margin-right: 15px;
-        }
-        
-        .action-buttons img {
-            filter: invert(100%);
-            width: 24px;
-            height: 24px;
-        }
-        
-        /* Quiz Management Styles */
-        #quizQuestionsList {
-            list-style: none;
-            padding-left: 0;
-            border: 1px solid var(--border-dark);
-            border-radius: 8px;
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 10px;
-        }
-        
-        #quizQuestionsList li {
-            background-color: var(--bg-dark);
-            padding: 10px;
-            border-bottom: 1px dashed var(--border-dark);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 1200px) {
-             .folder-list {
-                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            }
-        }
-        @media (max-width: 768px) {
-            .folder-list {
-                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            }
-            .admin-flex-item {
-                flex-basis: 100% !important;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
-    <div id="loginDialogOverlay" class="login-dialog-overlay" style="display: none;">
-        <div class="login-dialog-card">
-            <h3 class="mb-4">Login Admin</h3>
-            <form id="loginForm">
-                <input type="email" id="emailInput" class="form-control mb-3" placeholder="Masukkan Email" required />
-                <input type="password" id="passwordInput" class="form-control mb-3" placeholder="Masukkan Password" required />
-                <p id="loginErrorMessage" class="error-message"></p>
-                <div class="dialog-actions">
-                    <button type="submit" id="loginBtn" class="btn btn-primary w-100">Login</button>
-                </div>
-            </form>
-        </div>
+  <body>
+    <div id="loginDialogOverlay" class="login-dialog-overlay" style="display: none">
+      <div class="login-dialog-card">
+        <h3 class="mb-4">Login Admin</h3>
+        <form id="loginForm">
+          <input type="email" id="emailInput" class="form-control mb-3" placeholder="Masukkan Email" required />
+          <input type="password" id="passwordInput" class="form-control mb-3" placeholder="Masukkan Password" required />
+          <p id="loginErrorMessage" class="error-message"></p>
+          <div class="dialog-actions">
+            <button type="submit" id="loginBtn" class="btn btn-primary w-100">Login</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div id="pinDialogOverlay" class="pin-dialog-overlay" style="display: none">
-        <div class="pin-dialog-card">
-            <h3 id="pinDialogTitle" class="mb-3">Masukkan PIN</h3>
-            <p id="pinDialogMessage" class="text-muted">Untuk melanjutkan, Anda harus memasukkan PIN.</p>
-            <form id="pinForm">
-                <input type="password" id="pinInput" class="form-control mb-3" placeholder="Masukkan PIN" required />
-                <p id="pinErrorMessage" class="error-message"></p>
-                <div class="dialog-actions d-flex gap-2">
-                    <button type="button" id="cancelBtn" class="btn btn-secondary flex-fill">Batal</button>
-                    <button type="submit" id="accessBtn" class="btn btn-primary flex-fill">Akses</button>
-                </div>
-            </form>
-        </div>
+      <div class="pin-dialog-card">
+        <h3 id="pinDialogTitle" class="mb-3">Masukkan PIN</h3>
+        <p id="pinDialogMessage" class="text-muted">Untuk melanjutkan, Anda harus memasukkan PIN.</p>
+        <form id="pinForm">
+          <input type="password" id="pinInput" class="form-control mb-3" placeholder="Masukkan PIN" required />
+          <p id="pinErrorMessage" class="error-message"></p>
+          <div class="dialog-actions d-flex gap-2">
+            <button type="button" id="cancelBtn" class="btn btn-secondary flex-fill">Batal</button>
+            <button type="submit" id="accessBtn" class="btn btn-primary flex-fill">Akses</button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div id="quizQuestionDialogOverlay" class="pin-dialog-overlay" style="display: none">
-        <div class="pin-dialog-card" style="max-width: 600px">
-            <h3 id="quizQuestionDialogTitle" class="mb-3">Tambah Soal Baru</h3>
-            <form id="quizQuestionForm">
-                <div class="form-group text-start mb-3">
-                    <label for="questionTextInput">Soal Pertanyaan:</label>
-                    <textarea id="questionTextInput" class="form-control" rows="3" required></textarea>
-                </div>
+      <div class="pin-dialog-card" style="max-width: 600px">
+        <h3 id="quizQuestionDialogTitle" class="mb-3">Tambah Soal Baru</h3>
+        <form id="quizQuestionForm">
+          <div class="form-group text-start mb-3">
+            <label for="questionTextInput">Soal Pertanyaan:</label>
+            <textarea id="questionTextInput" class="form-control" rows="3" required></textarea>
+          </div>
 
-                <div class="form-group text-start mb-3">
-                    <label>Pilihan Jawaban (Min. 2, Max. 4):</label>
-                    <div id="quizOptionsContainer">
-                        </div>
-                </div>
+          <div class="form-group text-start mb-3">
+            <label>Pilihan Jawaban (Min. 2, Max. 4):</label>
+            <div id="quizOptionsContainer"></div>
+          </div>
 
-                <p id="quizQuestionErrorMessage" class="error-message"></p>
-                <div class="d-grid gap-2">
-                    <button
-                        type="button"
-                        id="addQuizOptionBtn"
-                        class="access-button access-open"
-                    >
-                        <i class="fas fa-plus"></i> Tambah Pilihan
-                    </button>
-                    <div class="d-flex gap-2">
-                        <button type="button" id="cancelQuizQuestionBtn" class="access-button access-closed w-50">Batal</button>
-                        <button type="submit" id="saveQuizQuestionBtn" class="access-button access-open w-50">Simpan Soal</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+          <p id="quizQuestionErrorMessage" class="error-message"></p>
+          <div class="d-grid gap-2">
+            <button type="button" id="addQuizOptionBtn" class="access-button access-open"><i class="fas fa-plus"></i> Tambah Pilihan</button>
+            <div class="d-flex gap-2">
+              <button type="button" id="cancelQuizQuestionBtn" class="access-button access-closed w-50">Batal</button>
+              <button type="submit" id="saveQuizQuestionBtn" class="access-button access-open w-50">Simpan Soal</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div id="mainContent" class="container">
-        <div class="card p-4">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h2 class="mb-0">Daftar Dokumen Tugas Mahasiswa Teknologi Informasi</h2>
-                <button id="login-button" class="btn btn-secondary btn-sm"><i class="fas fa-sign-in-alt"></i> Login Admin</button>
-            </div>
-            
-            <hr class="mt-0 mb-3" />
-
-            <div id="admin-section" style="display: none">
-                <button id="toggleAccessBtn" class="access-button w-100 mb-3"><i class="fas fa-sync-alt"></i> Memuat Status Akses...</button>
-                <hr class="mb-3" />
-
-                <div class="row g-3 admin-flex-container">
-                    
-                    <div class="col-12 col-lg-4 admin-flex-item">
-                        <h4 class="mb-3"><i class="fas fa-calendar-alt"></i> Kelola Akses & Deadline</h4>
-                        <div class="d-grid gap-2">
-                            <div class="form-group text-start">
-                                <label for="toggleCourseSelect">Pilih Mata Kuliah:</label>
-                                <select id="toggleCourseSelect" class="form-select">
-                                    <option value="" disabled selected>-- Pilih salah satu --</option>
-                                </select>
-                            </div>
-                            <button
-                                id="toggleCourseAccessBtn"
-                                class="access-button access-closed"
-                                disabled
-                            >
-                                Status: Memuat...
-                            </button>
-
-                            <div class="form-group text-start">
-                                <label for="courseDeadlineInput">Atur Batas Waktu Pengumpulan:</label>
-                                <input type="datetime-local" id="courseDeadlineInput" class="form-control" />
-                            </div>
-                            <button id="setDeadlineBtn" class="access-button access-open" disabled>
-                                <i class="fas fa-clock"></i> Atur Deadline
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
-                        <h4 class="mb-3"><i class="fas fa-chart-line"></i> Kelola Laporan Nilai</h4>
-                        <ul id="reportListContainer" class="folder-list">
-                            <p class="status-message">Memuat daftar laporan...</p>
-                        </ul>
-                        <div class="form-group text-start">
-                            <label for="newReportName">Nama Laporan Baru:</label>
-                            <input type="text" id="newReportName" class="form-control" placeholder="Contoh: Nilai Akhir TI-5B" required />
-                        </div>
-                        <div class="form-group text-start">
-                            <label for="newReportPin">PIN untuk Laporan Baru:</label>
-                            <input type="password" id="newReportPin" class="form-control" placeholder="Masukkan PIN" required />
-                        </div>
-                        <button id="createReportBtn" class="access-button access-open w-100">
-                            <i class="fas fa-file-invoice"></i> Buat Laporan Baru
-                        </button>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
-                        <div class="quiz-management-section">
-                            <h4 class="mb-3"><i class="fas fa-brain"></i> Kelola Kuis Cepat</h4>
-                            
-                            <div id="quizControlPanel">
-                                </div>
-                            
-                            <div class="form-group text-start">
-                                <label for="quizKeyInput">Kunci Akses Kuis (PIN):</label>
-                                <input type="text" id="quizKeyInput" class="form-control" placeholder="Contoh: KUISHEBAT2025" required />
-                                <button id="saveQuizKeyBtn" class="access-button access-open w-100 mt-2"><i class="fas fa-save"></i> Simpan Kunci & Config</button>
-                            </div>
-
-                            <div class="d-grid gap-1 mb-3">
-                                <div class="form-check text-start">
-                                    <input class="form-check-input" type="checkbox" id="quizActiveCheckbox" />
-                                    <label class="form-check-label" for="quizActiveCheckbox">
-                                        Kuis Aktif (Bisa Diakses Mahasiswa)
-                                    </label>
-                                </div>
-                                <div class="form-check text-start">
-                                    <input class="form-check-input" type="checkbox" id="quizRetakeCheckbox" />
-                                    <label class="form-check-label" for="quizRetakeCheckbox">
-                                        Izinkan Mahasiswa Mengulang (Retake)
-                                    </label>
-                                </div>
-                            </div>
-
-                            <h5 class="mt-3">Daftar Soal (<span id="quizQuestionCount">0</span> Soal)</h5>
-                            <ul id="quizQuestionsList" class="p-2">
-                                <p class="status-message text-center">Tidak ada soal yang dimuat.</p>
-                            </ul>
-
-                            <button id="resetQuizResultsBtn" class="access-button access-closed w-100 mt-2">
-                                <i class="fas fa-eraser"></i> Hapus Semua Hasil Kuis (⚠️ Reset)
-                            </button>
-                            
-                            
-                        </div>
-                    </div>
-                    
-                    <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
-                        <div class="create-folder-section">
-                            <h4 class="mb-3"><i class="fas fa-folder-plus"></i> Buat Folder Baru</h4>
-                            <div class="form-group text-start">
-                                <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
-                                <input type="text" id="newFolderName" class="form-control" placeholder="Masukkan nama folder" required />
-                            </div>
-                            <div class="form-group text-start">
-                                <label for="newFolderPin">PIN untuk Folder Baru:</label>
-                                <input type="password" id="newFolderPin" class="form-control" placeholder="Masukkan PIN" required />
-                            </div>
-                            <button id="createFolderBtn" class="access-button access-open w-100">
-                                <i class="fas fa-lock"></i> Buat Folder & Atur PIN
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
-                        <div class="notification-section">
-                            <h4 class="mb-3"><i class="fas fa-bell"></i> Kirim Notifikasi Manual</h4>
-                            <div class="form-group text-start">
-                                <label for="notificationTitle">Judul Notifikasi:</label>
-                                <input type="text" id="notificationTitle" class="form-control" placeholder="Misal: Info Penting TI" required />
-                            </div>
-                            <div class="form-group text-start">
-                                <label for="notificationMessage">Pesan Notifikasi:</label>
-                                <textarea id="notificationMessage" class="form-control" placeholder="Masukkan pesan notifikasi" rows="4" required></textarea>
-                            </div>
-                            <button id="sendNotificationBtn" class="access-button access-open w-100">
-                                <i class="fas fa-paper-plane"></i> Kirim Notifikasi
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-                <hr class="mt-3 mb-3" />
-            </div>
-
-            <div class="folder-list-container">
-                <h4 class="mb-3"><i class="fas fa-folder-open"></i> Pilih Folder Dokumen</h4>
-                <ul id="folderList" class="folder-list">
-                    <p class="status-message">Memuat daftar folder...</p>
-                </ul>
-                <p class="status-message" id="folder-status-message"></p>
-            </div>
-
-            <div class="search-group mb-3">
-                <input type="text" id="fileSearch" class="form-control" placeholder="Cari nama file..." />
-            </div>
-
-            <ul id="fileList">
-                <p class="status-message text-center">Pilih folder di atas untuk melihat file.</p>
-            </ul>
+      <div class="card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="mb-0">Daftar Dokumen Tugas Mahasiswa Teknologi Informasi</h2>
+          <button id="login-button" class="btn btn-secondary btn-sm"><i class="fas fa-sign-in-alt"></i> Login Admin</button>
         </div>
+
+        <hr class="mt-0 mb-3" />
+
+        <div id="admin-section" style="display: none">
+          <button id="toggleAccessBtn" class="access-button w-100 mb-3"><i class="fas fa-sync-alt"></i> Memuat Status Akses...</button>
+          <hr class="mb-3" />
+
+          <div class="row g-3 admin-flex-container">
+            <div class="col-12 col-lg-4 admin-flex-item">
+              <h4 class="mb-3"><i class="fas fa-calendar-alt"></i> Kelola Akses & Deadline</h4>
+              <div class="d-grid gap-2">
+                <div class="form-group text-start">
+                  <label for="toggleCourseSelect">Pilih Mata Kuliah:</label>
+                  <select id="toggleCourseSelect" class="form-select">
+                    <option value="" disabled selected>-- Pilih salah satu --</option>
+                  </select>
+                </div>
+                <button id="toggleCourseAccessBtn" class="access-button access-closed" disabled>Status: Memuat...</button>
+
+                <div class="form-group text-start">
+                  <label for="courseDeadlineInput">Atur Batas Waktu Pengumpulan:</label>
+                  <input type="datetime-local" id="courseDeadlineInput" class="form-control" />
+                </div>
+                <button id="setDeadlineBtn" class="access-button access-open" disabled><i class="fas fa-clock"></i> Atur Deadline</button>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
+              <h4 class="mb-3"><i class="fas fa-chart-line"></i> Kelola Laporan Nilai</h4>
+              <ul id="reportListContainer" class="folder-list">
+                <p class="status-message">Memuat daftar laporan...</p>
+              </ul>
+              <div class="form-group text-start">
+                <label for="newReportName">Nama Laporan Baru:</label>
+                <input type="text" id="newReportName" class="form-control" placeholder="Contoh: Nilai Akhir TI-5B" required />
+              </div>
+              <div class="form-group text-start">
+                <label for="newReportPin">PIN untuk Laporan Baru:</label>
+                <input type="password" id="newReportPin" class="form-control" placeholder="Masukkan PIN" required />
+              </div>
+              <button id="createReportBtn" class="access-button access-open w-100"><i class="fas fa-file-invoice"></i> Buat Laporan Baru</button>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
+              <div class="quiz-management-section">
+                <h4 class="mb-3"><i class="fas fa-brain"></i> Kelola Kuis Cepat</h4>
+
+                <div id="quizControlPanel"></div>
+
+                <div class="form-group text-start">
+                  <label for="quizKeyInput">Kunci Akses Kuis (PIN):</label>
+                  <input type="text" id="quizKeyInput" class="form-control" placeholder="Contoh: KUISHEBAT2025" required />
+                  <button id="saveQuizKeyBtn" class="access-button access-open w-100 mt-2"><i class="fas fa-save"></i> Simpan Kunci & Config</button>
+                </div>
+
+                <div class="d-grid gap-1 mb-3">
+                  <div class="form-check text-start">
+                    <input class="form-check-input" type="checkbox" id="quizActiveCheckbox" />
+                    <label class="form-check-label" for="quizActiveCheckbox"> Kuis Aktif (Bisa Diakses Mahasiswa) </label>
+                  </div>
+                  <div class="form-check text-start">
+                    <input class="form-check-input" type="checkbox" id="quizRetakeCheckbox" />
+                    <label class="form-check-label" for="quizRetakeCheckbox"> Izinkan Mahasiswa Mengulang (Retake) </label>
+                  </div>
+                </div>
+
+                <h5 class="mt-3">Daftar Soal (<span id="quizQuestionCount">0</span> Soal)</h5>
+                <ul id="quizQuestionsList" class="p-2">
+                  <p class="status-message text-center">Tidak ada soal yang dimuat.</p>
+                </ul>
+
+                <button id="resetQuizResultsBtn" class="access-button access-closed w-100 mt-2"><i class="fas fa-eraser"></i> Hapus Semua Hasil Kuis (⚠️ Reset)</button>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
+              <div class="create-folder-section">
+                <h4 class="mb-3"><i class="fas fa-folder-plus"></i> Buat Folder Baru</h4>
+                <div class="form-group text-start">
+                  <label for="newFolderName">Nama Mata Kuliah / Folder:</label>
+                  <input type="text" id="newFolderName" class="form-control" placeholder="Masukkan nama folder" required />
+                </div>
+                <div class="form-group text-start">
+                  <label for="newFolderPin">PIN untuk Folder Baru:</label>
+                  <input type="password" id="newFolderPin" class="form-control" placeholder="Masukkan PIN" required />
+                </div>
+                <button id="createFolderBtn" class="access-button access-open w-100"><i class="fas fa-lock"></i> Buat Folder & Atur PIN</button>
+              </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4 admin-flex-item">
+              <div class="notification-section">
+                <h4 class="mb-3"><i class="fas fa-bell"></i> Kirim Notifikasi Manual</h4>
+                <div class="form-group text-start">
+                  <label for="notificationTitle">Judul Notifikasi:</label>
+                  <input type="text" id="notificationTitle" class="form-control" placeholder="Misal: Info Penting TI" required />
+                </div>
+                <div class="form-group text-start">
+                  <label for="notificationMessage">Pesan Notifikasi:</label>
+                  <textarea id="notificationMessage" class="form-control" placeholder="Masukkan pesan notifikasi" rows="4" required></textarea>
+                </div>
+                <button id="sendNotificationBtn" class="access-button access-open w-100"><i class="fas fa-paper-plane"></i> Kirim Notifikasi</button>
+              </div>
+            </div>
+          </div>
+          <hr class="mt-3 mb-3" />
+        </div>
+
+        <div class="folder-list-container">
+          <h4 class="mb-3"><i class="fas fa-folder-open"></i> Pilih Folder Dokumen</h4>
+          <ul id="folderList" class="folder-list">
+            <p class="status-message">Memuat daftar folder...</p>
+          </ul>
+          <p class="status-message" id="folder-status-message"></p>
+        </div>
+
+        <div class="search-group mb-3">
+          <input type="text" id="fileSearch" class="form-control" placeholder="Cari nama file..." />
+        </div>
+
+        <ul id="fileList">
+          <p class="status-message text-center">Pilih folder di atas untuk melihat file.</p>
+        </ul>
+      </div>
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    
-<script>
-    // Konfigurasi Firebase Anda
-    const firebaseConfig = {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <script>
+      // Konfigurasi Firebase Anda
+      const firebaseConfig = {
         apiKey: "AIzaSyCZAfnelUdrwUz856j2hC3yJWqUm-JJmiI",
         authDomain: "ruangbelajar-52a67.firebaseapp.com",
         databaseURL: "https://ruangbelajar-52a67-default-rtdb.firebaseio.com",
@@ -461,98 +436,98 @@
         messagingSenderId: "545318863560",
         appId: "1:545318863560:web:df392c010ff914aad49bfd",
         measurementId: "G-9M8CKR66BW",
-    };
+      };
 
-    // Inisialisasi Firebase
-    firebase.initializeApp(firebaseConfig);
-    const storage = firebase.storage();
-    const database = firebase.database();
-    const auth = firebase.auth();
+      // Inisialisasi Firebase
+      firebase.initializeApp(firebaseConfig);
+      const storage = firebase.storage();
+      const database = firebase.database();
+      const auth = firebase.auth();
 
-    // Elemen DOM
-    const mainContent = document.getElementById("mainContent");
-    const loginDialogOverlay = document.getElementById("loginDialogOverlay");
-    const loginForm = document.getElementById("loginForm");
-    const emailInput = document.getElementById("emailInput");
-    const passwordInput = document.getElementById("passwordInput");
-    const loginErrorMessage = document.getElementById("loginErrorMessage");
-    const adminSection = document.getElementById("admin-section");
-    const loginButton = document.getElementById("login-button");
+      // Elemen DOM
+      const mainContent = document.getElementById("mainContent");
+      const loginDialogOverlay = document.getElementById("loginDialogOverlay");
+      const loginForm = document.getElementById("loginForm");
+      const emailInput = document.getElementById("emailInput");
+      const passwordInput = document.getElementById("passwordInput");
+      const loginErrorMessage = document.getElementById("loginErrorMessage");
+      const adminSection = document.getElementById("admin-section");
+      const loginButton = document.getElementById("login-button");
 
-    const pinDialogOverlay = document.getElementById("pinDialogOverlay");
-    const pinForm = document.getElementById("pinForm");
-    const pinInput = document.getElementById("pinInput");
-    const pinErrorMessage = document.getElementById("pinErrorMessage");
-    const pinDialogTitle = document.getElementById("pinDialogTitle");
-    const pinDialogMessage = document.getElementById("pinDialogMessage");
-    const cancelBtn = document.getElementById("cancelBtn");
+      const pinDialogOverlay = document.getElementById("pinDialogOverlay");
+      const pinForm = document.getElementById("pinForm");
+      const pinInput = document.getElementById("pinInput");
+      const pinErrorMessage = document.getElementById("pinErrorMessage");
+      const pinDialogTitle = document.getElementById("pinDialogTitle");
+      const pinDialogMessage = document.getElementById("pinDialogMessage");
+      const cancelBtn = document.getElementById("cancelBtn");
 
-    const fileListContainer = document.getElementById("fileList");
-    const toggleAccessBtn = document.getElementById("toggleAccessBtn");
-    const fileSearchInput = document.getElementById("fileSearch");
-    const toggleCourseSelect = document.getElementById("toggleCourseSelect");
-    const toggleCourseAccessBtn = document.getElementById("toggleCourseAccessBtn");
-    const newFolderNameInput = document.getElementById("newFolderName");
-    const newFolderPinInput = document.getElementById("newFolderPin");
-    const folderListContainer = document.getElementById("folderList");
-    const createFolderBtn = document.getElementById("createFolderBtn");
-    const folderStatusMessage = document.getElementById("folder-status-message");
+      const fileListContainer = document.getElementById("fileList");
+      const toggleAccessBtn = document.getElementById("toggleAccessBtn");
+      const fileSearchInput = document.getElementById("fileSearch");
+      const toggleCourseSelect = document.getElementById("toggleCourseSelect");
+      const toggleCourseAccessBtn = document.getElementById("toggleCourseAccessBtn");
+      const newFolderNameInput = document.getElementById("newFolderName");
+      const newFolderPinInput = document.getElementById("newFolderPin");
+      const folderListContainer = document.getElementById("folderList");
+      const createFolderBtn = document.getElementById("createFolderBtn");
+      const folderStatusMessage = document.getElementById("folder-status-message");
 
-    // DEADLINE ELEMENTS
-    const courseDeadlineInput = document.getElementById("courseDeadlineInput");
-    const setDeadlineBtn = document.getElementById("setDeadlineBtn");
+      // DEADLINE ELEMENTS
+      const courseDeadlineInput = document.getElementById("courseDeadlineInput");
+      const setDeadlineBtn = document.getElementById("setDeadlineBtn");
 
-    const notificationTitleInput = document.getElementById("notificationTitle");
-    const notificationMessageInput = document.getElementById("notificationMessage");
-    const sendNotificationBtn = document.getElementById("sendNotificationBtn");
+      const notificationTitleInput = document.getElementById("notificationTitle");
+      const notificationMessageInput = document.getElementById("notificationMessage");
+      const sendNotificationBtn = document.getElementById("sendNotificationBtn");
 
-    // LAPORAN NILAI ELEMENTS
-    const reportListContainer = document.getElementById("reportListContainer");
-    const newReportNameInput = document.getElementById("newReportName");
-    const newReportPinInput = document.getElementById("newReportPin");
-    const createReportBtn = document.getElementById("createReportBtn");
-    const mainCard = document.querySelector(".card");
+      // LAPORAN NILAI ELEMENTS
+      const reportListContainer = document.getElementById("reportListContainer");
+      const newReportNameInput = document.getElementById("newReportName");
+      const newReportPinInput = document.getElementById("newReportPin");
+      const createReportBtn = document.getElementById("createReportBtn");
+      const mainCard = document.querySelector(".card");
 
-    // KUIS ELEMENTS BARU
-    const quizKeyInput = document.getElementById("quizKeyInput");
-    const saveQuizKeyBtn = document.getElementById("saveQuizKeyBtn");
-    const quizActiveCheckbox = document.getElementById("quizActiveCheckbox");
-    const quizRetakeCheckbox = document.getElementById("quizRetakeCheckbox");
-    const quizQuestionCount = document.getElementById("quizQuestionCount");
-    const quizQuestionsList = document.getElementById("quizQuestionsList");
-    const resetQuizResultsBtn = document.getElementById("resetQuizResultsBtn");
-    const quizResultsContainer = document.getElementById("quizResultsContainer");
+      // KUIS ELEMENTS BARU
+      const quizKeyInput = document.getElementById("quizKeyInput");
+      const saveQuizKeyBtn = document.getElementById("saveQuizKeyBtn");
+      const quizActiveCheckbox = document.getElementById("quizActiveCheckbox");
+      const quizRetakeCheckbox = document.getElementById("quizRetakeCheckbox");
+      const quizQuestionCount = document.getElementById("quizQuestionCount");
+      const quizQuestionsList = document.getElementById("quizQuestionsList");
+      const resetQuizResultsBtn = document.getElementById("resetQuizResultsBtn");
+      const quizResultsContainer = document.getElementById("quizResultsContainer");
 
-    const quizQuestionDialogOverlay = document.getElementById("quizQuestionDialogOverlay");
-    const quizQuestionDialogTitle = document.getElementById("quizQuestionDialogTitle");
-    const quizQuestionForm = document.getElementById("quizQuestionForm");
-    const questionTextInput = document.getElementById("questionTextInput");
-    const quizOptionsContainer = document.getElementById("quizOptionsContainer");
-    const quizQuestionErrorMessage = document.getElementById("quizQuestionErrorMessage");
-    const addQuizOptionBtn = document.getElementById("addQuizOptionBtn");
-    const cancelQuizQuestionBtn = document.getElementById("cancelQuizQuestionBtn");
-    const saveQuizQuestionBtn = document.getElementById("saveQuizQuestionBtn");
+      const quizQuestionDialogOverlay = document.getElementById("quizQuestionDialogOverlay");
+      const quizQuestionDialogTitle = document.getElementById("quizQuestionDialogTitle");
+      const quizQuestionForm = document.getElementById("quizQuestionForm");
+      const questionTextInput = document.getElementById("questionTextInput");
+      const quizOptionsContainer = document.getElementById("quizOptionsContainer");
+      const quizQuestionErrorMessage = document.getElementById("quizQuestionErrorMessage");
+      const addQuizOptionBtn = document.getElementById("addQuizOptionBtn");
+      const cancelQuizQuestionBtn = document.getElementById("cancelQuizQuestionBtn");
+      const saveQuizQuestionBtn = document.getElementById("saveQuizQuestionBtn");
 
-    // Variabel State
-    const courseAuthStatus = {};
-    let cachedFiles = [];
-    let currentFolderPath = null;
-    let pendingAction = null;
-    let activeFolderElement = null;
-    let quizConfig = { questions: {}, key: "", active: false, canRetake: false };
-    let currentEditingQuestionKey = null;
+      // Variabel State
+      const courseAuthStatus = {};
+      let cachedFiles = [];
+      let currentFolderPath = null;
+      let pendingAction = null;
+      let activeFolderElement = null;
+      let quizConfig = { questions: {}, key: "", active: false, canRetake: false };
+      let currentEditingQuestionKey = null;
 
-    // KOLOM-KOLOM HASIL PERHITUNGAN
-    const RESULT_COLUMNS = ["NILAI TUGAS", "NILAI AKHIR", "NILAI HURUF", "BOBOT AKHIR"];
-    
-    // ============================================
-    // FUNGSI KUIS REAL-TIME
-    // ============================================
+      // KOLOM-KOLOM HASIL PERHITUNGAN
+      const RESULT_COLUMNS = ["NILAI TUGAS", "NILAI AKHIR", "NILAI HURUF", "BOBOT AKHIR"];
 
-    const quizStateRef = database.ref('current_quiz_state');
+      // ============================================
+      // FUNGSI KUIS REAL-TIME
+      // ============================================
 
-    function renderQuizControls() {
-        let controlDiv = document.getElementById('quizControlPanel');
+      const quizStateRef = database.ref("current_quiz_state");
+
+      function renderQuizControls() {
+        let controlDiv = document.getElementById("quizControlPanel");
         if (!controlDiv) return;
 
         controlDiv.innerHTML = `
@@ -566,288 +541,315 @@
             <button id="showLeaderboardBtn" class="access-button access-open w-100" style="background-color: #17a2b8;"><i class="fas fa-trophy"></i> Lihat Leaderboard</button>
         `;
 
-        document.getElementById('startStopQuizBtn').addEventListener('click', toggleQuizStartStop);
-        document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestionAdmin);
-        document.getElementById('showLeaderboardBtn').addEventListener('click', showLeaderboard);
-        
-        quizStateRef.on('value', updateAdminQuizControls);
-    }
+        document.getElementById("startStopQuizBtn").addEventListener("click", toggleQuizStartStop);
+        document.getElementById("nextQuestionBtn").addEventListener("click", nextQuestionAdmin);
+        document.getElementById("showLeaderboardBtn").addEventListener("click", showLeaderboard);
 
-    async function updateAdminQuizControls(snapshot) {
-        const state = snapshot.val() || { status: 'WAITING', currentQuestionIndex: -1, durationSeconds: 10 };
+        quizStateRef.on("value", updateAdminQuizControls);
+      }
+
+      async function updateAdminQuizControls(snapshot) {
+        const state = snapshot.val() || { status: "WAITING", currentQuestionIndex: -1, durationSeconds: 10 };
         const totalQuestions = Object.keys(quizConfig.questions).length;
-        
-        const startStopBtn = document.getElementById('startStopQuizBtn');
-        const nextBtn = document.getElementById('nextQuestionBtn');
-        const statusDiv = document.getElementById('realtimeStatus');
-        
+
+        const startStopBtn = document.getElementById("startStopQuizBtn");
+        const nextBtn = document.getElementById("nextQuestionBtn");
+        const statusDiv = document.getElementById("realtimeStatus");
+
         if (!startStopBtn || !nextBtn || !statusDiv) return;
 
-        if (state.status === 'WAITING' || state.status === 'FINISHED') {
-            startStopBtn.textContent = (state.status === 'FINISHED' || state.currentQuestionIndex >= totalQuestions) ? 'Mulai Kuis (Reset)' : 'Lanjutkan Kuis';
-            startStopBtn.classList.remove('access-closed');
-            startStopBtn.classList.add('access-open');
-            
-            nextBtn.textContent = 'Soal Berikutnya';
-            nextBtn.disabled = true;
-            
-            if (state.status === 'FINISHED') {
-                statusDiv.textContent = 'KUIS SELESAI. Hasil sudah direkam.';
-                statusDiv.style.color = '#28a745';
-            } else {
-                statusDiv.textContent = (state.currentQuestionIndex >= 0) ? `Status: DIJEDA, Soal ${state.currentQuestionIndex + 1} siap dilanjutkan.` : 'Status: Menunggu dimulai.';
-                statusDiv.style.color = 'var(--accent-red)';
-            }
-        } 
-        
-        if (state.status === 'ACTIVE') {
-            const isLastQuestion = state.currentQuestionIndex >= totalQuestions - 1;
-            
-            startStopBtn.textContent = isLastQuestion ? 'Selesaikan Kuis' : 'Jeda Kuis';
-            startStopBtn.classList.remove('access-open');
-            startStopBtn.classList.add('access-closed');
-            
-            nextBtn.textContent = isLastQuestion ? 'Soal Terakhir Aktif' : `Lanjut ke Soal ${state.currentQuestionIndex + 2}`;
-            nextBtn.disabled = isLastQuestion;
-            
-            statusDiv.textContent = `Status: AKTIF, Soal ${state.currentQuestionIndex + 1}/${totalQuestions}`;
-            statusDiv.style.color = 'var(--primary)';
-            
-            startAdminTimerDisplay(state.startTime, state.durationSeconds);
-        } else {
-            clearInterval(window.adminTimerInterval);
-            document.getElementById('realtimeTimerDisplay').textContent = '';
-        }
-    }
+        if (state.status === "WAITING" || state.status === "FINISHED") {
+          startStopBtn.textContent = state.status === "FINISHED" || state.currentQuestionIndex >= totalQuestions ? "Mulai Kuis (Reset)" : "Lanjutkan Kuis";
+          startStopBtn.classList.remove("access-closed");
+          startStopBtn.classList.add("access-open");
 
-    async function toggleQuizStartStop() {
+          nextBtn.textContent = "Soal Berikutnya";
+          nextBtn.disabled = true;
+
+          if (state.status === "FINISHED") {
+            statusDiv.textContent = "KUIS SELESAI. Hasil sudah direkam.";
+            statusDiv.style.color = "#28a745";
+          } else {
+            statusDiv.textContent = state.currentQuestionIndex >= 0 ? `Status: DIJEDA, Soal ${state.currentQuestionIndex + 1} siap dilanjutkan.` : "Status: Menunggu dimulai.";
+            statusDiv.style.color = "var(--accent-red)";
+          }
+        }
+
+        if (state.status === "ACTIVE") {
+          const isLastQuestion = state.currentQuestionIndex >= totalQuestions - 1;
+
+          startStopBtn.textContent = isLastQuestion ? "Selesaikan Kuis" : "Jeda Kuis";
+          startStopBtn.classList.remove("access-open");
+          startStopBtn.classList.add("access-closed");
+
+          nextBtn.textContent = isLastQuestion ? "Soal Terakhir Aktif" : `Lanjut ke Soal ${state.currentQuestionIndex + 2}`;
+          nextBtn.disabled = isLastQuestion;
+
+          statusDiv.textContent = `Status: AKTIF, Soal ${state.currentQuestionIndex + 1}/${totalQuestions}`;
+          statusDiv.style.color = "var(--primary)";
+
+          startAdminTimerDisplay(state.startTime, state.durationSeconds);
+        } else {
+          clearInterval(window.adminTimerInterval);
+          document.getElementById("realtimeTimerDisplay").textContent = "";
+        }
+      }
+
+      async function toggleQuizStartStop() {
         const totalQuestions = Object.keys(quizConfig.questions).length;
         if (totalQuestions === 0) {
-            alert("Mohon buat minimal 1 soal kuis terlebih dahulu.");
-            return;
+          alert("Mohon buat minimal 1 soal kuis terlebih dahulu.");
+          return;
         }
-        
-        const currentState = await quizStateRef.once('value').then(s => s.val() || { status: 'WAITING', currentQuestionIndex: -1 });
-        
-        if (currentState.status === 'WAITING' || currentState.status === 'FINISHED') {
-            if (confirm("Yakin ingin memulai/melanjutkan kuis untuk semua mahasiswa?")) {
-                const startIndex = (currentState.status === 'FINISHED' || currentState.currentQuestionIndex === -1) ? 0 : currentState.currentQuestionIndex;
-                await quizStateRef.set({
-                    status: 'ACTIVE',
-                    currentQuestionIndex: startIndex,
-                    startTime: firebase.database.ServerValue.TIMESTAMP,
-                    durationSeconds: 40,
-                    totalQuestions: totalQuestions,
-                });
-                alert(`Kuis berhasil dimulai di soal ${startIndex + 1}!`);
-            }
-        } else if (currentState.status === 'ACTIVE') {
-            if (currentState.currentQuestionIndex >= totalQuestions - 1) {
-                if (confirm("Yakin ingin menyelesaikan kuis? Semua hasil akan dihitung.")) {
-                    await quizStateRef.update({
-                        status: 'FINISHED',
-                        finishTime: firebase.database.ServerValue.TIMESTAMP,
-                    });
-                    alert("Kuis berhasil diselesaikan!");
-                    fetchAllQuizResults();
-                }
-            } else {
-                 if (confirm("Yakin ingin menjeda kuis? Mahasiswa akan menunggu soal selanjutnya.")) {
-                    await quizStateRef.update({
-                        status: 'WAITING',
-                    });
-                    alert("Kuis dijeda. Tombol 'Lanjutkan Kuis' akan muncul.");
-                }
-            }
-        }
-    }
 
-    async function nextQuestionAdmin() {
-        const currentState = await quizStateRef.once('value').then(s => s.val());
+        const currentState = await quizStateRef.once("value").then((s) => s.val() || { status: "WAITING", currentQuestionIndex: -1 });
+
+        if (currentState.status === "WAITING" || currentState.status === "FINISHED") {
+          if (confirm("Yakin ingin memulai/melanjutkan kuis untuk semua mahasiswa?")) {
+            const startIndex = currentState.status === "FINISHED" || currentState.currentQuestionIndex === -1 ? 0 : currentState.currentQuestionIndex;
+
+            // --- PERBAIKAN KRITIS DIMULAI DI SINI ---
+            if (startIndex === 0) {
+              // Peringatan tambahan untuk konfirmasi reset penuh
+              if (!confirm("⚠️ PERINGATAN! Anda memulai dari Soal 1. Ini akan MENGHAPUS SEMUA HASIL KUIS sebelumnya dan mengeluarkan mahasiswa yang sedang aktif. Lanjutkan?")) {
+                return;
+              }
+              await resetQuizStateForStart(); // Memanggil fungsi reset baru
+            }
+            // --- PERBAIKAN KRITIS SELESAI DI SINI ---
+
+            await quizStateRef.set({
+              status: "ACTIVE",
+              currentQuestionIndex: startIndex,
+              startTime: firebase.database.ServerValue.TIMESTAMP,
+              durationSeconds:25,
+              totalQuestions: totalQuestions,
+            });
+            alert(`Kuis berhasil dimulai di soal ${startIndex + 1}!`);
+          }
+        } else if (currentState.status === "ACTIVE") {
+          if (currentState.currentQuestionIndex >= totalQuestions - 1) {
+            if (confirm("Yakin ingin menyelesaikan kuis? Semua hasil akan dihitung.")) {
+              await quizStateRef.update({
+                status: "FINISHED",
+                finishTime: firebase.database.ServerValue.TIMESTAMP,
+              });
+              alert("Kuis berhasil diselesaikan!");
+              fetchAllQuizResults();
+            }
+          } else {
+            if (confirm("Yakin ingin menjeda kuis? Mahasiswa akan menunggu soal selanjutnya.")) {
+              await quizStateRef.update({
+                status: "WAITING",
+              });
+              alert("Kuis dijeda. Tombol 'Lanjutkan Kuis' akan muncul.");
+            }
+          }
+        }
+      }
+
+      // --- FUNGSI BARU UNTUK MENGELUARKAN USER & MERESET STATE KUIS DITAMBAHKAN ---
+      async function resetQuizStateForStart() {
+        // 1. Reset hasil kuis dan jawaban
+        await database.ref("quiz_results").remove();
+        await database.ref("user_answers").remove();
+
+        // 2. Reset status kuis setiap pengguna (mengeluarkan mereka dari sesi)
+        await database.ref("user_quiz_status").remove();
+
+        console.log("Semua hasil dan status kuis pengguna berhasil direset!");
+      }
+
+      async function nextQuestionAdmin() {
+        const currentState = await quizStateRef.once("value").then((s) => s.val());
         const totalQuestions = Object.keys(quizConfig.questions).length;
 
-        if (currentState && (currentState.status === 'ACTIVE' || currentState.status === 'WAITING')) {
-            const nextIndex = currentState.currentQuestionIndex + 1;
-            if (nextIndex < totalQuestions) {
-                await quizStateRef.update({
-                    status: 'ACTIVE',
-                    currentQuestionIndex: nextIndex,
-                    startTime: firebase.database.ServerValue.TIMESTAMP,
-                });
-                alert(`Pindah ke Soal ${nextIndex + 1}.`);
-            } else {
-                alert("Sudah di soal terakhir. Silakan selesaikan kuis.");
-            }
+        if (currentState && (currentState.status === "ACTIVE" || currentState.status === "WAITING")) {
+          const nextIndex = currentState.currentQuestionIndex + 1;
+          if (nextIndex < totalQuestions) {
+            await quizStateRef.update({
+              status: "ACTIVE",
+              currentQuestionIndex: nextIndex,
+              startTime: firebase.database.ServerValue.TIMESTAMP,
+            });
+            
+          } else {
+            alert("Sudah di soal terakhir. Silakan selesaikan kuis.");
+          }
         } else {
-            alert("Kuis belum dimulai atau sudah selesai. Silakan klik 'Mulai Kuis'.");
+          alert("Kuis belum dimulai atau sudah selesai. Silakan klik 'Mulai Kuis'.");
         }
-    }
+      }
 
-    function startAdminTimerDisplay(startTime, durationSeconds) {
+      function startAdminTimerDisplay(startTime, durationSeconds) {
         clearInterval(window.adminTimerInterval);
-        const targetTime = startTime + (durationSeconds * 1000);
+        const targetTime = startTime + durationSeconds * 1000;
 
         const updateTimer = () => {
-            const now = new Date().getTime();
-            const timeLeft = targetTime - now;
+          const now = new Date().getTime();
+          const timeLeft = targetTime - now;
 
-            const timerDisplay = document.getElementById('realtimeTimerDisplay');
-            if (!timerDisplay) return;
+          const timerDisplay = document.getElementById("realtimeTimerDisplay");
+          if (!timerDisplay) return;
 
-            if (timeLeft <= 0) {
-                clearInterval(window.adminTimerInterval);
-                timerDisplay.textContent = "WAKTU HABIS! Segera Lanjut Soal.";
-                timerDisplay.style.color = 'var(--accent-red)';
-            } else {
-                const secondsLeft = Math.ceil(timeLeft / 1000);
-                timerDisplay.textContent = `Waktu Tersisa: ${secondsLeft}s`;
-                timerDisplay.style.color = secondsLeft <= 5 ? 'var(--accent-red)' : 'var(--primary)';
-            }
+          if (timeLeft <= 0) {
+            clearInterval(window.adminTimerInterval);
+            timerDisplay.textContent = "WAKTU HABIS! Segera Lanjut Soal.";
+            timerDisplay.style.color = "var(--accent-red)";
+          } else {
+            const secondsLeft = Math.ceil(timeLeft / 1000);
+            timerDisplay.textContent = `Waktu Tersisa: ${secondsLeft}s`;
+            timerDisplay.style.color = secondsLeft <= 5 ? "var(--accent-red)" : "var(--primary)";
+          }
         };
 
         updateTimer();
         window.adminTimerInterval = setInterval(updateTimer, 100);
-    }
+      }
 
-    function showLeaderboard() {
-    // 1. Cek apakah jendela sudah terbuka
-    if (window.quizLeaderboardWindow && !window.quizLeaderboardWindow.closed) {
-        window.quizLeaderboardWindow.focus();
-        return;
-    }
-
-    // 2. Buka jendela pop-up
-    const w = window.open('about:blank', 'Leaderboard', 'width=800,height=600');
-    if (!w) {
-        alert("Pop-up diblokir. Izinkan pop-up untuk melihat Leaderboard.");
-        return;
-    }
-    window.quizLeaderboardWindow = w; // Simpan referensi
-
-    // 3. Render HTML awal (template)
-    // Tulis template HTML dasar ke jendela baru agar kita bisa melampirkan listener di sana
-    w.document.write(`
-        <!DOCTYPE html>
-        <html lang="id">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Leaderboard Kuis - TI UM-Palembang</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-            <style>
-                body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; color: #212529; padding: 20px; }
-                .rank-1 { background-color: gold !important; font-weight: 700; }
-                .rank-2 { background-color: silver !important; }
-                .rank-3 { background-color: #cd7f32 !important; color: white; }
-                .score-high { color: #28a745; font-weight: 600; }
-                .score-low { color: #e74a3b; font-weight: 600; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h2 class="text-center text-primary mb-4">🏆 Leaderboard Hasil Kuis Mahasiswa</h2>
-                <p class="text-muted">Data diperbarui pada <span id="updateTime">Memuat...</span></p>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-bordered">
-                        <thead>
-                            <tr class="bg-primary text-white">
-                                <th>Rank</th>
-                                <th>Nama Pengguna</th>
-                                <th>Skor</th>
-                                <th>Jawaban Benar</th>
-                                <th>Waktu Selesai</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboardBody">
-                            <tr><td colspan="5" class="text-center">Menghubungkan ke database...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </body>
-        </html>
-    `);
-    w.document.close();
-
-    // 4. Pasang listener real-time (`.on('value')`)
-    const quizResultsRef = database.ref('quiz_results');
-    
-    quizResultsRef.on('value', (snapshot) => {
-        const results = [];
-        snapshot.forEach(snap => {
-            results.push(snap.val());
-        });
-        
-        results.sort((a, b) => b.score - a.score);
-        
-        const tbody = w.document.getElementById('leaderboardBody');
-        const updateTimeSpan = w.document.getElementById('updateTime');
-
-        if (!tbody || w.closed) { 
-             // Kritis: Hapus listener jika jendela Leaderboard sudah ditutup
-             quizResultsRef.off();
-             return;
+      function showLeaderboard() {
+        // 1. Cek apakah jendela sudah terbuka
+        if (window.quizLeaderboardWindow && !window.quizLeaderboardWindow.closed) {
+          window.quizLeaderboardWindow.focus();
+          return;
         }
 
-        updateTimeSpan.textContent = new Date().toLocaleTimeString('id-ID');
+        // 2. Buka jendela pop-up
+        const w = window.open("about:blank", "Leaderboard", "width=800,height=600");
+        if (!w) {
+          alert("Pop-up diblokir. Izinkan pop-up untuk melihat Leaderboard.");
+          return;
+        }
+        window.quizLeaderboardWindow = w; // Simpan referensi
 
-        let rowsHTML = '';
-        if (results.length === 0) {
-            rowsHTML = '<tr><td colspan="5" class="text-center">Belum ada hasil kuis yang tercatat.</td></tr>';
-        } else {
-            results.forEach((result, index) => {
-                let rankClass = '';
-                if (index === 0) rankClass = 'rank-1';
-                else if (index === 1) rankClass = 'rank-2';
-                else if (index === 2) rankClass = 'rank-3';
-                
-                const scoreClass = result.score >= 70 ? 'score-high' : 'score-low';
-                // HANYA NAMA PENGGUNA (userName)
-                const userName = result.userName || result.userEmail.split('@')[0] || 'N/A'; 
+        // 3. Render HTML awal (template)
+        // Tulis template HTML dasar ke jendela baru agar kita bisa melampirkan listener di sana
+        w.document.write(`<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard Kuis - TI UM-Palembang</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; color: #212529; padding: 20px; }
+        .rank-1 { background-color: gold !important; font-weight: 700; }
+        .rank-2 { background-color: silver !important; }
+        .rank-3 { background-color: #cd7f32 !important; color: white; }
+        .score-high { color: #28a745; font-weight: 600; }
+        .score-low { color: #e74a3b; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center text-primary mb-4">🏆 Leaderboard Hasil Kuis Mahasiswa</h2>
+        <p class="text-muted">Data diperbarui pada <span id="updateTime">Memuat...</span></p>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr class="bg-primary text-white">
+                        <th>Rank</th>
+                        <th>Nama Pengguna</th>
+                        <th>Skor</th>
+                        <th>Waktu Selesai</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                    <tr><td colspan="5" class="text-center">Menghubungkan ke database...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>`);
+        w.document.close();
 
-                const date = result.timestamp ? new Date(result.timestamp).toLocaleDateString("id-ID", {
-                    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
-                }) : 'N/A';
+        // 4. Pasang listener real-time (`.on('value')`)
+        const quizResultsRef = database.ref("quiz_results");
+
+        quizResultsRef.on(
+          "value",
+          (snapshot) => {
+            const results = [];
+            snapshot.forEach((snap) => {
+              results.push(snap.val());
+            });
+
+            // Urutkan berdasarkan Total Poin
+            results.sort((a, b) => (b.totalPoints || 0) - (a.totalPoints || 0));
+
+            const tbody = w.document.getElementById("leaderboardBody");
+            const updateTimeSpan = w.document.getElementById("updateTime");
+
+            if (!tbody || w.closed) {
+              // Kritis: Hapus listener jika jendela Leaderboard sudah ditutup
+              quizResultsRef.off();
+              return;
+            }
+
+            updateTimeSpan.textContent = new Date().toLocaleTimeString("id-ID");
+
+            let rowsHTML = "";
+            if (results.length === 0) {
+              rowsHTML = '<tr><td colspan="4" class="text-center">Belum ada hasil kuis yang tercatat.</td></tr>';
+            } else {
+              results.forEach((result, index) => {
+                let rankClass = "";
+                if (index === 0) rankClass = "rank-1";
+                else if (index === 1) rankClass = "rank-2";
+                else if (index === 2) rankClass = "rank-3";
+
+                // Menggunakan skor persen untuk warna, totalPoints untuk nilai
+                const scoreClass = (result.score || 0) >= 70 ? "score-high" : "score-low";
+                const userName = result.userName || result.userEmail.split("@")[0] || "N/A";
+
+                const date = result.timestamp
+                  ? new Date(result.timestamp).toLocaleDateString("id-ID", {
+                      day: "numeric",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "N/A";
 
                 rowsHTML += `
                     <tr class="${rankClass}">
                         <td>${index + 1}</td>
                         <td>${userName}</td>
-                        <td class="${scoreClass}">${result.score.toFixed(2)}</td>
-                        <td>${result.correctAnswers || 0} / ${result.totalQuestions || 0}</td>
+                        <td class="${scoreClass}">${(result.totalPoints || 0).toFixed(2)}</td> 
                         <td>${date}</td>
                     </tr>
                 `;
-            });
-        }
-        tbody.innerHTML = rowsHTML;
+              });
+            }
+            tbody.innerHTML = rowsHTML;
+          },
+          (error) => {
+            console.error("Leaderboard Realtime Error:", error);
+          }
+        );
 
-    }, (error) => {
-        console.error("Leaderboard Realtime Error:", error);
-    });
+        // 5. Hapus listener saat jendela ditutup
+        w.onbeforeunload = () => {
+          quizResultsRef.off();
+        };
+      }
 
-    // 5. Hapus listener saat jendela ditutup
-    w.onbeforeunload = () => {
-         quizResultsRef.off();
-    };
-}
+      // ===============================================
+      // 		UTILITY FUNCTIONS FOR GRADES (SAME)
+      // ===============================================
 
-
-    // ===============================================
-    // 		UTILITY FUNCTIONS FOR GRADES (SAME)
-    // ===============================================
-
-    function getLetterGrade(score) {
+      function getLetterGrade(score) {
         if (score >= 80) return { letter: "A", weight: 4, meaning: "Sangat Baik" };
         if (score >= 68) return { letter: "B", weight: 3, meaning: "Baik" };
         if (score >= 56) return { letter: "C", weight: 2, meaning: "Cukup" };
         if (score >= 40) return { letter: "D", weight: 1, meaning: "Gagal" };
         if (score >= 0) return { letter: "E", weight: 0, meaning: "Gagal" };
         return { letter: "T", weight: 0, meaning: "Tidak Ada" };
-    }
+      }
 
-    function calculateFinalGrade(row) {
+      function calculateFinalGrade(row) {
         const uts = parseFloat(row.UTS || 0);
         const uas = parseFloat(row.UAS || 0);
 
@@ -855,12 +857,12 @@
         let assignmentCount = 0;
 
         for (let i = 1; i <= 16; i++) {
-            const key = `TUGAS ${i}`;
-            if (i !== 8 && i !== 16 && row.hasOwnProperty(key)) {
-                const score = parseFloat(row[key]) || 0;
-                totalAssignmentScore += score;
-                assignmentCount++;
-            }
+          const key = `TUGAS ${i}`;
+          if (i !== 8 && i !== 16 && row.hasOwnProperty(key)) {
+            const score = parseFloat(row[key]) || 0;
+            totalAssignmentScore += score;
+            assignmentCount++;
+          }
         }
 
         const nilaitugas = assignmentCount > 0 ? totalAssignmentScore / assignmentCount : 0;
@@ -868,14 +870,14 @@
         const grade = getLetterGrade(nilaiAkhir);
 
         return {
-            "NILAI TUGAS": nilaitugas.toFixed(2),
-            "NILAI AKHIR": nilaiAkhir.toFixed(2),
-            "NILAI HURUF": grade.letter,
-            "BOBOT AKHIR": grade.weight,
+          "NILAI TUGAS": nilaitugas.toFixed(2),
+          "NILAI AKHIR": nilaiAkhir.toFixed(2),
+          "NILAI HURUF": grade.letter,
+          "BOBOT AKHIR": grade.weight,
         };
-    }
+      }
 
-    function updateResultColumns(rowData, rowIndex, columnNames) {
+      function updateResultColumns(rowData, rowIndex, columnNames) {
         const finalGrades = calculateFinalGrade(rowData);
         const tbody = document.querySelector(`#report-tbody-${window.currentReportKey}`);
         if (!tbody) return;
@@ -884,173 +886,173 @@
         if (!rowElement) return;
 
         columnNames.forEach((colName) => {
-            if (RESULT_COLUMNS.includes(colName)) {
-                const tdIndex = columnNames.indexOf(colName);
-                const tdElement = rowElement.children[tdIndex];
+          if (RESULT_COLUMNS.includes(colName)) {
+            const tdIndex = columnNames.indexOf(colName);
+            const tdElement = rowElement.children[tdIndex];
 
-                if (tdElement) {
-                    tdElement.textContent = finalGrades[colName];
-                    tdElement.style.backgroundColor = "var(--card-bg)";
-                }
+            if (tdElement) {
+              tdElement.textContent = finalGrades[colName];
+              tdElement.style.backgroundColor = "var(--card-bg)";
             }
+          }
         });
-    }
+      }
 
-    // ===============================================
-    // 		INIT & AUTH
-    // ===============================================
+      // ===============================================
+      // 		INIT & AUTH
+      // ===============================================
 
-    document.addEventListener("DOMContentLoaded", () => {
+      document.addEventListener("DOMContentLoaded", () => {
         auth.onAuthStateChanged((user) => {
-            if (user) {
-                showAdminView();
-            } else {
-                showLoginView();
-            }
+          if (user) {
+            showAdminView();
+          } else {
+            showLoginView();
+          }
         });
-        
+
         setupQuizQuestionDialog();
-    });
+      });
 
-    // ===============================================
-    // 		DEADLINE & COURSE ACCESS LOGIC
-    // ===============================================
+      // ===============================================
+      // 		DEADLINE & COURSE ACCESS LOGIC
+      // ===============================================
 
-    toggleCourseSelect.addEventListener("change", () => {
+      toggleCourseSelect.addEventListener("change", () => {
         const courseKey = toggleCourseSelect.value;
         if (courseKey) {
-            toggleCourseAccessBtn.disabled = false;
-            setDeadlineBtn.disabled = false;
-            updateCourseToggleButtonStatus(courseKey);
+          toggleCourseAccessBtn.disabled = false;
+          setDeadlineBtn.disabled = false;
+          updateCourseToggleButtonStatus(courseKey);
         } else {
-            toggleCourseAccessBtn.textContent = "Status: Memuat...";
-            toggleCourseAccessBtn.classList.remove("access-open", "access-closed");
-            toggleCourseAccessBtn.disabled = true;
-            setDeadlineBtn.disabled = true;
-            courseDeadlineInput.value = "";
+          toggleCourseAccessBtn.textContent = "Status: Memuat...";
+          toggleCourseAccessBtn.classList.remove("access-open", "access-closed");
+          toggleCourseAccessBtn.disabled = true;
+          setDeadlineBtn.disabled = true;
+          courseDeadlineInput.value = "";
         }
-    });
+      });
 
-    setDeadlineBtn.addEventListener("click", () => {
+      setDeadlineBtn.addEventListener("click", () => {
         const courseKey = toggleCourseSelect.value;
         const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
         const deadline = courseDeadlineInput.value;
 
         if (!courseKey || !deadline) {
-            alert("Mohon pilih Mata Kuliah dan atur waktu deadline terlebih dahulu.");
-            return;
+          alert("Mohon pilih Mata Kuliah dan atur waktu deadline terlebih dahulu.");
+          return;
         }
 
         if (auth.currentUser) {
-            showPinDialog("set_deadline", courseKey, `mengatur deadline ${courseName}`, null, {
-                deadline: deadline,
-            });
+          showPinDialog("set_deadline", courseKey, `mengatur deadline ${courseName}`, null, {
+            deadline: deadline,
+          });
         } else {
-            alert("Anda harus login sebagai Admin untuk mengatur deadline.");
+          alert("Anda harus login sebagai Admin untuk mengatur deadline.");
         }
-    });
+      });
 
-    async function setCourseDeadline(courseKey, deadlineString) {
+      async function setCourseDeadline(courseKey, deadlineString) {
         setDeadlineBtn.disabled = true;
         const originalText = setDeadlineBtn.textContent;
         setDeadlineBtn.textContent = "Menyimpan Deadline...";
 
         try {
-            await database.ref(`akses_unggah/${courseKey}/deadline`).set(deadlineString);
-            await database.ref(`akses_unggah/${courseKey}/isOpen`).set(true);
+          await database.ref(`akses_unggah/${courseKey}/deadline`).set(deadlineString);
+          await database.ref(`akses_unggah/${courseKey}/isOpen`).set(true);
 
-            alert(`Deadline untuk Mata Kuliah berhasil diatur pada: ${new Date(deadlineString).toLocaleString()}`);
-            updateCourseToggleButtonStatus(courseKey);
+          alert(`Deadline untuk Mata Kuliah berhasil diatur pada: ${new Date(deadlineString).toLocaleString()}`);
+          updateCourseToggleButtonStatus(courseKey);
         } catch (error) {
-            console.error("Gagal mengatur deadline:", error);
-            alert(`Gagal mengatur deadline: ${error.message}`);
+          console.error("Gagal mengatur deadline:", error);
+          alert(`Gagal mengatur deadline: ${error.message}`);
         } finally {
-            setDeadlineBtn.disabled = false;
-            setDeadlineBtn.textContent = originalText;
+          setDeadlineBtn.disabled = false;
+          setDeadlineBtn.textContent = originalText;
         }
-    }
+      }
 
-    async function updateCourseToggleButtonStatus(courseKey) {
+      async function updateCourseToggleButtonStatus(courseKey) {
         try {
-            const snapshot = await database.ref(`akses_unggah/${courseKey}`).once("value");
-            const courseData = snapshot.val() || {};
-            const isOpen = courseData.isOpen === true;
-            const deadline = courseData.deadline;
+          const snapshot = await database.ref(`akses_unggah/${courseKey}`).once("value");
+          const courseData = snapshot.val() || {};
+          const isOpen = courseData.isOpen === true;
+          const deadline = courseData.deadline;
 
-            if (isOpen) {
-                toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: BUKA ✅";
-                toggleCourseAccessBtn.classList.remove("access-closed");
-                toggleCourseAccessBtn.classList.add("access-open");
-            } else {
-                toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: TUTUP 🔒";
-                toggleCourseAccessBtn.classList.remove("access-open");
-                toggleCourseAccessBtn.classList.add("access-closed");
-            }
+          if (isOpen) {
+            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: BUKA ✅";
+            toggleCourseAccessBtn.classList.remove("access-closed");
+            toggleCourseAccessBtn.classList.add("access-open");
+          } else {
+            toggleCourseAccessBtn.textContent = "Akses Mata Kuliah: TUTUP 🔒";
+            toggleCourseAccessBtn.classList.remove("access-open");
+            toggleCourseAccessBtn.classList.add("access-closed");
+          }
 
-            if (deadline) {
-                courseDeadlineInput.value = deadline.substring(0, 16);
-                setDeadlineBtn.textContent = `Deadline Diatur: ${new Date(deadline).toLocaleString()}`;
-            } else {
-                courseDeadlineInput.value = "";
-                setDeadlineBtn.textContent = "Atur Deadline";
-            }
+          if (deadline) {
+            courseDeadlineInput.value = deadline.substring(0, 16);
+            setDeadlineBtn.textContent = `Deadline Diatur: ${new Date(deadline).toLocaleString()}`;
+          } else {
+            courseDeadlineInput.value = "";
+            setDeadlineBtn.textContent = "Atur Deadline";
+          }
         } catch (error) {
-            console.error("Gagal memperbarui status tombol mata kuliah:", error);
-            toggleCourseAccessBtn.textContent = "Status tidak dapat dimuat.";
-            setDeadlineBtn.textContent = "Gagal memuat deadline.";
+          console.error("Gagal memperbarui status tombol mata kuliah:", error);
+          toggleCourseAccessBtn.textContent = "Status tidak dapat dimuat.";
+          setDeadlineBtn.textContent = "Gagal memuat deadline.";
         }
-    }
+      }
 
-    // ===============================================
-    // 		UI & EVENT LISTENERS UMUM
-    // ===============================================
+      // ===============================================
+      // 		UI & EVENT LISTENERS UMUM
+      // ===============================================
 
-    fileSearchInput.addEventListener("keyup", () => {
+      fileSearchInput.addEventListener("keyup", () => {
         filterFiles(fileSearchInput.value);
-    });
+      });
 
-    loginButton.addEventListener("click", () => {
+      loginButton.addEventListener("click", () => {
         if (auth.currentUser) {
-            auth
-                .signOut()
-                .then(() => {
-                    showLoginView();
-                })
-                .catch((error) => {
-                    console.error("Logout failed:", error);
-                    alert("Gagal logout. Silakan coba lagi.");
-                });
+          auth
+            .signOut()
+            .then(() => {
+              showLoginView();
+            })
+            .catch((error) => {
+              console.error("Logout failed:", error);
+              alert("Gagal logout. Silakan coba lagi.");
+            });
         } else {
-            loginDialogOverlay.style.display = "flex";
+          loginDialogOverlay.style.display = "flex";
         }
-    });
+      });
 
-    loginForm.addEventListener("submit", async (e) => {
+      loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = emailInput.value;
         const password = passwordInput.value;
         loginErrorMessage.textContent = "Sedang login...";
         try {
-            const userCredential = await auth.signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-            const adminUIDs = {
-                rSaaJgKyEQRrh7nblW9pME6o7Ci1: true,
-            };
-            if (adminUIDs[user.uid]) {
-                alert("Login berhasil! Selamat datang, Admin.");
-                showAdminView();
-            } else {
-                await auth.signOut();
-                loginErrorMessage.textContent = "Akses ditolak. Hanya admin yang diizinkan.";
-                showLoginView();
-            }
+          const userCredential = await auth.signInWithEmailAndPassword(email, password);
+          const user = userCredential.user;
+          const adminUIDs = {
+            rSaaJgKyEQRrh7nblW9pME6o7Ci1: true,
+          };
+          if (adminUIDs[user.uid]) {
+            alert("Login berhasil! Selamat datang, Admin.");
+            showAdminView();
+          } else {
+            await auth.signOut();
+            loginErrorMessage.textContent = "Akses ditolak. Hanya admin yang diizinkan.";
+            showLoginView();
+          }
         } catch (error) {
-            console.error("Login gagal:", error);
-            loginErrorMessage.textContent = "Email atau password salah. Coba lagi.";
+          console.error("Login gagal:", error);
+          loginErrorMessage.textContent = "Email atau password salah. Coba lagi.";
         }
-    });
+      });
 
-    function showAdminView() {
+      function showAdminView() {
         mainContent.style.display = "block";
         loginDialogOverlay.style.display = "none";
         loginButton.textContent = "Logout";
@@ -1062,22 +1064,21 @@
         fetchReportList();
         fetchQuizConfig();
         fetchAllQuizResults();
-        
+
         renderQuizControls();
-        
+
         // --- PERBAIKAN KRITIS: Tampilkan kembali folder dan search ---
-        document.querySelector('.folder-list-container').style.display = 'block';
-        document.querySelector('.search-group').style.display = 'block';
-        document.getElementById('fileList').style.display = 'block';
-        
+        document.querySelector(".folder-list-container").style.display = "block";
+        document.querySelector(".search-group").style.display = "block";
+        document.getElementById("fileList").style.display = "block";
+
         // Sembunyikan tabel laporan jika ada
         document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
-        document.querySelector("h2").textContent =
-            "Daftar Dokumen Tugas Mahasiswa Teknologi Informasi";
+        document.querySelector("h2").textContent = "Daftar Dokumen Tugas Mahasiswa Teknologi Informasi";
         document.querySelector("hr").style.display = "block";
-    }
+      }
 
-    function showLoginView() {
+      function showLoginView() {
         mainContent.style.display = "block";
         loginDialogOverlay.style.display = "flex";
         loginButton.textContent = "Login Admin";
@@ -1088,16 +1089,15 @@
         loginErrorMessage.textContent = "";
 
         fetchFolders();
-        const controlDiv = document.getElementById('quizControlPanel');
-        if(controlDiv) controlDiv.innerHTML = '';
-    }
+        const controlDiv = document.getElementById("quizControlPanel");
+        if (controlDiv) controlDiv.innerHTML = "";
+      }
 
+      // ===============================================
+      // 		PIN DIALOG LOGIC
+      // ===============================================
 
-    // ===============================================
-    // 		PIN DIALOG LOGIC
-    // ===============================================
-
-    pinForm.addEventListener("submit", (e) => {
+      pinForm.addEventListener("submit", (e) => {
         e.preventDefault();
         const enteredPin = pinInput.value.trim();
         const actionType = pinDialogOverlay.dataset.actionType;
@@ -1105,16 +1105,16 @@
         const selectedPath = pinDialogOverlay.dataset.selectedPath;
         const folderName = pinDialogOverlay.dataset.folderName;
         validatePin(enteredPin, actionType, actionKey, selectedPath, folderName);
-    });
+      });
 
-    cancelBtn.addEventListener("click", () => {
+      cancelBtn.addEventListener("click", () => {
         pinDialogOverlay.style.display = "none";
         pinInput.value = "";
         pinErrorMessage.textContent = "";
         pendingAction = null;
-    });
+      });
 
-    function showPinDialog(actionType, actionKey, dialogTitle, selectedPath, data = null) {
+      function showPinDialog(actionType, actionKey, dialogTitle, selectedPath, data = null) {
         pinInput.value = "";
         pinErrorMessage.textContent = "";
         pinDialogTitle.textContent = `Masukkan PIN untuk ${dialogTitle}`;
@@ -1122,181 +1122,166 @@
         pinDialogOverlay.dataset.actionType = actionType;
         pinDialogOverlay.dataset.actionKey = actionKey;
         if (selectedPath) {
-            pinDialogOverlay.dataset.selectedPath = selectedPath;
+          pinDialogOverlay.dataset.selectedPath = selectedPath;
         } else {
-            delete pinDialogOverlay.dataset.selectedPath;
+          delete pinDialogOverlay.dataset.selectedPath;
         }
         if (data && data.folderName) {
-            pinDialogOverlay.dataset.folderName = data.folderName;
+          pinDialogOverlay.dataset.folderName = data.folderName;
         } else {
-            delete pinDialogOverlay.dataset.folderName;
+          delete pinDialogOverlay.dataset.folderName;
         }
         pendingAction = data;
         pinDialogOverlay.style.display = "flex";
-    }
+      }
 
-    async function validatePin(enteredPin, actionType, actionKey, selectedPath, folderName) {
+      async function validatePin(enteredPin, actionType, actionKey, selectedPath, folderName) {
         let pinToCheck = "";
 
         if (actionType === "view_report" || actionType === "delete_report") {
-            pinToCheck = await database
-                .ref(`akses_pin/${actionKey}`)
-                .once("value")
-                .then((snap) => snap.val());
+          pinToCheck = await database
+            .ref(`akses_pin/${actionKey}`)
+            .once("value")
+            .then((snap) => snap.val());
         } else if (actionType === "toggle_access") {
-            pinToCheck = await database
-                .ref(`akses_pin/toggle_access_pin`)
-                .once("value")
-                .then((snap) => snap.val());
-        } else if (
-            actionType === "toggle_course_access" ||
-            actionType === "set_deadline" ||
-            actionType === "view_folder" ||
-            actionType === "delete_folder"
-        ) {
-            pinToCheck = await database
-                .ref(`akses_pin/${actionKey}`)
-                .once("value")
-                .then((snap) => snap.val());
+          pinToCheck = await database
+            .ref(`akses_pin/toggle_access_pin`)
+            .once("value")
+            .then((snap) => snap.val());
+        } else if (actionType === "toggle_course_access" || actionType === "set_deadline" || actionType === "view_folder" || actionType === "delete_folder") {
+          pinToCheck = await database
+            .ref(`akses_pin/${actionKey}`)
+            .once("value")
+            .then((snap) => snap.val());
         } else {
-            pinToCheck = null;
+          pinToCheck = null;
         }
 
         if (enteredPin === pinToCheck) {
-            pinErrorMessage.textContent = "";
-            pinDialogOverlay.style.display = "none";
+          pinErrorMessage.textContent = "";
+          pinDialogOverlay.style.display = "none";
 
-            if (actionType === "view_folder") {
-                if (activeFolderElement) {
-                    activeFolderElement.classList.remove("active-folder");
-                }
-                const folderElement = document.querySelector(
-                    `.folder-item[data-folder-name="${folderName}"]`
-                );
-                if (folderElement) {
-                    folderElement.classList.add("active-folder");
-                    activeFolderElement = folderElement;
-                }
-
-                courseAuthStatus[actionKey] = true;
-                fetchFiles(selectedPath);
-            } else if (actionType === "view_report") {
-                const reportKey = actionKey;
-                const reportName = pendingAction.reportName;
-
-                document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
-
-                const reportTableId = `report-table-${reportKey}`;
-                let reportElement = document.createElement("div");
-                reportElement.id = reportTableId;
-                reportElement.style.marginTop = "20px";
-                mainCard.appendChild(reportElement);
-
-                displayReportTable(reportKey, reportName);
-            } else if (actionType === "delete_report") {
-                await deleteReport(actionKey, pendingAction.reportName);
-                pendingAction = null;
-            } else if (actionType === "toggle_access") {
-                await _toggleAccessStatusLogic("akses");
-            } else if (actionType === "toggle_course_access") {
-                await _toggleAccessStatusLogic(`akses_unggah/${actionKey}/isOpen`);
-            } else if (actionType === "set_deadline") {
-                const deadline = pendingAction.deadline;
-                await setCourseDeadline(actionKey, deadline);
-                pendingAction = null;
-            } else if (actionType === "delete_folder") {
-                await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
-                pendingAction = null;
+          if (actionType === "view_folder") {
+            if (activeFolderElement) {
+              activeFolderElement.classList.remove("active-folder");
             }
+            const folderElement = document.querySelector(`.folder-item[data-folder-name="${folderName}"]`);
+            if (folderElement) {
+              folderElement.classList.add("active-folder");
+              activeFolderElement = folderElement;
+            }
+
+            courseAuthStatus[actionKey] = true;
+            fetchFiles(selectedPath);
+          } else if (actionType === "view_report") {
+            const reportKey = actionKey;
+            const reportName = pendingAction.reportName;
+
+            document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
+
+            const reportTableId = `report-table-${reportKey}`;
+            let reportElement = document.createElement("div");
+            reportElement.id = reportTableId;
+            reportElement.style.marginTop = "20px";
+            mainCard.appendChild(reportElement);
+
+            displayReportTable(reportKey, reportName);
+          } else if (actionType === "delete_report") {
+            await deleteReport(actionKey, pendingAction.reportName);
+            pendingAction = null;
+          } else if (actionType === "toggle_access") {
+            await _toggleAccessStatusLogic("akses");
+          } else if (actionType === "toggle_course_access") {
+            await _toggleAccessStatusLogic(`akses_unggah/${actionKey}/isOpen`);
+          } else if (actionType === "set_deadline") {
+            const deadline = pendingAction.deadline;
+            await setCourseDeadline(actionKey, deadline);
+            pendingAction = null;
+          } else if (actionType === "delete_folder") {
+            await deleteFolder(pendingAction.folderName, pendingAction.folderKey);
+            pendingAction = null;
+          }
         } else {
-            pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
+          pinErrorMessage.textContent = "PIN salah! Silakan coba lagi.";
         }
-    }
+      }
 
-    // ===============================================
-    // 		FOLDER & FILE LOGIC
-    // ===============================================
+      // ===============================================
+      // 		FOLDER & FILE LOGIC
+      // ===============================================
 
-    async function fetchFolders() {
+      async function fetchFolders() {
         const storageRef = storage.ref("dokumen");
         folderStatusMessage.textContent = "Memuat daftar folder...";
         try {
-            const listResult = await storageRef.listAll();
-            displayFolders(listResult.prefixes);
-            if (listResult.prefixes.length > 0) {
-                folderStatusMessage.textContent = "";
-            } else {
-                folderStatusMessage.textContent = "Belum ada folder yang dibuat.";
-            }
+          const listResult = await storageRef.listAll();
+          displayFolders(listResult.prefixes);
+          if (listResult.prefixes.length > 0) {
+            folderStatusMessage.textContent = "";
+          } else {
+            folderStatusMessage.textContent = "Belum ada folder yang dibuat.";
+          }
         } catch (error) {
-            console.error("Gagal mengambil daftar folder:", error);
-            folderStatusMessage.textContent = `Gagal memuat folder: ${error.message}`;
+          console.error("Gagal mengambil daftar folder:", error);
+          folderStatusMessage.textContent = `Gagal memuat folder: ${error.message}`;
         }
-    }
+      }
 
-    function displayFolders(prefixes) {
+      function displayFolders(prefixes) {
         folderListContainer.innerHTML = "";
         if (prefixes.length === 0) {
-            folderListContainer.innerHTML =
-                '<p class="empty-message">Belum ada folder yang dibuat.</p>';
-            return;
+          folderListContainer.innerHTML = '<p class="empty-message">Belum ada folder yang dibuat.</p>';
+          return;
         }
 
         prefixes.forEach((prefix) => {
-            const folderName = prefix.name;
-            const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
-            const folderItem = document.createElement("li");
-            folderItem.classList.add("folder-item");
-            folderItem.dataset.folderName = folderName;
-            folderItem.innerHTML = `
+          const folderName = prefix.name;
+          const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+          const folderItem = document.createElement("li");
+          folderItem.classList.add("folder-item");
+          folderItem.dataset.folderName = folderName;
+          folderItem.innerHTML = `
                     <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Folder Icon" class="folder-icon" />
                     <span>${folderName}</span>
-                    <button class="folder-delete-btn" data-folder-name="${folderName}" style="position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer; display: ${
-                        auth.currentUser ? "block" : "none"
-                    };">
+                    <button class="folder-delete-btn" data-folder-name="${folderName}" style="position: absolute; top: 5px; right: 5px; background: none; border: none; cursor: pointer; display: ${auth.currentUser ? "block" : "none"};">
                         <i class="fas fa-trash-alt text-danger"></i>
                     </button>
                 `;
 
-            folderItem.addEventListener("click", () => {
-                const path = `dokumen/${folderName}/`;
-                showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path, {
-                    folderName,
-                });
+          folderItem.addEventListener("click", () => {
+            const path = `dokumen/${folderName}/`;
+            showPinDialog("view_folder", folderKey, `melihat folder ${folderName}`, path, {
+              folderName,
             });
+          });
 
-            const deleteButton = folderItem.querySelector(".folder-delete-btn");
-            if (deleteButton) {
-                deleteButton.addEventListener("click", (e) => {
-                    e.stopPropagation();
-                    if (
-                        auth.currentUser &&
-                        confirm(
-                            `Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`
-                        )
-                    ) {
-                        showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, {
-                            folderName,
-                            folderKey,
-                        });
-                    }
+          const deleteButton = folderItem.querySelector(".folder-delete-btn");
+          if (deleteButton) {
+            deleteButton.addEventListener("click", (e) => {
+              e.stopPropagation();
+              if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus folder "${folderName}" beserta seluruh isinya? Aksi ini tidak dapat dibatalkan.`)) {
+                showPinDialog("delete_folder", folderKey, `menghapus folder ${folderName}`, null, {
+                  folderName,
+                  folderKey,
                 });
-            }
-            folderListContainer.appendChild(folderItem);
+              }
+            });
+          }
+          folderListContainer.appendChild(folderItem);
         });
-    }
+      }
 
-    createFolderBtn.addEventListener("click", () => {
+      createFolderBtn.addEventListener("click", () => {
         const folderName = newFolderNameInput.value.trim();
         const folderPin = newFolderPinInput.value.trim();
         if (!folderName || !folderPin) {
-            alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
-            return;
+          alert("Mohon masukkan nama folder dan PIN terlebih dahulu.");
+          return;
         }
         createFolder(folderName, folderPin);
-    });
+      });
 
-    async function createFolder(folderName, folderPin) {
+      async function createFolder(folderName, folderPin) {
         createFolderBtn.disabled = true;
         const originalBtnText = createFolderBtn.textContent;
         createFolderBtn.textContent = "Sedang membuat...";
@@ -1304,370 +1289,344 @@
         const folderKey = folderName.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 
         try {
-            const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
-            if (snapshot.exists()) {
-                alert(`Folder "${folderName}" sudah ada. Mohon gunakan nama lain.`);
-                return;
-            }
+          const snapshot = await database.ref(`mata_kuliah/${folderKey}`).once("value");
+          if (snapshot.exists()) {
+            alert(`Folder "${folderName}" sudah ada. Mohon gunakan nama lain.`);
+            return;
+          }
 
-            const folderPath = `dokumen/${folderName}/`;
-            const placeholderFileName = ".gitkeep";
-            const placeholderBlob = new Blob([], { type: "text/plain" });
+          const folderPath = `dokumen/${folderName}/`;
+          const placeholderFileName = ".gitkeep";
+          const placeholderBlob = new Blob([], { type: "text/plain" });
 
-            const storageRef = storage.ref(`${folderPath}${placeholderFileName}`);
-            await storageRef.put(placeholderBlob);
+          const storageRef = storage.ref(`${folderPath}${placeholderFileName}`);
+          await storageRef.put(placeholderBlob);
 
-            await database.ref(`akses_pin/${folderKey}`).set(folderPin);
-            await database.ref(`akses_unggah/${folderKey}/isOpen`).set(true);
-            await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
+          await database.ref(`akses_pin/${folderKey}`).set(folderPin);
+          await database.ref(`akses_unggah/${folderKey}/isOpen`).set(true);
+          await database.ref(`mata_kuliah/${folderKey}`).set(folderName);
 
-            alert(
-                `Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`
-            );
-            newFolderNameInput.value = "";
-            newFolderPinInput.value = "";
-            fetchFolders();
-            fetchCourseList();
+          alert(`Folder "${folderName}" berhasil dibuat dengan PIN. Akses unggah diatur ke BUKA.`);
+          newFolderNameInput.value = "";
+          newFolderPinInput.value = "";
+          fetchFolders();
+          fetchCourseList();
         } catch (error) {
-            console.error("Gagal membuat folder:", error);
-            alert(`Gagal membuat folder: ${error.message}`);
+          console.error("Gagal membuat folder:", error);
+          alert(`Gagal membuat folder: ${error.message}`);
         } finally {
-            createFolderBtn.disabled = false;
-            createFolderBtn.textContent = originalBtnText;
+          createFolderBtn.disabled = false;
+          createFolderBtn.textContent = originalBtnText;
         }
-    }
+      }
 
-    async function deleteFolder(folderName, folderKey) {
+      async function deleteFolder(folderName, folderKey) {
         const folderRef = storage.ref(`dokumen/${folderName}`);
         try {
-            const listResult = await folderRef.listAll();
-            const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
-            await Promise.all(deletePromises);
+          const listResult = await folderRef.listAll();
+          const deletePromises = listResult.items.map((fileRef) => fileRef.delete());
+          await Promise.all(deletePromises);
 
-            const dbPromises = [
-                database.ref(`akses_pin/${folderKey}`).remove(),
-                database.ref(`akses_unggah/${folderKey}`).remove(),
-                database.ref(`mata_kuliah/${folderKey}`).remove(),
-            ];
-            await Promise.all(dbPromises);
+          const dbPromises = [database.ref(`akses_pin/${folderKey}`).remove(), database.ref(`akses_unggah/${folderKey}`).remove(), database.ref(`mata_kuliah/${folderKey}`).remove()];
+          await Promise.all(dbPromises);
 
-            alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
-            fetchFolders();
-            fetchCourseList();
-            fileListContainer.innerHTML =
-                '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
+          alert(`Folder "${folderName}" berhasil dihapus beserta seluruh databasenya.`);
+          fetchFolders();
+          fetchCourseList();
+          fileListContainer.innerHTML = '<p class="status-message">Pilih folder di atas untuk melihat file.</p>';
         } catch (error) {
-            console.error("Gagal menghapus folder:", error);
-            alert(`Gagal menghapus folder: ${error.message}`);
+          console.error("Gagal menghapus folder:", error);
+          alert(`Gagal menghapus folder: ${error.message}`);
         }
-    }
+      }
 
-    async function fetchFiles(path) {
+      async function fetchFiles(path) {
         currentFolderPath = path;
         const storageRef = storage.ref(path);
         fileListContainer.innerHTML = '<p class="status-message text-center">Memuat daftar file...</p>';
 
         try {
-            const listResult = await storageRef.listAll();
-            cachedFiles = [];
-            const filePromises = listResult.items.map(async (itemRef) => {
-                if (itemRef.name === ".gitkeep") return null;
-                const downloadURL = await itemRef.getDownloadURL();
-                const fileName = itemRef.name;
-                const filePath = itemRef.fullPath;
-                const fileExtension = fileName.split(".").pop().toLowerCase();
-                return { fileName, downloadURL, filePath, fileExtension };
-            });
+          const listResult = await storageRef.listAll();
+          cachedFiles = [];
+          const filePromises = listResult.items.map(async (itemRef) => {
+            if (itemRef.name === ".gitkeep") return null;
+            const downloadURL = await itemRef.getDownloadURL();
+            const fileName = itemRef.name;
+            const filePath = itemRef.fullPath;
+            const fileExtension = fileName.split(".").pop().toLowerCase();
+            return { fileName, downloadURL, filePath, fileExtension };
+          });
 
-            cachedFiles = (await Promise.all(filePromises)).filter((file) => file !== null);
-            displayFiles(cachedFiles);
+          cachedFiles = (await Promise.all(filePromises)).filter((file) => file !== null);
+          displayFiles(cachedFiles);
         } catch (error) {
-            console.error("Gagal mengambil data file:", error);
-            fileListContainer.innerHTML = `<p class="status-message text-center text-danger">Gagal memuat file: ${error.message}</p>`;
+          console.error("Gagal mengambil data file:", error);
+          fileListContainer.innerHTML = `<p class="status-message text-center text-danger">Gagal memuat file: ${error.message}</p>`;
         }
-    }
+      }
 
-    function filterFiles(searchTerm) {
-        const filtered = cachedFiles.filter((file) =>
-            file.fileName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+      function filterFiles(searchTerm) {
+        const filtered = cachedFiles.filter((file) => file.fileName.toLowerCase().includes(searchTerm.toLowerCase()));
         displayFiles(filtered);
-    }
+      }
 
-    function displayFiles(files) {
+      function displayFiles(files) {
         fileListContainer.innerHTML = "";
         if (files.length === 0) {
-            fileListContainer.innerHTML = '<p class="empty-message text-center">Tidak ada file yang ditemukan.</p>';
-            return;
+          fileListContainer.innerHTML = '<p class="empty-message text-center">Tidak ada file yang ditemukan.</p>';
+          return;
         }
 
         let fileNumber = 1;
         files.forEach((file) => {
-            const li = document.createElement("li");
-            
-            const fileInfoDiv = document.createElement('div');
-            fileInfoDiv.className = 'd-flex align-items-center flex-grow-1 overflow-hidden';
+          const li = document.createElement("li");
 
-            const fileNumberSpan = document.createElement("span");
-            fileNumberSpan.classList.add("file-number", "me-2", "fw-bold", "text-muted");
-            fileNumberSpan.textContent = `${fileNumber}.`;
+          const fileInfoDiv = document.createElement("div");
+          fileInfoDiv.className = "d-flex align-items-center flex-grow-1 overflow-hidden";
 
-            const fileNameSpan = document.createElement("span");
-            fileNameSpan.classList.add("file-name-text");
-            fileNameSpan.textContent = file.fileName;
-            fileNameSpan.style.whiteSpace = 'nowrap';
-            fileNameSpan.style.overflow = 'hidden';
-            fileNameSpan.style.textOverflow = 'ellipsis';
-            
-            fileInfoDiv.appendChild(fileNumberSpan);
-            fileInfoDiv.appendChild(fileNameSpan);
+          const fileNumberSpan = document.createElement("span");
+          fileNumberSpan.classList.add("file-number", "me-2", "fw-bold", "text-muted");
+          fileNumberSpan.textContent = `${fileNumber}.`;
 
-            const actionButtonsDiv = document.createElement("div");
-            actionButtonsDiv.classList.add("action-buttons", "d-flex", "gap-3");
+          const fileNameSpan = document.createElement("span");
+          fileNameSpan.classList.add("file-name-text");
+          fileNameSpan.textContent = file.fileName;
+          fileNameSpan.style.whiteSpace = "nowrap";
+          fileNameSpan.style.overflow = "hidden";
+          fileNameSpan.style.textOverflow = "ellipsis";
 
-            const supportedPreviewExtensions = [
-                "pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx",
-            ];
-            if (supportedPreviewExtensions.includes(file.fileExtension)) {
-                const previewBtn = document.createElement("a");
-                previewBtn.classList.add("preview-btn", "text-info");
-                previewBtn.target = "_blank";
-                let viewerUrl =
-                    file.fileExtension === "pdf"
-                        ? file.downloadURL
-                        : `https://docs.google.com/gview?url=${encodeURIComponent(
-                              file.downloadURL
-                          )}&embedded=true`;
-                previewBtn.href = viewerUrl;
-                const previewIcon = document.createElement("i");
-                previewIcon.className = "fas fa-eye";
-                previewBtn.appendChild(previewIcon);
-                actionButtonsDiv.appendChild(previewBtn);
+          fileInfoDiv.appendChild(fileNumberSpan);
+          fileInfoDiv.appendChild(fileNameSpan);
+
+          const actionButtonsDiv = document.createElement("div");
+          actionButtonsDiv.classList.add("action-buttons", "d-flex", "gap-3");
+
+          const supportedPreviewExtensions = ["pdf", "doc", "docx", "ppt", "pptx", "xls", "xlsx"];
+          if (supportedPreviewExtensions.includes(file.fileExtension)) {
+            const previewBtn = document.createElement("a");
+            previewBtn.classList.add("preview-btn", "text-info");
+            previewBtn.target = "_blank";
+            let viewerUrl = file.fileExtension === "pdf" ? file.downloadURL : `https://docs.google.com/gview?url=${encodeURIComponent(file.downloadURL)}&embedded=true`;
+            previewBtn.href = viewerUrl;
+            const previewIcon = document.createElement("i");
+            previewIcon.className = "fas fa-eye";
+            previewBtn.appendChild(previewIcon);
+            actionButtonsDiv.appendChild(previewBtn);
+          }
+
+          const downloadBtn = document.createElement("a");
+          downloadBtn.href = file.downloadURL;
+          downloadBtn.classList.add("download-btn", "text-success");
+          downloadBtn.target = "_blank";
+          downloadBtn.download = file.fileName;
+          const downloadIcon = document.createElement("i");
+          downloadIcon.className = "fas fa-download";
+          downloadBtn.appendChild(downloadIcon);
+          actionButtonsDiv.appendChild(downloadBtn);
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.classList.add("delete-btn", "p-0", "bg-transparent", "border-0", "text-danger");
+          const deleteIcon = document.createElement("i");
+          deleteIcon.className = "fas fa-trash-alt";
+          deleteBtn.appendChild(deleteIcon);
+          deleteBtn.style.display = auth.currentUser ? "block" : "none";
+
+          deleteBtn.addEventListener("click", () => {
+            if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)) {
+              deleteFile(file.filePath);
             }
+          });
 
-            const downloadBtn = document.createElement("a");
-            downloadBtn.href = file.downloadURL;
-            downloadBtn.classList.add("download-btn", "text-success");
-            downloadBtn.target = "_blank";
-            downloadBtn.download = file.fileName;
-            const downloadIcon = document.createElement("i");
-            downloadIcon.className = "fas fa-download";
-            downloadBtn.appendChild(downloadIcon);
-            actionButtonsDiv.appendChild(downloadBtn);
-
-            const deleteBtn = document.createElement("button");
-            deleteBtn.classList.add("delete-btn", "p-0", "bg-transparent", "border-0", "text-danger");
-            const deleteIcon = document.createElement("i");
-            deleteIcon.className = "fas fa-trash-alt";
-            deleteBtn.appendChild(deleteIcon);
-            deleteBtn.style.display = auth.currentUser ? "block" : "none";
-
-            deleteBtn.addEventListener("click", () => {
-                if (
-                    auth.currentUser &&
-                    confirm(`Apakah Anda yakin ingin menghapus file "${file.fileName}"?`)
-                ) {
-                    deleteFile(file.filePath);
-                }
-            });
-
-            actionButtonsDiv.appendChild(deleteBtn);
-            li.appendChild(fileInfoDiv);
-            li.appendChild(actionButtonsDiv);
-            fileListContainer.appendChild(li);
-            fileNumber++;
+          actionButtonsDiv.appendChild(deleteBtn);
+          li.appendChild(fileInfoDiv);
+          li.appendChild(actionButtonsDiv);
+          fileListContainer.appendChild(li);
+          fileNumber++;
         });
-    }
-    
-    async function deleteFile(filePath) {
+      }
+
+      async function deleteFile(filePath) {
         if (!auth.currentUser) {
-            alert("Anda harus login untuk menghapus file.");
-            return;
+          alert("Anda harus login untuk menghapus file.");
+          return;
         }
 
         try {
-            const fileRef = storage.ref(filePath);
-            await fileRef.delete();
-            alert(`File ${filePath.split('/').pop()} berhasil dihapus.`);
-            
-            if(currentFolderPath) {
-                fetchFiles(currentFolderPath);
-            } else {
-                fetchFolders();
-            }
+          const fileRef = storage.ref(filePath);
+          await fileRef.delete();
+          alert(`File ${filePath.split("/").pop()} berhasil dihapus.`);
 
+          if (currentFolderPath) {
+            fetchFiles(currentFolderPath);
+          } else {
+            fetchFolders();
+          }
         } catch (error) {
-            console.error("Gagal menghapus file:", error);
-            alert(`Gagal menghapus file: ${error.message}`);
+          console.error("Gagal menghapus file:", error);
+          alert(`Gagal menghapus file: ${error.message}`);
         }
-    }
+      }
 
+      // ===============================================
+      // 		ACCESS TOGGLE & NOTIFICATION LOGIC
+      // ===============================================
 
-    // ===============================================
-    // 		ACCESS TOGGLE & NOTIFICATION LOGIC
-    // ===============================================
-
-    toggleAccessBtn.addEventListener("click", () => {
+      toggleAccessBtn.addEventListener("click", () => {
         showPinDialog("toggle_access", "toggle_access_pin", "mengubah status akses global", null);
-    });
+      });
 
-    toggleCourseAccessBtn.addEventListener("click", () => {
+      toggleCourseAccessBtn.addEventListener("click", () => {
         const courseKey = toggleCourseSelect.value;
         if (courseKey) {
-            const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
-            showPinDialog(
-                "toggle_course_access",
-                courseKey,
-                `mengubah status akses ${courseName}`,
-                null
-            );
+          const courseName = toggleCourseSelect.options[toggleCourseSelect.selectedIndex].text;
+          showPinDialog("toggle_course_access", courseKey, `mengubah status akses ${courseName}`, null);
         } else {
-            alert("Mohon pilih mata kuliah terlebih dahulu.");
+          alert("Mohon pilih mata kuliah terlebih dahulu.");
         }
-    });
+      });
 
-    async function fetchCourseList() {
+      async function fetchCourseList() {
         try {
-            const snapshot = await database.ref("mata_kuliah").once("value");
-            const courses = snapshot.val();
+          const snapshot = await database.ref("mata_kuliah").once("value");
+          const courses = snapshot.val();
 
-            while (toggleCourseSelect.options.length > 1) {
-                toggleCourseSelect.remove(1);
-            }
+          while (toggleCourseSelect.options.length > 1) {
+            toggleCourseSelect.remove(1);
+          }
 
-            if (courses) {
-                for (const key in courses) {
-                    if (Object.hasOwnProperty.call(courses, key)) {
-                        const courseName = courses[key];
-                        const option = document.createElement("option");
-                        option.value = key;
-                        option.textContent = courseName;
-                        toggleCourseSelect.appendChild(option);
-                    }
-                }
-            } else {
-                console.log("No courses found in the database.");
+          if (courses) {
+            for (const key in courses) {
+              if (Object.hasOwnProperty.call(courses, key)) {
+                const courseName = courses[key];
+                const option = document.createElement("option");
+                option.value = key;
+                option.textContent = courseName;
+                toggleCourseSelect.appendChild(option);
+              }
             }
-            const currentSelection = toggleCourseSelect.value;
-            if (currentSelection) {
-                updateCourseToggleButtonStatus(currentSelection);
-            }
+          } else {
+            console.log("No courses found in the database.");
+          }
+          const currentSelection = toggleCourseSelect.value;
+          if (currentSelection) {
+            updateCourseToggleButtonStatus(currentSelection);
+          }
         } catch (error) {
-            console.error("Gagal memuat daftar mata kuliah:", error);
+          console.error("Gagal memuat daftar mata kuliah:", error);
         }
-    }
+      }
 
-    async function updateAccessButtonStatus() {
+      async function updateAccessButtonStatus() {
         try {
-            const snapshot = await database.ref("akses").once("value");
-            const isOpen = snapshot.val();
-            if (isOpen === true) {
-                toggleAccessBtn.textContent = "Akses Website: BUKA ✅";
-                toggleAccessBtn.classList.remove("access-closed");
-                toggleAccessBtn.classList.add("access-open");
-            } else {
-                toggleAccessBtn.textContent = "Akses Website: TUTUP 🔒";
-                toggleAccessBtn.classList.remove("access-open");
-                toggleAccessBtn.classList.add("access-closed");
-            }
+          const snapshot = await database.ref("akses").once("value");
+          const isOpen = snapshot.val();
+          if (isOpen === true) {
+            toggleAccessBtn.textContent = "Akses Website: BUKA ✅";
+            toggleAccessBtn.classList.remove("access-closed");
+            toggleAccessBtn.classList.add("access-open");
+          } else {
+            toggleAccessBtn.textContent = "Akses Website: TUTUP 🔒";
+            toggleAccessBtn.classList.remove("access-open");
+            toggleAccessBtn.classList.add("access-closed");
+          }
         } catch (error) {
-            console.error("Gagal memperbarui status tombol:", error);
-            toggleAccessBtn.textContent = "Status tidak dapat dimuat.";
+          console.error("Gagal memperbarui status tombol:", error);
+          toggleAccessBtn.textContent = "Status tidak dapat dimuat.";
         }
-    }
+      }
 
-    async function _toggleAccessStatusLogic(dbPath) {
+      async function _toggleAccessStatusLogic(dbPath) {
         try {
-            const snapshot = await database.ref(dbPath).once("value");
-            const currentStatus = snapshot.val();
-            const newStatus = !currentStatus;
-            await database.ref(dbPath).set(newStatus);
+          const snapshot = await database.ref(dbPath).once("value");
+          const currentStatus = snapshot.val();
+          const newStatus = !currentStatus;
+          await database.ref(dbPath).set(newStatus);
 
-            if (dbPath === "akses") {
-                updateAccessButtonStatus();
-            } else {
-                const parts = dbPath.split("/");
-                const courseKey = parts[1];
-                updateCourseToggleButtonStatus(courseKey);
-            }
-            alert(`Akses berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
+          if (dbPath === "akses") {
+            updateAccessButtonStatus();
+          } else {
+            const parts = dbPath.split("/");
+            const courseKey = parts[1];
+            updateCourseToggleButtonStatus(courseKey);
+          }
+          alert(`Akses berhasil diubah menjadi: ${newStatus ? "DIBUKA" : "DITUTUP"}`);
         } catch (error) {
-            console.error("Gagal mengubah status akses:", error);
-            alert(`Gagal mengubah status akses: ${error.message}`);
+          console.error("Gagal mengubah status akses:", error);
+          alert(`Gagal mengubah status akses: ${error.message}`);
         }
-    }
+      }
 
-    sendNotificationBtn.addEventListener("click", () => {
+      sendNotificationBtn.addEventListener("click", () => {
         const title = notificationTitleInput.value.trim();
         const message = notificationMessageInput.value.trim();
         if (!title || !message) {
-            alert("Judul dan pesan tidak boleh kosong.");
-            return;
+          alert("Judul dan pesan tidak boleh kosong.");
+          return;
         }
         sendManualNotification(title, message);
-    });
+      });
 
-    async function sendManualNotification(title, message) {
+      async function sendManualNotification(title, message) {
         sendNotificationBtn.disabled = true;
         const originalBtnText = sendNotificationBtn.textContent;
         sendNotificationBtn.textContent = "Mengirim...";
 
         try {
-            const notifRef = database.ref("notifikasi_manual");
-            const snapshot = await notifRef.once("value");
-            const currentNotif = snapshot.val();
+          const notifRef = database.ref("notifikasi_manual");
+          const snapshot = await notifRef.once("value");
+          const currentNotif = snapshot.val();
 
-            let newIdNumber = 1;
-            if (currentNotif && currentNotif.id) {
-                const lastId = currentNotif.id;
-                const numberString = lastId.split("-").pop();
-                const lastNumber = parseInt(numberString);
-                if (!isNaN(lastNumber)) {
-                    newIdNumber = lastNumber + 1;
-                }
+          let newIdNumber = 1;
+          if (currentNotif && currentNotif.id) {
+            const lastId = currentNotif.id;
+            const numberString = lastId.split("-").pop();
+            const lastNumber = parseInt(numberString);
+            if (!isNaN(lastNumber)) {
+              newIdNumber = lastNumber + 1;
             }
+          }
 
-            const newId = `notif-penting-${String(newIdNumber).padStart(2, "0")}`;
+          const newId = `notif-penting-${String(newIdNumber).padStart(2, "0")}`;
 
-            await notifRef.set({
-                aktif: true,
-                id: newId,
-                judul: title,
-                isi: message,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-            });
+          await notifRef.set({
+            aktif: true,
+            id: newId,
+            judul: title,
+            isi: message,
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+          });
 
-            alert("Notifikasi berhasil dikirim!");
-            notificationTitleInput.value = "";
-            notificationMessageInput.value = "";
+          alert("Notifikasi berhasil dikirim!");
+          notificationTitleInput.value = "";
+          notificationMessageInput.value = "";
         } catch (error) {
-            console.error("Gagal mengirim notifikasi:", error);
-            alert(`Gagal mengirim notifikasi: ${error.message}`);
+          console.error("Gagal mengirim notifikasi:", error);
+          alert(`Gagal mengirim notifikasi: ${error.message}`);
         } finally {
-            sendNotificationBtn.disabled = false;
-            sendNotificationBtn.textContent = originalBtnText;
+          sendNotificationBtn.disabled = false;
+          sendNotificationBtn.textContent = originalBtnText;
         }
-    }
+      }
 
-    // ===============================================
-    // 		LAPORAN NILAI LOGIC
-    // ===============================================
+      // ===============================================
+      // 		LAPORAN NILAI LOGIC
+      // ===============================================
 
-    async function fetchReportList() {
+      async function fetchReportList() {
         reportListContainer.innerHTML = '<p class="status-message">Memuat daftar laporan...</p>';
         try {
-            const snapshot = await database.ref("laporan_nilai").once("value");
-            const reports = snapshot.val();
-            reportListContainer.innerHTML = "";
+          const snapshot = await database.ref("laporan_nilai").once("value");
+          const reports = snapshot.val();
+          reportListContainer.innerHTML = "";
 
-            if (reports) {
-                for (const key in reports) {
-                    const reportName = reports[key].name || key;
-                    const reportItem = document.createElement("li");
-                    reportItem.classList.add("folder-item");
-                    reportItem.dataset.reportKey = key;
+          if (reports) {
+            for (const key in reports) {
+              const reportName = reports[key].name || key;
+              const reportItem = document.createElement("li");
+              reportItem.classList.add("folder-item");
+              reportItem.dataset.reportKey = key;
 
-                    const deleteBtnHtml = `
+              const deleteBtnHtml = `
                         <button 
                             class="folder-delete-btn delete-report-btn" 
                             data-report-key="${key}" 
@@ -1678,209 +1637,186 @@
                         </button>
                     `;
 
-                    reportItem.innerHTML = `
+              reportItem.innerHTML = `
                         <img src="https://img.icons8.com/color/48/000000/documents.png" alt="Report Icon" class="folder-icon" />
                         <span>${reportName}</span>
                         ${deleteBtnHtml}
                     `;
 
-                    reportItem.addEventListener("click", (e) => {
-                        if (e.target.closest(".delete-report-btn")) return;
+              reportItem.addEventListener("click", (e) => {
+                if (e.target.closest(".delete-report-btn")) return;
 
-                        showPinDialog("view_report", key, `melihat laporan ${reportName}`, null, {
-                            reportName,
-                        });
+                showPinDialog("view_report", key, `melihat laporan ${reportName}`, null, {
+                  reportName,
+                });
+              });
+
+              const deleteButton = reportItem.querySelector(".folder-delete-btn");
+              if (deleteButton) {
+                deleteButton.addEventListener("click", (e) => {
+                  e.stopPropagation();
+                  if (auth.currentUser && confirm(`Apakah Anda yakin ingin menghapus Laporan Nilai "${reportName}"? Aksi ini tidak dapat dibatalkan.`)) {
+                    showPinDialog("delete_report", key, `menghapus laporan ${reportName}`, null, {
+                      reportName: reportName,
                     });
+                  }
+                });
+              }
 
-                    const deleteButton = reportItem.querySelector(".folder-delete-btn");
-                    if (deleteButton) {
-                        deleteButton.addEventListener("click", (e) => {
-                            e.stopPropagation();
-                            if (
-                                auth.currentUser &&
-                                confirm(
-                                    `Apakah Anda yakin ingin menghapus Laporan Nilai "${reportName}"? Aksi ini tidak dapat dibatalkan.`
-                                )
-                            ) {
-                                showPinDialog("delete_report", key, `menghapus laporan ${reportName}`, null, {
-                                    reportName: reportName,
-                                });
-                            }
-                        });
-                    }
-
-                    reportListContainer.appendChild(reportItem);
-                }
-            } else {
-                reportListContainer.innerHTML =
-                    '<p class="empty-message">Belum ada laporan nilai yang dibuat.</p>';
+              reportListContainer.appendChild(reportItem);
             }
+          } else {
+            reportListContainer.innerHTML = '<p class="empty-message">Belum ada laporan nilai yang dibuat.</p>';
+          }
         } catch (error) {
-            console.error("Gagal memuat daftar laporan:", error);
-            reportListContainer.innerHTML = `<p class="status-message text-danger">Gagal memuat laporan: ${error.message}</p>`;
+          console.error("Gagal memuat daftar laporan:", error);
+          reportListContainer.innerHTML = `<p class="status-message text-danger">Gagal memuat laporan: ${error.message}</p>`;
         }
-    }
+      }
 
-    async function deleteReport(reportKey, reportName) {
+      async function deleteReport(reportKey, reportName) {
         try {
-            await database.ref(`laporan_nilai/${reportKey}`).remove();
-            await database.ref(`akses_pin/${reportKey}`).remove();
+          await database.ref(`laporan_nilai/${reportKey}`).remove();
+          await database.ref(`akses_pin/${reportKey}`).remove();
 
-            alert(`Laporan "${reportName}" berhasil dihapus.`);
-            fetchReportList();
+          alert(`Laporan "${reportName}" berhasil dihapus.`);
+          fetchReportList();
 
-            document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
-            showAdminView();
+          document.querySelectorAll('[id^="report-table-"]').forEach((el) => el.remove());
+          showAdminView();
         } catch (error) {
-            console.error("Gagal menghapus laporan:", error);
-            alert(`Gagal menghapus laporan: ${error.message}`);
+          console.error("Gagal menghapus laporan:", error);
+          alert(`Gagal menghapus laporan: ${error.message}`);
         }
-    }
+      }
 
-    createReportBtn.addEventListener("click", () => {
+      createReportBtn.addEventListener("click", () => {
         const reportName = newReportNameInput.value.trim();
         if (!reportName) {
-            alert("Mohon masukkan nama laporan.");
-            return;
+          alert("Mohon masukkan nama laporan.");
+          return;
         }
         createReport(reportName);
-    });
+      });
 
-    async function createReport(reportName) {
+      async function createReport(reportName) {
         createReportBtn.disabled = true;
         const originalBtnText = createReportBtn.textContent;
         createReportBtn.textContent = "Sedang membuat...";
 
         const reportPin = newReportPinInput.value.trim();
         if (!reportPin) {
-            alert("PIN untuk Laporan Baru tidak boleh kosong.");
-            createReportBtn.disabled = false;
-            createReportBtn.textContent = originalBtnText;
-            return;
+          alert("PIN untuk Laporan Baru tidak boleh kosong.");
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+          return;
         }
 
-        const studentListInput = prompt(
-            "Masukkan daftar mahasiswa (NIM, Nama Mahasiswa, L/P) per baris.\nContoh:\n162024001,NADA MAHARANI,P\n162024002,JUNIAIN RISKI,L\n\n(Kosongkan untuk data demo 3 mahasiswa)"
-        );
+        const studentListInput = prompt("Masukkan daftar mahasiswa (NIM, Nama Mahasiswa, L/P) per baris.\nContoh:\n162024001,NADA MAHARANI,P\n162024002,JUNIAIN RISKI,L\n\n(Kosongkan untuk data demo 3 mahasiswa)");
 
         if (studentListInput === null) {
-            createReportBtn.disabled = false;
-            createReportBtn.textContent = originalBtnText;
-            return;
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+          return;
         }
 
         let rawStudents = [];
         if (studentListInput.trim() === "") {
-            rawStudents = [
-                "162024001,NAMA DEMO SATU,P",
-                "162024002,NAMA DEMO DUA,L",
-                "162024003,NAMA DEMO TIGA,P",
-            ];
+          rawStudents = ["162024001,NAMA DEMO SATU,P", "162024002,NAMA DEMO DUA,L", "162024003,NAMA DEMO TIGA,P"];
         } else {
-            rawStudents = studentListInput
-                .trim()
-                .split("\n")
-                .filter((line) => line.trim() !== "");
+          rawStudents = studentListInput
+            .trim()
+            .split("\n")
+            .filter((line) => line.trim() !== "");
         }
 
         const taskColumns = [];
         for (let i = 1; i <= 16; i++) {
-            if (i === 8) taskColumns.push("UTS");
-            else if (i === 16) taskColumns.push("UAS");
-            else taskColumns.push(`TUGAS ${i}`);
+          if (i === 8) taskColumns.push("UTS");
+          else if (i === 16) taskColumns.push("UAS");
+          else taskColumns.push(`TUGAS ${i}`);
         }
 
         const studentData = [];
 
         rawStudents.forEach((line) => {
-            const parts = line.split(",").map((p) => p.trim());
-            if (parts.length >= 3) {
-                const nim = parts[0];
-                const name = parts[1];
-                const lp = parts[2].toUpperCase().substring(0, 1);
+          const parts = line.split(",").map((p) => p.trim());
+          if (parts.length >= 3) {
+            const nim = parts[0];
+            const name = parts[1];
+            const lp = parts[2].toUpperCase().substring(0, 1);
 
-                let studentRow = {
-                    NIM: nim,
-                    "NAMA MAHASISWA": name,
-                    L_P: lp,
-                    UTS: 0,
-                    UAS: 0,
-                };
+            let studentRow = {
+              NIM: nim,
+              "NAMA MAHASISWA": name,
+              L_P: lp,
+              UTS: 0,
+              UAS: 0,
+            };
 
-                for (let i = 1; i <= 16; i++) {
-                    if (i === 8) studentRow["UTS"] = 0;
-                    else if (i === 16) studentRow["UAS"] = 0;
-                    else studentRow[`TUGAS ${i}`] = 0;
-                }
-
-                studentData.push(studentRow);
+            for (let i = 1; i <= 16; i++) {
+              if (i === 8) studentRow["UTS"] = 0;
+              else if (i === 16) studentRow["UAS"] = 0;
+              else studentRow[`TUGAS ${i}`] = 0;
             }
+
+            studentData.push(studentRow);
+          }
         });
 
         if (studentData.length === 0) {
-            alert(
-                "Input data mahasiswa tidak valid. Pastikan formatnya adalah NIM, Nama Mahasiswa, L/P dan minimal ada 1 mahasiswa."
-            );
-            createReportBtn.disabled = false;
-            createReportBtn.textContent = originalBtnText;
-            return;
+          alert("Input data mahasiswa tidak valid. Pastikan formatnya adalah NIM, Nama Mahasiswa, L/P dan minimal ada 1 mahasiswa.");
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
+          return;
         }
 
         studentData.sort((a, b) => {
-            const nimA = parseInt(a.NIM);
-            const nimB = parseInt(b.NIM);
-            if (!isNaN(nimA) && !isNaN(nimB)) {
-                return nimA - nimB;
-            }
-            return a.NIM.localeCompare(b.NIM);
+          const nimA = parseInt(a.NIM);
+          const nimB = parseInt(b.NIM);
+          if (!isNaN(nimA) && !isNaN(nimB)) {
+            return nimA - nimB;
+          }
+          return a.NIM.localeCompare(b.NIM);
         });
 
-        const columnsArray = [
-            "NO",
-            "NAMA MAHASISWA",
-            "NIM",
-            "L_P",
-            ...taskColumns,
-            ...RESULT_COLUMNS,
-        ];
+        const columnsArray = ["NO", "NAMA MAHASISWA", "NIM", "L_P", ...taskColumns, ...RESULT_COLUMNS];
 
         try {
-            const newReportRef = database.ref("laporan_nilai").push();
-            const reportKey = newReportRef.key;
+          const newReportRef = database.ref("laporan_nilai").push();
+          const reportKey = newReportRef.key;
 
-            await newReportRef.set({
-                name: reportName,
-                columns: columnsArray,
-                data: studentData,
-            });
+          await newReportRef.set({
+            name: reportName,
+            columns: columnsArray,
+            data: studentData,
+          });
 
-            await database.ref(`akses_pin/${reportKey}`).set(reportPin);
+          await database.ref(`akses_pin/${reportKey}`).set(reportPin);
 
-            alert(
-                `Laporan "${reportName}" berhasil dibuat dengan PIN. Gunakan PIN ini untuk mengakses.`
-            );
-            newReportNameInput.value = "";
-            newReportPinInput.value = "";
-            fetchReportList();
+          alert(`Laporan "${reportName}" berhasil dibuat dengan PIN. Gunakan PIN ini untuk mengakses.`);
+          newReportNameInput.value = "";
+          newReportPinInput.value = "";
+          fetchReportList();
         } catch (error) {
-            console.error("Gagal membuat laporan:", error);
-            alert(`Gagal membuat laporan: ${error.message}`);
+          console.error("Gagal membuat laporan:", error);
+          alert(`Gagal membuat laporan: ${error.message}`);
         } finally {
-            createReportBtn.disabled = false;
-            createReportBtn.textContent = originalBtnText;
+          createReportBtn.disabled = false;
+          createReportBtn.textContent = originalBtnText;
         }
-    }
+      }
 
-    function displayReportTable(reportKey, reportName) {
+      function displayReportTable(reportKey, reportName) {
         window.currentReportKey = reportKey;
 
         // --- Menyembunyikan elemen utama Admin ---
-        document.querySelector('.folder-list-container').style.display = 'none';
-        document.querySelector('.search-group').style.display = 'none';
-        document.getElementById('fileList').style.display = 'none';
-        document.getElementById('admin-section').style.display = 'none';
+        document.querySelector(".folder-list-container").style.display = "none";
+        document.querySelector(".search-group").style.display = "none";
+        document.getElementById("fileList").style.display = "none";
+        document.getElementById("admin-section").style.display = "none";
         // ----------------------------------------
-        
+
         document.querySelector("h2").textContent = `Laporan Nilai: ${reportName}`;
         document.querySelector("hr").style.display = "none";
         loginButton.style.display = "none";
@@ -1894,23 +1830,23 @@
         mainCard.appendChild(reportElement);
 
         renderReportContent(reportElement, reportKey, reportName);
-    }
+      }
 
-    async function renderReportContent(container, reportKey, reportName) {
+      async function renderReportContent(container, reportKey, reportName) {
         container.innerHTML = `<p class="status-message text-center">Memuat detail laporan...</p>`;
 
         // Tombol Aksi
         const actionDiv = document.createElement("div");
-        actionDiv.className = 'd-flex gap-2 mb-3';
+        actionDiv.className = "d-flex gap-2 mb-3";
 
         const backBtn = document.createElement("button");
         backBtn.textContent = "⬅️ Kembali ke Admin Dashboard";
-        backBtn.classList.add("access-button", "access-closed", "btn", "btn-sm"); 
+        backBtn.classList.add("access-button", "access-closed", "btn", "btn-sm");
         backBtn.style.marginBottom = "0";
         backBtn.addEventListener("click", () => {
-            container.remove();
-            delete window.currentReportKey;
-            showAdminView();
+          container.remove();
+          delete window.currentReportKey;
+          showAdminView();
         });
         actionDiv.appendChild(backBtn);
 
@@ -1928,57 +1864,54 @@
         const reportData = dataSnapshot.val();
 
         if (!reportData || !reportData.data || reportData.data.length === 0) {
-            container.innerHTML +=
-                '<p class="empty-message text-center">Tidak ada data mahasiswa dalam laporan ini.</p>';
+          container.innerHTML += '<p class="empty-message text-center">Tidak ada data mahasiswa dalam laporan ini.</p>';
 
-            const addStudentBtn = document.createElement("button");
-            addStudentBtn.textContent = "⬇️ Tambah Baris Mahasiswa Baru";
-            addStudentBtn.classList.add("access-button", "access-open", "btn", "btn-primary", "w-100");
-            addStudentBtn.style.marginTop = "15px";
-            addStudentBtn.addEventListener("click", () =>
-                addNewStudentRow(reportKey, reportData.name)
-            );
-            container.appendChild(addStudentBtn);
+          const addStudentBtn = document.createElement("button");
+          addStudentBtn.textContent = "⬇️ Tambah Baris Mahasiswa Baru";
+          addStudentBtn.classList.add("access-button", "access-open", "btn", "btn-primary", "w-100");
+          addStudentBtn.style.marginTop = "15px";
+          addStudentBtn.addEventListener("click", () => addNewStudentRow(reportKey, reportData.name));
+          container.appendChild(addStudentBtn);
 
-            return;
+          return;
         }
 
         reportData.data.sort((a, b) => {
-            const nimA = parseInt(a.NIM);
-            const nimB = parseInt(b.NIM);
-            if (!isNaN(nimA) && !isNaN(nimB)) {
-                return nimA - nimB;
-            }
-            return a.NIM.localeCompare(b.NIM);
+          const nimA = parseInt(a.NIM);
+          const nimB = parseInt(b.NIM);
+          if (!isNaN(nimA) && !isNaN(nimB)) {
+            return nimA - nimB;
+          }
+          return a.NIM.localeCompare(b.NIM);
         });
 
         // Kontainer Scroll Horizontal
         const tableContainer = document.createElement("div");
         tableContainer.id = "report-table-fixed-container";
-        tableContainer.className = 'table-responsive';
+        tableContainer.className = "table-responsive";
         container.appendChild(tableContainer);
 
         const table = document.createElement("table");
-        table.className = 'table table-bordered table-sm';
+        table.className = "table table-bordered table-sm";
         table.style.color = "var(--text-light)"; // Tetapkan warna teks menjadi putih
 
         let headerHtml = "<tr>";
         reportData.columns.forEach((col) => {
-            let minWidth = "80px";
-            let bgColor = "var(--primary)";
+          let minWidth = "80px";
+          let bgColor = "var(--primary)";
 
-            if (col === "NAMA MAHASISWA") {
-                minWidth = "180px";
-            } else if (col === "NIM") {
-                minWidth = "120px";
-            } else if (col === "NO" || col === "L_P") {
-                minWidth = "40px";
-            } else if (RESULT_COLUMNS.includes(col)) {
-                minWidth = "120px";
-                bgColor = "#17a2b8";
-            }
+          if (col === "NAMA MAHASISWA") {
+            minWidth = "180px";
+          } else if (col === "NIM") {
+            minWidth = "120px";
+          } else if (col === "NO" || col === "L_P") {
+            minWidth = "40px";
+          } else if (RESULT_COLUMNS.includes(col)) {
+            minWidth = "120px";
+            bgColor = "#17a2b8";
+          }
 
-            headerHtml += `<th class="report-table-fixed" style="min-width: ${minWidth}; background-color: ${bgColor}; border-color: var(--border-dark); color: white; white-space: nowrap;">${col}</th>`;
+          headerHtml += `<th class="report-table-fixed" style="min-width: ${minWidth}; background-color: ${bgColor}; border-color: var(--border-dark); color: white; white-space: nowrap;">${col}</th>`;
         });
         headerHtml += "</tr>";
 
@@ -1993,124 +1926,110 @@
 
         const tbody = document.getElementById(`report-tbody-${reportKey}`);
         reportData.data.forEach((row, rowIndex) => {
-            const finalGrades = calculateFinalGrade(row);
+          const finalGrades = calculateFinalGrade(row);
 
-            const tr = document.createElement("tr");
-            tr.dataset.rowIndex = rowIndex;
-            tr.style.color = "var(--text-light)";
+          const tr = document.createElement("tr");
+          tr.dataset.rowIndex = rowIndex;
+          tr.style.color = "var(--text-light)";
 
-            reportData.columns.forEach((colName) => {
-                const td = document.createElement("td");
-                
-                // Menggunakan warna background gelap untuk body tabel
-                td.style.backgroundColor = "var(--bg-dark)"; 
-                td.style.borderColor = "var(--border-dark)";
-                td.style.color = "var(--text-light)"; // Font putih
+          reportData.columns.forEach((colName) => {
+            const td = document.createElement("td");
 
-                td.style.textAlign =
-                    ["NO", "L_P"].includes(colName) ||
-                    colName.includes("TUGAS") ||
-                    colName === "UTS" ||
-                    colName === "UAS"
-                        ? "center"
-                        : "left";
+            // Menggunakan warna background gelap untuk body tabel
+            td.style.backgroundColor = "var(--bg-dark)";
+            td.style.borderColor = "var(--border-dark)";
+            td.style.color = "var(--text-light)"; // Font putih
 
-                if (colName === "NO") {
-                    td.textContent = rowIndex + 1;
-                    td.style.fontWeight = '600';
-                    td.style.backgroundColor = "var(--card-bg)"; 
-                } else if (["NAMA MAHASISWA", "NIM", "L_P"].includes(colName)) {
-                    // Kolom Nama, NIM, L/P - Font Putih, Tebal, Latar Belakang Card
-                    td.textContent = row[colName];
-                    td.style.fontWeight = '700';
-                    td.style.backgroundColor = "var(--card-bg)"; 
-                    
-                } else if (RESULT_COLUMNS.includes(colName)) {
-                    // Kolom Hasil Perhitungan
-                    td.textContent = finalGrades[colName];
-                    td.style.backgroundColor = "var(--card-bg)";
-                    td.style.fontWeight = '700';
-                    td.className = (colName === "NILAI HURUF" && (finalGrades[colName] === 'D' || finalGrades[colName] === 'E')) ? 'text-danger fw-bold' : 'text-success fw-bold';
-                } else {
-                    // Kolom Input Nilai (TUGAS, UTS, UAS)
-                    const input = document.createElement("input");
-                    input.type = "number";
-                    input.min = 0;
-                    input.max = 100;
-                    input.value = row[colName] || 0;
-                    input.className = 'form-control form-control-sm';
-                    input.style.width = "70px";
-                    input.style.textAlign = "center";
-                    input.style.padding = "5px";
+            td.style.textAlign = ["NO", "L_P"].includes(colName) || colName.includes("TUGAS") || colName === "UTS" || colName === "UAS" ? "center" : "left";
 
-                    // Style input untuk tema gelap
-                    input.style.backgroundColor = "var(--card-bg)";
-                    input.style.color = "var(--text-light)"; // Font putih di input
-                    input.style.borderColor = "var(--border-dark)";
-                    input.style.fontWeight = '600';
+            if (colName === "NO") {
+              td.textContent = rowIndex + 1;
+              td.style.fontWeight = "600";
+              td.style.backgroundColor = "var(--card-bg)";
+            } else if (["NAMA MAHASISWA", "NIM", "L_P"].includes(colName)) {
+              // Kolom Nama, NIM, L/P - Font Putih, Tebal, Latar Belakang Card
+              td.textContent = row[colName];
+              td.style.fontWeight = "700";
+              td.style.backgroundColor = "var(--card-bg)";
+            } else if (RESULT_COLUMNS.includes(colName)) {
+              // Kolom Hasil Perhitungan
+              td.textContent = finalGrades[colName];
+              td.style.backgroundColor = "var(--card-bg)";
+              td.style.fontWeight = "700";
+              td.className = colName === "NILAI HURUF" && (finalGrades[colName] === "D" || finalGrades[colName] === "E") ? "text-danger fw-bold" : "text-success fw-bold";
+            } else {
+              // Kolom Input Nilai (TUGAS, UTS, UAS)
+              const input = document.createElement("input");
+              input.type = "number";
+              input.min = 0;
+              input.max = 100;
+              input.value = row[colName] || 0;
+              input.className = "form-control form-control-sm";
+              input.style.width = "70px";
+              input.style.textAlign = "center";
+              input.style.padding = "5px";
 
+              // Style input untuk tema gelap
+              input.style.backgroundColor = "var(--card-bg)";
+              input.style.color = "var(--text-light)"; // Font putih di input
+              input.style.borderColor = "var(--border-dark)";
+              input.style.fontWeight = "600";
 
-                    input.dataset.colName = colName;
-                    input.dataset.rowIndex = rowIndex;
+              input.dataset.colName = colName;
+              input.dataset.rowIndex = rowIndex;
 
-                    input.addEventListener("change", async (e) => {
-                        const changedRowIndex = parseInt(e.target.dataset.rowIndex);
-                        const changedColName = e.target.dataset.colName;
-                        const newValue = parseInt(e.target.value) || 0;
+              input.addEventListener("change", async (e) => {
+                const changedRowIndex = parseInt(e.target.dataset.rowIndex);
+                const changedColName = e.target.dataset.colName;
+                const newValue = parseInt(e.target.value) || 0;
 
-                        e.target.disabled = true;
-                        e.target.style.backgroundColor = "#ffc107";
+                e.target.disabled = true;
+                e.target.style.backgroundColor = "#ffc107";
 
-                        try {
-                            reportData.data[changedRowIndex][changedColName] = newValue;
+                try {
+                  reportData.data[changedRowIndex][changedColName] = newValue;
 
-                            await database.ref(`laporan_nilai/${reportKey}/data`).set(reportData.data);
+                  await database.ref(`laporan_nilai/${reportKey}/data`).set(reportData.data);
 
-                            updateResultColumns(
-                                reportData.data[changedRowIndex],
-                                changedRowIndex,
-                                reportData.columns
-                            );
+                  updateResultColumns(reportData.data[changedRowIndex], changedRowIndex, reportData.columns);
 
-                            e.target.style.backgroundColor = "#28a745";
-                            setTimeout(() => {
-                                e.target.style.backgroundColor = "var(--card-bg)";
-                                e.target.disabled = false;
-                            }, 500);
-                        } catch (error) {
-                            console.error("Gagal menyimpan nilai:", error);
-                            e.target.style.backgroundColor = "#dc3545";
-                            alert("Gagal menyimpan nilai. Cek koneksi.");
-                            setTimeout(() => {
-                                e.target.style.backgroundColor = "var(--card-bg)";
-                                e.target.disabled = false;
-                            }, 2000);
-                        }
-                    });
-                    td.appendChild(input);
+                  e.target.style.backgroundColor = "#28a745";
+                  setTimeout(() => {
+                    e.target.style.backgroundColor = "var(--card-bg)";
+                    e.target.disabled = false;
+                  }, 500);
+                } catch (error) {
+                  console.error("Gagal menyimpan nilai:", error);
+                  e.target.style.backgroundColor = "#dc3545";
+                  alert("Gagal menyimpan nilai. Cek koneksi.");
+                  setTimeout(() => {
+                    e.target.style.backgroundColor = "var(--card-bg)";
+                    e.target.disabled = false;
+                  }, 2000);
                 }
-                tr.appendChild(td);
-            });
-            tbody.appendChild(tr);
+              });
+              td.appendChild(input);
+            }
+            tr.appendChild(td);
+          });
+          tbody.appendChild(tr);
         });
 
         // Tombol aksi di bawah tabel
-        const buttonGroup = document.createElement('div');
-        buttonGroup.className = 'd-grid gap-2 mt-3';
+        const buttonGroup = document.createElement("div");
+        buttonGroup.className = "d-grid gap-2 mt-3";
 
         const newColumnBtn = document.createElement("button");
         newColumnBtn.textContent = "➕ Tambah Kolom Nilai Baru";
         newColumnBtn.classList.add("access-button", "access-open", "btn", "btn-info");
         newColumnBtn.style.width = "100%";
         newColumnBtn.addEventListener("click", () => {
-            const newColName = prompt(
-                "Masukkan nama kolom nilai baru (Contoh: QUIZ atau TUGAS 17):"
-            );
-            if (newColName && newColName.trim()) {
-                addNewColumn(reportKey, newColName.trim().toUpperCase());
-            } else if (newColName !== null) {
-                alert("Nama kolom tidak boleh kosong.");
-            }
+          const newColName = prompt("Masukkan nama kolom nilai baru (Contoh: QUIZ atau TUGAS 17):");
+          if (newColName && newColName.trim()) {
+            addNewColumn(reportKey, newColName.trim().toUpperCase());
+          } else if (newColName !== null) {
+            alert("Nama kolom tidak boleh kosong.");
+          }
         });
         buttonGroup.appendChild(newColumnBtn);
 
@@ -2118,476 +2037,454 @@
         addStudentBtn.textContent = "⬇️ Tambah Baris Mahasiswa Baru (Otomatis Diurutkan)";
         addStudentBtn.classList.add("access-button", "access-open", "btn", "btn-warning");
         addStudentBtn.style.width = "100%";
-        addStudentBtn.addEventListener("click", () =>
-            addNewStudentRow(reportKey, reportData.name)
-        );
+        addStudentBtn.addEventListener("click", () => addNewStudentRow(reportKey, reportData.name));
         buttonGroup.appendChild(addStudentBtn);
-        
-        container.appendChild(buttonGroup);
-    }
 
-    async function addNewStudentRow(reportKey, reportName) {
-        const studentInput = prompt(
-            "Masukkan data mahasiswa baru (NIM, Nama Mahasiswa, L/P).\nContoh: 162024099,JOHN DOE,L"
-        );
+        container.appendChild(buttonGroup);
+      }
+
+      async function addNewStudentRow(reportKey, reportName) {
+        const studentInput = prompt("Masukkan data mahasiswa baru (NIM, Nama Mahasiswa, L/P).\nContoh: 162024099,JOHN DOE,L");
 
         if (!studentInput) return;
 
         const parts = studentInput.split(",").map((p) => p.trim());
         if (parts.length < 3) {
-            alert(
-                "Format input salah. Harap masukkan NIM, Nama Mahasiswa, dan L/P dipisahkan koma."
-            );
-            return;
+          alert("Format input salah. Harap masukkan NIM, Nama Mahasiswa, dan L/P dipisahkan koma.");
+          return;
         }
 
         const [nim, name, lpRaw] = parts;
         const lp = lpRaw.toUpperCase().substring(0, 1);
 
         if (!nim || !name || (lp !== "L" && lp !== "P")) {
-            alert("Data tidak lengkap atau Jenis Kelamin (L/P) tidak valid.");
+          alert("Data tidak lengkap atau Jenis Kelamin (L/P) tidak valid.");
+          return;
+        }
+
+        try {
+          const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+          const reportData = dataSnapshot.val();
+          let currentData = reportData.data || [];
+          const columns = reportData.columns;
+
+          if (currentData.some((row) => row.NIM === nim)) {
+            alert(`Mahasiswa dengan NIM ${nim} sudah ada di laporan ini.`);
             return;
-        }
+          }
 
-        try {
-            const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
-            const reportData = dataSnapshot.val();
-            let currentData = reportData.data || [];
-            const columns = reportData.columns;
+          let newStudentRow = {
+            NIM: nim,
+            "NAMA MAHASISWA": name,
+            L_P: lp,
+            UTS: 0,
+            UAS: 0,
+          };
 
-            if (currentData.some((row) => row.NIM === nim)) {
-                alert(`Mahasiswa dengan NIM ${nim} sudah ada di laporan ini.`);
-                return;
+          columns.forEach((col) => {
+            if (col.startsWith("TUGAS") || col === "UTS" || col === "UAS") {
+              newStudentRow[col] = 0;
             }
+          });
 
-            let newStudentRow = {
-                NIM: nim,
-                "NAMA MAHASISWA": name,
-                L_P: lp,
-                UTS: 0,
-                UAS: 0,
-            };
+          currentData.push(newStudentRow);
 
-            columns.forEach((col) => {
-                if (col.startsWith("TUGAS") || col === "UTS" || col === "UAS") {
-                    newStudentRow[col] = 0;
-                }
-            });
+          currentData.sort((a, b) => {
+            const nimA = parseInt(a.NIM);
+            const nimB = parseInt(b.NIM);
+            if (!isNaN(nimA) && !isNaN(nimB)) {
+              return nimA - nimB;
+            }
+            return a.NIM.localeCompare(b.NIM);
+          });
 
-            currentData.push(newStudentRow);
+          await database.ref(`laporan_nilai/${reportKey}/data`).set(currentData);
 
-            currentData.sort((a, b) => {
-                const nimA = parseInt(a.NIM);
-                const nimB = parseInt(b.NIM);
-                if (!isNaN(nimA) && !isNaN(nimB)) {
-                    return nimA - nimB;
-                }
-                return a.NIM.localeCompare(b.NIM);
-            });
+          alert(`Mahasiswa "${name}" berhasil ditambahkan ke laporan dan diurutkan berdasarkan NIM.`);
 
-            await database.ref(`laporan_nilai/${reportKey}/data`).set(currentData);
-
-            alert(`Mahasiswa "${name}" berhasil ditambahkan ke laporan dan diurutkan berdasarkan NIM.`);
-
-            const oldTable = document.getElementById(`report-table-${reportKey}`);
-            if (oldTable) oldTable.remove();
-            displayReportTable(reportKey, reportName);
+          const oldTable = document.getElementById(`report-table-${reportKey}`);
+          if (oldTable) oldTable.remove();
+          displayReportTable(reportKey, reportName);
         } catch (error) {
-            console.error("Gagal menambahkan baris mahasiswa:", error);
-            alert(`Gagal menambahkan mahasiswa: ${error.message}`);
+          console.error("Gagal menambahkan baris mahasiswa:", error);
+          alert(`Gagal menambahkan mahasiswa: ${error.message}`);
         }
-    }
+      }
 
-    async function addNewColumn(reportKey, newColName) {
+      async function addNewColumn(reportKey, newColName) {
         try {
-            const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
-            const reportData = dataSnapshot.val();
+          const dataSnapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+          const reportData = dataSnapshot.val();
 
-            if (reportData.columns.includes(newColName)) {
-                alert(`Kolom dengan nama "${newColName}" sudah ada.`);
-                return;
-            }
+          if (reportData.columns.includes(newColName)) {
+            alert(`Kolom dengan nama "${newColName}" sudah ada.`);
+            return;
+          }
 
-            if (RESULT_COLUMNS.includes(newColName)) {
-                alert(`Nama kolom "${newColName}" dicadangkan untuk hasil perhitungan.`);
-                return;
-            }
+          if (RESULT_COLUMNS.includes(newColName)) {
+            alert(`Nama kolom "${newColName}" dicadangkan untuk hasil perhitungan.`);
+            return;
+          }
 
-            const originalColumns = reportData.columns.filter(
-                (col) => !RESULT_COLUMNS.includes(col)
-            );
+          const originalColumns = reportData.columns.filter((col) => !RESULT_COLUMNS.includes(col));
 
-            const newColumns = [...originalColumns, newColName, ...RESULT_COLUMNS];
+          const newColumns = [...originalColumns, newColName, ...RESULT_COLUMNS];
 
-            await database.ref(`laporan_nilai/${reportKey}/columns`).set(newColumns);
+          await database.ref(`laporan_nilai/${reportKey}/columns`).set(newColumns);
 
-            const newData = reportData.data.map((row) => ({
-                ...row,
-                [newColName]: 0,
-            }));
-            await database.ref(`laporan_nilai/${reportKey}/data`).set(newData);
+          const newData = reportData.data.map((row) => ({
+            ...row,
+            [newColName]: 0,
+          }));
+          await database.ref(`laporan_nilai/${reportKey}/data`).set(newData);
 
-            alert(`Kolom "${newColName}" berhasil ditambahkan. Memuat ulang tabel...`);
+          alert(`Kolom "${newColName}" berhasil ditambahkan. Memuat ulang tabel...`);
 
-            const oldTable = document.getElementById(`report-table-${reportKey}`);
-            const reportName = reportData.name;
-            if (oldTable) oldTable.remove();
-            displayReportTable(reportKey, reportName);
+          const oldTable = document.getElementById(`report-table-${reportKey}`);
+          const reportName = reportData.name;
+          if (oldTable) oldTable.remove();
+          displayReportTable(reportKey, reportName);
         } catch (error) {
-            console.error("Gagal menambahkan kolom:", error);
-            alert(`Gagal menambahkan kolom: ${error.message}`);
+          console.error("Gagal menambahkan kolom:", error);
+          alert(`Gagal menambahkan kolom: ${error.message}`);
         }
-    }
+      }
 
-    async function exportReportToCSV(reportKey, reportName) {
+      async function exportReportToCSV(reportKey, reportName) {
         try {
-            const snapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
-            const reportData = snapshot.val();
+          const snapshot = await database.ref(`laporan_nilai/${reportKey}`).once("value");
+          const reportData = snapshot.val();
 
-            if (!reportData || !reportData.data || reportData.data.length === 0) {
-                alert("Tidak ada data untuk diekspor.");
-                return;
+          if (!reportData || !reportData.data || reportData.data.length === 0) {
+            alert("Tidak ada data untuk diekspor.");
+            return;
+          }
+
+          const columns = reportData.columns;
+          let data = reportData.data;
+
+          data.sort((a, b) => {
+            const nimA = parseInt(a.NIM);
+            const nimB = parseInt(b.NIM);
+            if (!isNaN(nimA) && !isNaN(nimB)) {
+              return nimA - nimB;
             }
+            return a.NIM.localeCompare(b.NIM);
+          });
 
-            const columns = reportData.columns;
-            let data = reportData.data;
+          const dataWithGrades = data.map((row) => {
+            const grades = calculateFinalGrade(row);
+            return { ...row, ...grades };
+          });
 
-            data.sort((a, b) => {
-                const nimA = parseInt(a.NIM);
-                const nimB = parseInt(b.NIM);
-                if (!isNaN(nimA) && !isNaN(nimB)) {
-                    return nimA - nimB;
-                }
-                return a.NIM.localeCompare(b.NIM);
+          let csvContent = columns.join(",") + "\n";
+
+          dataWithGrades.forEach((row, index) => {
+            const rowValues = columns.map((col) => {
+              if (col === "NO") return index + 1;
+              let value = row[col];
+
+              if (RESULT_COLUMNS.includes(col) || col.includes("TUGAS") || col === "UTS" || col === "UAS") {
+                value = parseFloat(value);
+              }
+
+              if (typeof value === "string" && (value.includes(",") || value.includes("\n"))) {
+                return `"${value.replace(/"/g, '""')}"`;
+              }
+              return value;
             });
+            csvContent += rowValues.join(",") + "\n";
+          });
 
-            const dataWithGrades = data.map((row) => {
-                const grades = calculateFinalGrade(row);
-                return { ...row, ...grades };
-            });
-
-            let csvContent = columns.join(",") + "\n";
-
-            dataWithGrades.forEach((row, index) => {
-                const rowValues = columns.map((col) => {
-                    if (col === "NO") return index + 1;
-                    let value = row[col];
-
-                    if (
-                        RESULT_COLUMNS.includes(col) ||
-                        col.includes("TUGAS") ||
-                        col === "UTS" ||
-                        col === "UAS"
-                    ) {
-                        value = parseFloat(value);
-                    }
-
-                    if (typeof value === "string" && (value.includes(",") || value.includes("\n"))) {
-                        return `"${value.replace(/"/g, '""')}"`;
-                    }
-                    return value;
-                });
-                csvContent += rowValues.join(",") + "\n";
-            });
-
-            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-            const link = document.createElement("a");
-            if (link.download !== undefined) {
-                const url = URL.createObjectURL(blob);
-                link.setAttribute("href", url);
-                link.setAttribute(
-                    "download",
-                    `${reportName.replace(/\s/g, "_")}_${new Date().toISOString().slice(0, 10)}.csv`
-                );
-                link.style.visibility = "hidden";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } else {
-                alert(
-                    "Browser Anda tidak mendukung fitur download otomatis. Mohon salin konten CSV secara manual."
-                );
-            }
+          const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+          const link = document.createElement("a");
+          if (link.download !== undefined) {
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `${reportName.replace(/\s/g, "_")}_${new Date().toISOString().slice(0, 10)}.csv`);
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          } else {
+            alert("Browser Anda tidak mendukung fitur download otomatis. Mohon salin konten CSV secara manual.");
+          }
         } catch (error) {
-            console.error("Gagal ekspor CSV:", error);
-            alert(`Gagal mengekspor data: ${error.message}`);
+          console.error("Gagal ekspor CSV:", error);
+          alert(`Gagal mengekspor data: ${error.message}`);
         }
-    }
+      }
 
-    // ===============================================
-    // 		QUIZ MANAGEMENT LOGIC
-    // ===============================================
+      // ===============================================
+      // 		QUIZ MANAGEMENT LOGIC
+      // ===============================================
 
-    function setupQuizQuestionDialog() {
-        addQuizOptionBtn.removeEventListener('click', addOptionInput);
-        addQuizOptionBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            addOptionInput();
+      function setupQuizQuestionDialog() {
+        addQuizOptionBtn.removeEventListener("click", addOptionInput);
+        addQuizOptionBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          addOptionInput();
         });
 
-        cancelQuizQuestionBtn.addEventListener('click', () => {
-            quizQuestionDialogOverlay.style.display = 'none';
+        cancelQuizQuestionBtn.addEventListener("click", () => {
+          quizQuestionDialogOverlay.style.display = "none";
         });
 
-        quizQuestionForm.addEventListener('submit', handleQuizQuestionSubmit);
-        
-        saveQuizKeyBtn.addEventListener('click', saveQuizConfig);
-        resetQuizResultsBtn.addEventListener('click', resetAllQuizResults);
-        
+        quizQuestionForm.addEventListener("submit", handleQuizQuestionSubmit);
+
+        saveQuizKeyBtn.addEventListener("click", saveQuizConfig);
+        resetQuizResultsBtn.addEventListener("click", resetAllQuizResults);
+
         // --- START: PERBAIKAN TOMBOL TAMBAH SOAL DI MAIN VIEW ---
-        let addQuestionButton = document.getElementById('addQuizQuestionMainBtn');
-        
+        let addQuestionButton = document.getElementById("addQuizQuestionMainBtn");
+
         if (!addQuestionButton) {
-            addQuestionButton = document.createElement('button');
-            addQuestionButton.id = 'addQuizQuestionMainBtn';
-            addQuestionButton.textContent = "➕ Tambah Soal Baru";
-            addQuestionButton.classList.add("access-button", "access-open", "btn", "btn-info", "w-100", "mt-3");
-            
-            const listContainer = document.getElementById('quizQuestionsList');
-            const resetBtnElement = document.getElementById('resetQuizResultsBtn');
-            
-            if (listContainer && listContainer.parentElement) {
-                 listContainer.parentElement.insertBefore(addQuestionButton, resetBtnElement);
-            }
+          addQuestionButton = document.createElement("button");
+          addQuestionButton.id = "addQuizQuestionMainBtn";
+          addQuestionButton.textContent = "➕ Tambah Soal Baru";
+          addQuestionButton.classList.add("access-button", "access-open", "btn", "btn-info", "w-100", "mt-3");
 
-            addQuestionButton.addEventListener('click', () => showQuizQuestionDialog(null));
+          const listContainer = document.getElementById("quizQuestionsList");
+          const resetBtnElement = document.getElementById("resetQuizResultsBtn");
+
+          if (listContainer && listContainer.parentElement) {
+            listContainer.parentElement.insertBefore(addQuestionButton, resetBtnElement);
+          }
+
+          addQuestionButton.addEventListener("click", () => showQuizQuestionDialog(null));
         }
-        addQuestionButton.style.display = 'block'; 
+        addQuestionButton.style.display = "block";
         // --- END: PERBAIKAN TOMBOL TAMBAH SOAL DI MAIN VIEW ---
-        
-        if(quizOptionsContainer.children.length === 0) {
-            addOptionInput(null, true, 0);
-            addOptionInput(null, false, 1);
-        }
-    }
 
-    function addOptionInput(optionText = '', isCorrect = false, optionIndex) {
-        const numOptions = quizOptionsContainer.querySelectorAll('.form-group').length;
+        if (quizOptionsContainer.children.length === 0) {
+          addOptionInput(null, true, 0);
+          addOptionInput(null, false, 1);
+        }
+      }
+
+      function addOptionInput(optionText = "", isCorrect = false, optionIndex) {
+        const numOptions = quizOptionsContainer.querySelectorAll(".form-group").length;
         if (numOptions >= 4) {
-            alert("Maksimal 4 pilihan jawaban.");
-            return;
+          alert("Maksimal 4 pilihan jawaban.");
+          return;
         }
         const index = optionIndex !== undefined ? optionIndex : numOptions;
-        
-        const optionGroup = document.createElement('div');
-        optionGroup.className = 'form-group d-flex align-items-center mb-2';
-        
-        let deleteBtnHtml = '';
-        let inputWidth = '75%';
+
+        const optionGroup = document.createElement("div");
+        optionGroup.className = "form-group d-flex align-items-center mb-2";
+
+        let deleteBtnHtml = "";
+        let inputWidth = "75%";
         if (numOptions >= 2) {
-            inputWidth = '65%';
-            deleteBtnHtml = `
+          inputWidth = "65%";
+          deleteBtnHtml = `
                 <button type="button" 
                     class="btn btn-sm btn-danger ms-2"
                     onclick="this.parentElement.remove(); updateOptionIndexes();"
                 ><i class="fas fa-times"></i></button>
             `;
         }
-        
+
         optionGroup.innerHTML = `
             <input type="text" class="quiz-option-input form-control form-control-sm" placeholder="Opsi ${index + 1}" value="${optionText}" required style="width: ${inputWidth};">
             <div class="form-check ms-3">
-                <input type="radio" name="correctOption" value="${index}" class="form-check-input quiz-option-radio" id="radio-${index}" ${isCorrect ? 'checked' : ''}> 
+                <input type="radio" name="correctOption" value="${index}" class="form-check-input quiz-option-radio" id="radio-${index}" ${isCorrect ? "checked" : ""}> 
                 <label class="form-check-label" for="radio-${index}">Benar</label>
             </div>
             ${deleteBtnHtml}
         `;
-        
+
         quizOptionsContainer.appendChild(optionGroup);
         updateOptionIndexes();
-    }
-    
-    function updateOptionIndexes() {
-        quizOptionsContainer.querySelectorAll('.form-group').forEach((group, index) => {
-            const input = group.querySelector('.quiz-option-input');
-            const radio = group.querySelector('.quiz-option-radio');
-            const label = group.querySelector('label.form-check-label');
-            
-            if (input) input.placeholder = `Opsi ${index + 1}`;
-            if (radio) {
-                radio.value = index;
-                radio.id = `radio-${index}`;
-            }
-            if (label) label.htmlFor = `radio-${index}`;
-        });
-    }
+      }
 
-    function showQuizQuestionDialog(questionKey) {
-        quizQuestionDialogOverlay.style.display = 'flex';
-        quizQuestionErrorMessage.textContent = '';
+      function updateOptionIndexes() {
+        quizOptionsContainer.querySelectorAll(".form-group").forEach((group, index) => {
+          const input = group.querySelector(".quiz-option-input");
+          const radio = group.querySelector(".quiz-option-radio");
+          const label = group.querySelector("label.form-check-label");
+
+          if (input) input.placeholder = `Opsi ${index + 1}`;
+          if (radio) {
+            radio.value = index;
+            radio.id = `radio-${index}`;
+          }
+          if (label) label.htmlFor = `radio-${index}`;
+        });
+      }
+
+      function showQuizQuestionDialog(questionKey) {
+        quizQuestionDialogOverlay.style.display = "flex";
+        quizQuestionErrorMessage.textContent = "";
         currentEditingQuestionKey = questionKey;
-        quizOptionsContainer.innerHTML = '';
+        quizOptionsContainer.innerHTML = "";
 
         if (questionKey) {
-            quizQuestionDialogTitle.textContent = "Edit Soal Kuis";
-            const questionData = quizConfig.questions[questionKey];
-            if (!questionData) {
-                alert("Soal tidak ditemukan.");
-                return;
-            }
-            questionTextInput.value = questionData.text;
-            
-            questionData.options.forEach((optionText, index) => {
-                const isCorrect = index == questionData.correctOptionIndex;
-                addOptionInput(optionText, isCorrect, index);
-            });
-            
-        } else {
-            quizQuestionDialogTitle.textContent = "Tambah Soal Baru";
-            quizQuestionForm.reset();
-            addOptionInput(null, true, 0);
-            addOptionInput(null, false, 1);
-        }
-    }
+          quizQuestionDialogTitle.textContent = "Edit Soal Kuis";
+          const questionData = quizConfig.questions[questionKey];
+          if (!questionData) {
+            alert("Soal tidak ditemukan.");
+            return;
+          }
+          questionTextInput.value = questionData.text;
 
-    async function saveQuizConfig() {
+          questionData.options.forEach((optionText, index) => {
+            const isCorrect = index == questionData.correctOptionIndex;
+            addOptionInput(optionText, isCorrect, index);
+          });
+        } else {
+          quizQuestionDialogTitle.textContent = "Tambah Soal Baru";
+          quizQuestionForm.reset();
+          addOptionInput(null, true, 0);
+          addOptionInput(null, false, 1);
+        }
+      }
+
+      async function saveQuizConfig() {
         const key = quizKeyInput.value.trim();
         const active = quizActiveCheckbox.checked;
         const canRetake = quizRetakeCheckbox.checked;
 
         if (!key) {
-            alert("Kunci akses kuis tidak boleh kosong.");
-            return;
+          alert("Kunci akses kuis tidak boleh kosong.");
+          return;
         }
-        
+
         saveQuizKeyBtn.disabled = true;
         const originalText = saveQuizKeyBtn.textContent;
         saveQuizKeyBtn.textContent = "Menyimpan...";
 
         try {
-            await database.ref('quiz_config').update({
-                key: key,
-                active: active,
-                canRetake: canRetake
-            });
-            
-            alert("Konfigurasi Kuis (Kunci, Status Aktif, Retake) berhasil disimpan!");
-            
-            quizConfig.key = key;
-            quizConfig.active = active;
-            quizConfig.canRetake = canRetake;
-            
-        } catch (error) {
-            console.error("Gagal menyimpan konfigurasi kuis:", error);
-            alert("Gagal menyimpan konfigurasi kuis: " + error.message);
-        } finally {
-            saveQuizKeyBtn.disabled = false;
-            saveQuizKeyBtn.textContent = originalText;
-        }
-    }
+          await database.ref("quiz_config").update({
+            key: key,
+            active: active,
+            canRetake: canRetake,
+          });
 
-    async function handleQuizQuestionSubmit(e) {
+          alert("Konfigurasi Kuis (Kunci, Status Aktif, Retake) berhasil disimpan!");
+
+          quizConfig.key = key;
+          quizConfig.active = active;
+          quizConfig.canRetake = canRetake;
+        } catch (error) {
+          console.error("Gagal menyimpan konfigurasi kuis:", error);
+          alert("Gagal menyimpan konfigurasi kuis: " + error.message);
+        } finally {
+          saveQuizKeyBtn.disabled = false;
+          saveQuizKeyBtn.textContent = originalText;
+        }
+      }
+
+      async function handleQuizQuestionSubmit(e) {
         e.preventDefault();
-        
+
         const questionText = questionTextInput.value.trim();
-        const optionInputs = quizOptionsContainer.querySelectorAll('.quiz-option-input');
+        const optionInputs = quizOptionsContainer.querySelectorAll(".quiz-option-input");
         const correctRadio = quizQuestionForm.querySelector('input[name="correctOption"]:checked');
-        
-        const options = Array.from(optionInputs).map(input => input.value.trim());
+
+        const options = Array.from(optionInputs).map((input) => input.value.trim());
         const correctOptionIndex = correctRadio ? parseInt(correctRadio.value) : -1;
 
-        if (questionText === "" || options.some(o => o === "") || correctOptionIndex === -1) {
-            quizQuestionErrorMessage.textContent = "Semua kolom (soal, pilihan, jawaban benar) harus diisi.";
-            return;
+        if (questionText === "" || options.some((o) => o === "") || correctOptionIndex === -1) {
+          quizQuestionErrorMessage.textContent = "Semua kolom (soal, pilihan, jawaban benar) harus diisi.";
+          return;
         }
         if (options.length < 2) {
-            quizQuestionErrorMessage.textContent = "Minimal harus ada 2 pilihan jawaban.";
-            return;
+          quizQuestionErrorMessage.textContent = "Minimal harus ada 2 pilihan jawaban.";
+          return;
         }
-        
+
         const newQuestionData = {
-            text: questionText,
-            options: options,
-            correctOptionIndex: correctOptionIndex,
+          text: questionText,
+          options: options,
+          correctOptionIndex: correctOptionIndex,
         };
-        
+
         saveQuizQuestionBtn.disabled = true;
         const originalText = saveQuizQuestionBtn.textContent;
         saveQuizQuestionBtn.textContent = "Menyimpan Soal...";
 
         try {
-            let questionRef;
-            if (currentEditingQuestionKey) {
-                questionRef = database.ref(`quiz_config/questions/${currentEditingQuestionKey}`);
-            } else {
-                questionRef = database.ref('quiz_config/questions').push();
-            }
-            
-            await questionRef.set(newQuestionData);
-            
-            quizConfig.questions[questionRef.key] = newQuestionData;
+          let questionRef;
+          if (currentEditingQuestionKey) {
+            questionRef = database.ref(`quiz_config/questions/${currentEditingQuestionKey}`);
+          } else {
+            questionRef = database.ref("quiz_config/questions").push();
+          }
 
-            alert(`Soal berhasil disimpan!`);
-            quizQuestionDialogOverlay.style.display = 'none';
-            fetchQuizConfig();
-            
+          await questionRef.set(newQuestionData);
+
+          quizConfig.questions[questionRef.key] = newQuestionData;
+
+          alert(`Soal berhasil disimpan!`);
+          quizQuestionDialogOverlay.style.display = "none";
+          fetchQuizConfig();
         } catch (error) {
-            console.error("Gagal menyimpan soal kuis:", error);
-            quizQuestionErrorMessage.textContent = "Gagal menyimpan soal: " + error.message;
+          console.error("Gagal menyimpan soal kuis:", error);
+          quizQuestionErrorMessage.textContent = "Gagal menyimpan soal: " + error.message;
         } finally {
-            saveQuizQuestionBtn.disabled = false;
-            saveQuizQuestionBtn.textContent = originalText;
+          saveQuizQuestionBtn.disabled = false;
+          saveQuizQuestionBtn.textContent = originalText;
         }
-    }
-    
-    async function deleteQuestion(key) {
+      }
+
+      async function deleteQuestion(key) {
         if (!confirm("Apakah Anda yakin ingin menghapus soal ini?")) return;
-        
+
         try {
-            await database.ref(`quiz_config/questions/${key}`).remove();
-            alert("Soal berhasil dihapus.");
-            fetchQuizConfig();
+          await database.ref(`quiz_config/questions/${key}`).remove();
+          alert("Soal berhasil dihapus.");
+          fetchQuizConfig();
         } catch (error) {
-            console.error("Gagal menghapus soal:", error);
-            alert("Gagal menghapus soal.");
+          console.error("Gagal menghapus soal:", error);
+          alert("Gagal menghapus soal.");
         }
-    }
+      }
 
-    async function fetchQuizConfig() {
+      async function fetchQuizConfig() {
         try {
-            const snapshot = await database.ref('quiz_config').once('value');
-            const data = snapshot.val() || {};
-            
-            quizConfig = {
-                questions: data.questions || {},
-                key: data.key || "",
-                active: data.active || false,
-                canRetake: data.canRetake || false,
-            };
+          const snapshot = await database.ref("quiz_config").once("value");
+          const data = snapshot.val() || {};
 
-            quizKeyInput.value = quizConfig.key;
-            quizActiveCheckbox.checked = quizConfig.active;
-            quizRetakeCheckbox.checked = quizConfig.canRetake;
-            
-            renderQuestionList(quizConfig.questions);
-            
+          quizConfig = {
+            questions: data.questions || {},
+            key: data.key || "",
+            active: data.active || false,
+            canRetake: data.canRetake || false,
+          };
+
+          quizKeyInput.value = quizConfig.key;
+          quizActiveCheckbox.checked = quizConfig.active;
+          quizRetakeCheckbox.checked = quizConfig.canRetake;
+
+          renderQuestionList(quizConfig.questions);
         } catch (error) {
-            console.error("Gagal memuat konfigurasi kuis:", error);
+          console.error("Gagal memuat konfigurasi kuis:", error);
         }
-    }
+      }
 
-    function renderQuestionList(questions) {
-        quizQuestionsList.innerHTML = '';
+      function renderQuestionList(questions) {
+        quizQuestionsList.innerHTML = "";
         const keys = Object.keys(questions);
         const count = keys.length;
         quizQuestionCount.textContent = count;
 
         // Pastikan tombol utama Tambah Soal terlihat
-        const addQuestionButton = document.getElementById('addQuizQuestionMainBtn');
+        const addQuestionButton = document.getElementById("addQuizQuestionMainBtn");
         if (addQuestionButton) {
-            addQuestionButton.style.display = 'block';
+          addQuestionButton.style.display = "block";
         }
 
         if (count === 0) {
-            quizQuestionsList.innerHTML = '<p class="status-message text-center">Tidak ada soal yang dibuat. Klik "Tambah Soal Baru" di bawah.</p>';
-            return;
+          quizQuestionsList.innerHTML = '<p class="status-message text-center">Tidak ada soal yang dibuat. Klik "Tambah Soal Baru" di bawah.</p>';
+          return;
         }
 
         keys.forEach((key, index) => {
-            const q = questions[key];
-            const listItem = document.createElement('li');
-            listItem.className = 'd-flex justify-content-between align-items-center';
-            listItem.innerHTML = `
+          const q = questions[key];
+          const listItem = document.createElement("li");
+          listItem.className = "d-flex justify-content-between align-items-center";
+          listItem.innerHTML = `
                 <div class="flex-grow-1 text-start me-3">
                     <span class="fw-bold">Soal ${index + 1}:</span> ${q.text}
                     <div style="font-size: 0.9em; margin-top: 3px;">
@@ -2599,55 +2496,52 @@
                     <button onclick="deleteQuestion('${key}')" class="btn btn-sm btn-danger"><i class="fas fa-trash-alt"></i></button>
                 </div>
             `;
-            quizQuestionsList.appendChild(listItem);
+          quizQuestionsList.appendChild(listItem);
         });
-    }
+      }
 
-    async function resetAllQuizResults() {
+      async function resetAllQuizResults() {
         if (!confirm("⚠️ PERINGATAN! Anda akan menghapus SEMUA hasil kuis mahasiswa. Lanjutkan?")) return;
-        
+
         resetQuizResultsBtn.disabled = true;
         const originalText = resetQuizResultsBtn.textContent;
         resetQuizResultsBtn.textContent = "Menghapus Hasil...";
 
         try {
-            await database.ref('quiz_results').remove();
-            await database.ref('user_answers').remove();
-            await database.ref('user_quiz_status').remove();
-            
-            await quizStateRef.set(null); 
-            
-            alert("Semua hasil kuis mahasiswa berhasil dihapus (DIRESET).");
-            fetchAllQuizResults();
+          await resetQuizStateForStart(); // Gunakan fungsi reset yang baru
+          await quizStateRef.set(null); // Reset state kuis utama
+
+          alert("Semua hasil kuis mahasiswa berhasil dihapus (DIRESET).");
+          fetchAllQuizResults();
         } catch (error) {
-            console.error("Gagal mereset hasil kuis:", error);
-            alert("Gagal mereset hasil kuis: " + error.message);
+          console.error("Gagal mereset hasil kuis:", error);
+          alert("Gagal mereset hasil kuis: " + error.message);
         } finally {
-            resetQuizResultsBtn.disabled = false;
-            resetQuizResultsBtn.textContent = originalText;
+          resetQuizResultsBtn.disabled = false;
+          resetQuizResultsBtn.textContent = originalText;
         }
-    }
-    
-    async function fetchAllQuizResults() {
+      }
+
+      async function fetchAllQuizResults() {
         quizResultsContainer.innerHTML = '<p class="status-message text-center">Memuat hasil kuis...</p>';
         try {
-            const snapshot = await database.ref('quiz_results').once('value');
-            const results = [];
-            snapshot.forEach(snap => {
-                results.push(snap.val());
-            });
+          const snapshot = await database.ref("quiz_results").once("value");
+          const results = [];
+          snapshot.forEach((snap) => {
+            results.push(snap.val());
+          });
 
-            renderQuizResults(results);
+          renderQuizResults(results);
         } catch (error) {
-            console.error("Gagal memuat hasil kuis:", error);
-            quizResultsContainer.innerHTML = `<p class="status-message text-center text-danger">Gagal memuat hasil: ${error.message}</p>`;
+          console.error("Gagal memuat hasil kuis:", error);
+          quizResultsContainer.innerHTML = `<p class="status-message text-center text-danger">Gagal memuat hasil: ${error.message}</p>`;
         }
-    }
+      }
 
-    function renderQuizResults(results) {
+      function renderQuizResults(results) {
         if (results.length === 0) {
-            quizResultsContainer.innerHTML = '<p class="empty-message text-center">Belum ada mahasiswa yang menyelesaikan kuis.</p>';
-            return;
+          quizResultsContainer.innerHTML = '<p class="empty-message text-center">Belum ada mahasiswa yang menyelesaikan kuis.</p>';
+          return;
         }
 
         results.sort((a, b) => b.score - a.score);
@@ -2666,16 +2560,21 @@
                     </thead>
                     <tbody>
         `;
-        
-        results.forEach((result, index) => {
-            const scoreClass = result.score >= 70 ? 'text-success fw-bold' : 'text-danger fw-bold';
-            const userName = result.userName || 'N/A';
-            const userEmail = result.userEmail || 'N/A';
-            const date = result.timestamp ? new Date(result.timestamp).toLocaleDateString("id-ID", {
-                day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
-            }) : 'N/A';
 
-            tableHTML += `
+        results.forEach((result, index) => {
+          const scoreClass = result.score >= 70 ? "text-success fw-bold" : "text-danger fw-bold";
+          const userName = result.userName || "N/A";
+          const userEmail = result.userEmail || "N/A";
+          const date = result.timestamp
+            ? new Date(result.timestamp).toLocaleDateString("id-ID", {
+                day: "numeric",
+                month: "short",
+                hour: "2-digit",
+                minute: "2-digit",
+              })
+            : "N/A";
+
+          tableHTML += `
                 <tr style="background-color: var(--bg-dark);">
                     <td style="border-color: var(--border-dark); color: var(--text-light);">${index + 1}</td>
                     <td style="border-color: var(--border-dark); color: var(--text-light);">
@@ -2695,7 +2594,7 @@
         `;
 
         quizResultsContainer.innerHTML = tableHTML;
-    }
-</script>
-</body>
+      }
+    </script>
+  </body>
 </html>
